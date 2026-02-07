@@ -1,21 +1,235 @@
-<div class="row topRow">
-  <div class="leftControls">
-    <label class="small">Level:</label>
-    <select id="level">
-      <option value="BIOL112_EVOLUTION">Evolution</option>
-    </select>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Term ↔ Definition Quiz Cards</title>
 
-    <label class="small">Direction:</label>
-    <select id="direction">
-      <option value="mixed">Mixed</option>
-      <option value="de-en">Term → Definition</option>
-      <option value="en-de">Definition → Term</option>
-    </select>
+  <style>
+    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    body { margin: 0; background: #f6f7fb; color: #111; }
+    .wrap { max-width: 780px; margin: 0 auto; padding: 18px; }
 
-    <button id="nextBtn" class="primary">Next</button>
-    <button id="resetBtn" title="Reset score">Reset</button>
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.08);
+    }
+
+    h1 { margin: 0 0 10px; font-size: 20px; }
+
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .row > * { flex: 0 0 auto; }
+
+    .topRow { justify-content: space-between; }
+    .leftControls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+    select, button, .btnLink {
+      border: 1px solid #d7dbe6;
+      background: #fff;
+      color: #111;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    button.primary {
+      background: #111;
+      color: #fff;
+      border-color: #111;
+    }
+
+    button:disabled { opacity: .55; cursor: not-allowed; }
+
+    .prompt {
+      margin: 14px 0 6px;
+      font-size: 34px;
+      font-weight: 700;
+    }
+
+    .sub { color: #555; font-size: 13px; margin-bottom: 10px; }
+
+    .choices {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    @media (min-width: 560px) {
+      .choices { grid-template-columns: 1fr 1fr; }
+    }
+
+    .choice {
+      text-align: left;
+      width: 100%;
+      padding: 14px 12px;
+      border-radius: 12px;
+      border: 1px solid #d7dbe6;
+      background: #fff;
+    }
+
+    .choice.correct { border-color: #1f9d55; }
+    .choice.wrong { border-color: #d64545; }
+
+    .status {
+      margin-top: 12px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 13px;
+    }
+
+    .pill {
+      background: #f0f2f8;
+      border: 1px solid #e1e5f0;
+      padding: 6px 10px;
+      border-radius: 999px;
+    }
+
+    .divider { height: 1px; background: #eceff6; margin: 14px 0; }
+
+    .masteryRow { margin-top: 6px; }
+    .masteryHelp { margin-top: 6px; font-size: 12px; color: #666; }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="card">
+
+      <h1>Term ↔ Definition Quiz Cards</h1>
+
+      <!-- TOP CONTROLS -->
+      <div class="row topRow">
+        <div class="leftControls">
+          <label class="small">Level:</label>
+          <select id="level">
+            <option value="BIOL112_EVOLUTION">Evolution</option>
+          </select>
+
+          <label class="small">Direction:</label>
+          <select id="direction">
+            <option value="mixed">Mixed</option>
+            <option value="de-en">Term → Definition</option>
+            <option value="en-de">Definition → Term</option>
+          </select>
+
+          <button id="nextBtn" class="primary">Next</button>
+          <button id="resetBtn">Reset</button>
+        </div>
+
+        <!-- BACK ONE LEVEL -->
+        <a href="../" class="btnLink" title="Back to Vocab Hub">⬅ Back</a>
+      </div>
+
+      <!-- MASTERY CONTROLS -->
+      <div class="row masteryRow">
+        <button id="knowBtn">I know this</button>
+        <button id="practiceBtn">Need practice</button>
+      </div>
+
+      <div class="masteryHelp">
+        <b>I know this</b> = show very rarely • <b>Need practice</b> = shows more often
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- QUIZ -->
+      <div id="prompt" class="prompt">—</div>
+      <div id="sub" class="sub">Pick the correct answer.</div>
+      <div id="choices" class="choices"></div>
+
+      <!-- STATUS -->
+      <div class="status">
+        <div class="pill">Score: <span id="score">0</span></div>
+        <div class="pill">Correct: <span id="correct">0</span></div>
+        <div class="pill">Wrong: <span id="wrong">0</span></div>
+        <div class="pill">Streak: <span id="streak">0</span></div>
+        <div class="pill">Words loaded: <span id="count">0</span></div>
+      </div>
+
+    </div>
   </div>
 
-  <!-- goes up one folder: /vocab/flashcards/ -> /vocab/ -->
-  <a class="btnLink" href="../" title="Back to Vocab Hub">⬅ Back</a>
-</div>
+  <!-- DECKS -->
+  <script src="../data/decks.js"></script>
+  <script src="../data/decks.util.js"></script>
+
+  <!-- APP SCRIPT -->
+  <script>
+    let progress = JSON.parse(localStorage.getItem("progress") || "{}");
+
+    function itemKey(item) { return `${item.de}|||${item.en}`; }
+
+    function getItemState(item) {
+      return progress[itemKey(item)] || { status: "new", seen: 0, correct: 0, wrong: 0 };
+    }
+
+    function setItemState(item, patch) {
+      progress[itemKey(item)] = { ...getItemState(item), ...patch };
+      localStorage.setItem("progress", JSON.stringify(progress));
+    }
+
+    function shuffle(a) {
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function getLevelList() {
+      const level = document.getElementById("level").value;
+      const base = dedupePairs(getDeck(level));
+      const filtered = base.filter(i => getItemState(i).status !== "known");
+      return filtered.length >= 4 ? filtered : base;
+    }
+
+    function makeQuestion() {
+      const list = getLevelList();
+      if (list.length < 4) return;
+
+      const dir = document.getElementById("direction").value === "mixed"
+        ? (Math.random() < 0.5 ? "de-en" : "en-de")
+        : document.getElementById("direction").value;
+
+      const item = list[Math.floor(Math.random() * list.length)];
+      const prompt = dir === "de-en" ? item.de : item.en;
+      const answer = dir === "de-en" ? item.en : item.de;
+
+      document.getElementById("prompt").textContent = prompt;
+      document.getElementById("choices").innerHTML = "";
+
+      const options = shuffle([
+        answer,
+        ...shuffle(list.filter(x => x !== item))
+          .slice(0, 3)
+          .map(x => dir === "de-en" ? x.en : x.de)
+      ]);
+
+      options.forEach(opt => {
+        const b = document.createElement("button");
+        b.className = "choice";
+        b.textContent = opt;
+        b.onclick = () => makeQuestion();
+        document.getElementById("choices").appendChild(b);
+      });
+
+      document.getElementById("count").textContent = list.length;
+    }
+
+    document.getElementById("nextBtn").onclick = makeQuestion;
+    document.getElementById("resetBtn").onclick = () => {
+      progress = {};
+      localStorage.removeItem("progress");
+      makeQuestion();
+    };
+
+    makeQuestion();
+  </script>
+</body>
+</html>
