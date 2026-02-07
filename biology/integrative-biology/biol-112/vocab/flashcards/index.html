@@ -160,189 +160,180 @@
   <script src="../data/decks.utils.js"></script>
 
   <!-- APP SCRIPT -->
- <script>
-  // ---------------------------
-  // State + persistence
-  // ---------------------------
-  let progress = JSON.parse(localStorage.getItem("progress") || "{}");
+  <script>
+    // ---------------------------
+    // Persistent per-card progress
+    // ---------------------------
+    let progress = JSON.parse(localStorage.getItem("progress") || "{}");
 
-  let score = 0;
-  let correctCount = 0;
-  let wrongCount = 0;
-  let streak = 0;
+    function itemKey(item) { return `${item.de}|||${item.en}`; }
 
-  let current = null; // { item, dir, prompt, answer }
-
-  function itemKey(item) { return `${item.de}|||${item.en}`; }
-
-  function getItemState(item) {
-    return progress[itemKey(item)] || { status: "new", seen: 0, correct: 0, wrong: 0 };
-  }
-
-  function setItemState(item, patch) {
-    progress[itemKey(item)] = { ...getItemState(item), ...patch };
-    localStorage.setItem("progress", JSON.stringify(progress));
-  }
-
-  function updateStatus() {
-    document.getElementById("score").textContent = score;
-    document.getElementById("correct").textContent = correctCount;
-    document.getElementById("wrong").textContent = wrongCount;
-    document.getElementById("streak").textContent = streak;
-  }
-
-  // ---------------------------
-  // Helpers
-  // ---------------------------
-  function shuffle(a) {
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-  }
-
-  function getLevelList() {
-    const level = document.getElementById("level").value;
-    const base = dedupePairs(getDeck(level));
-    const filtered = base.filter(i => getItemState(i).status !== "known");
-    return filtered.length >= 4 ? filtered : base;
-  }
-
-  // ---------------------------
-  // UI feedback + scoring
-  // ---------------------------
-  function handleAnswer(clickedText, buttonEl) {
-    if (!current) return;
-
-    // prevent double-click scoring
-    const buttons = [...document.querySelectorAll(".choice")];
-    buttons.forEach(b => b.disabled = true);
-
-    const isCorrect = clickedText === current.answer;
-
-    // mark buttons
-    buttons.forEach(b => {
-      if (b.textContent === current.answer) b.classList.add("correct");
-    });
-
-    if (!isCorrect) {
-      buttonEl.classList.add("wrong");
+    function getItemState(item) {
+      return progress[itemKey(item)] || { status: "new", seen: 0, correct: 0, wrong: 0 };
     }
 
-    // update stats
-    const item = current.item;
-    const st = getItemState(item);
-
-    setItemState(item, { seen: st.seen + 1 });
-
-    if (isCorrect) {
-      score += 1;
-      correctCount += 1;
-      streak += 1;
-      setItemState(item, { correct: st.correct + 1 });
-
-      document.getElementById("sub").textContent = "✅ Correct!";
-    } else {
-      score = Math.max(0, score - 1);
-      wrongCount += 1;
-      streak = 0;
-      setItemState(item, { wrong: st.wrong + 1, status: "practice" });
-
-      document.getElementById("sub").textContent = `❌ Wrong. Correct answer: ${current.answer}`;
+    function setItemState(item, patch) {
+      progress[itemKey(item)] = { ...getItemState(item), ...patch };
+      localStorage.setItem("progress", JSON.stringify(progress));
     }
 
-    updateStatus();
+    // ---------------------------
+    // Session scoreboard (not persisted)
+    // ---------------------------
+    let score = 0;
+    let correctCount = 0;
+    let wrongCount = 0;
+    let streak = 0;
 
-    // auto-advance after a short pause
-    setTimeout(() => {
+    // Tracks current question + whether it's been answered
+    let current = null;   // { item, dir, prompt, answer }
+    let answered = false; // prevents "mark mastery" before answering
+
+    function updateStatus() {
+      document.getElementById("score").textContent = score;
+      document.getElementById("correct").textContent = correctCount;
+      document.getElementById("wrong").textContent = wrongCount;
+      document.getElementById("streak").textContent = streak;
+    }
+
+    function shuffle(a) {
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function getLevelList() {
+      const level = document.getElementById("level").value;
+      const base = dedupePairs(getDeck(level));
+      const filtered = base.filter(i => getItemState(i).status !== "known");
+      // If everything is known/pruned and we can't make 4 options, fall back to full list
+      return filtered.length >= 4 ? filtered : base;
+    }
+
+    function handleAnswer(clickedText, buttonEl) {
+      if (!current) return;
+
+      // prevent double scoring
+      const buttons = [...document.querySelectorAll(".choice")];
+      buttons.forEach(b => b.disabled = true);
+
+      const isCorrect = clickedText === current.answer;
+
+      // mark correct button, and wrong if applicable
+      buttons.forEach(b => {
+        if (b.textContent === current.answer) b.classList.add("correct");
+      });
+      if (!isCorrect) buttonEl.classList.add("wrong");
+
+      // update persistent progress
+      const item = current.item;
+      const st = getItemState(item);
+      setItemState(item, { seen: st.seen + 1 });
+
+      // update session scoreboard
+      if (isCorrect) {
+        score += 1;
+        correctCount += 1;
+        streak += 1;
+        setItemState(item, { correct: st.correct + 1 });
+        document.getElementById("sub").textContent =
+          "✅ Correct! Now optionally click: I know this / Need practice, then Next.";
+      } else {
+        score = Math.max(0, score - 1);
+        wrongCount += 1;
+        streak = 0;
+        setItemState(item, { wrong: st.wrong + 1, status: "practice" }); // wrong => upweight as practice
+        document.getElementById("sub").textContent =
+          `❌ Wrong. Correct answer: ${current.answer}. Now optionally click mastery, then Next.`;
+      }
+
+      answered = true;
+      updateStatus();
+      // NOTE: no auto-advance — user controls pacing via Next or mastery buttons
+    }
+
+    function makeQuestion() {
+      const list = getLevelList();
+      if (list.length < 4) return;
+
+      answered = false;
+      document.getElementById("sub").textContent = "Pick the correct answer.";
+
+      const directionSelect = document.getElementById("direction").value;
+      const dir = directionSelect === "mixed"
+        ? (Math.random() < 0.5 ? "de-en" : "en-de")
+        : directionSelect;
+
+      const item = list[Math.floor(Math.random() * list.length)];
+      const prompt = dir === "de-en" ? item.de : item.en;
+      const answer = dir === "de-en" ? item.en : item.de;
+
+      current = { item, dir, prompt, answer };
+
+      document.getElementById("prompt").textContent = prompt;
+
+      const choicesEl = document.getElementById("choices");
+      choicesEl.innerHTML = "";
+
+      const distractors = shuffle(list.filter(x => x !== item))
+        .slice(0, 3)
+        .map(x => dir === "de-en" ? x.en : x.de);
+
+      const options = shuffle([answer, ...distractors]);
+
+      options.forEach(opt => {
+        const b = document.createElement("button");
+        b.className = "choice";
+        b.textContent = opt;
+        b.onclick = () => handleAnswer(opt, b);
+        choicesEl.appendChild(b);
+      });
+
+      document.getElementById("count").textContent = list.length;
+    }
+
+    // ---------------------------
+    // Controls
+    // ---------------------------
+    document.getElementById("nextBtn").onclick = () => {
+      // Allow skipping if you want. If you want to REQUIRE an answer, uncomment below:
+      // if (!answered) { document.getElementById("sub").textContent = "Answer first, then click Next."; return; }
       makeQuestion();
-    }, 650);
-  }
+    };
 
-  // ---------------------------
-  // Question generation
-  // ---------------------------
-  function makeQuestion() {
-    const list = getLevelList();
-    if (list.length < 4) return;
+    document.getElementById("resetBtn").onclick = () => {
+      progress = {};
+      localStorage.removeItem("progress");
 
-    // reset prompt helper text
-    document.getElementById("sub").textContent = "Pick the correct answer.";
+      score = 0;
+      correctCount = 0;
+      wrongCount = 0;
+      streak = 0;
+      updateStatus();
 
-    const directionSelect = document.getElementById("direction").value;
-    const dir = directionSelect === "mixed"
-      ? (Math.random() < 0.5 ? "de-en" : "en-de")
-      : directionSelect;
+      makeQuestion();
+    };
 
-    const item = list[Math.floor(Math.random() * list.length)];
-    const prompt = dir === "de-en" ? item.de : item.en;
-    const answer = dir === "de-en" ? item.en : item.de;
+    // Mastery buttons: only allowed AFTER answering (prevents accidental mark)
+    document.getElementById("knowBtn").onclick = () => {
+      if (!current) return;
+      if (!answered) { document.getElementById("sub").textContent = "Answer first, then mark mastery."; return; }
+      setItemState(current.item, { status: "known" });
+      makeQuestion(); // advance immediately
+    };
 
-    current = { item, dir, prompt, answer };
+    document.getElementById("practiceBtn").onclick = () => {
+      if (!current) return;
+      if (!answered) { document.getElementById("sub").textContent = "Answer first, then mark mastery."; return; }
+      setItemState(current.item, { status: "practice" });
+      makeQuestion(); // advance immediately
+    };
 
-    document.getElementById("prompt").textContent = prompt;
-
-    const choicesEl = document.getElementById("choices");
-    choicesEl.innerHTML = "";
-
-    const distractors = shuffle(list.filter(x => x !== item))
-      .slice(0, 3)
-      .map(x => dir === "de-en" ? x.en : x.de);
-
-    const options = shuffle([answer, ...distractors]);
-
-    options.forEach(opt => {
-      const b = document.createElement("button");
-      b.className = "choice";
-      b.textContent = opt;
-      b.onclick = () => handleAnswer(opt, b);
-      choicesEl.appendChild(b);
-    });
-
-    document.getElementById("count").textContent = list.length;
-  }
-
-  // ---------------------------
-  // Mastery buttons
-  // ---------------------------
-  document.getElementById("knowBtn").onclick = () => {
-    if (!current) return;
-    setItemState(current.item, { status: "known" });
-    makeQuestion();
-  };
-
-  document.getElementById("practiceBtn").onclick = () => {
-    if (!current) return;
-    setItemState(current.item, { status: "practice" });
-    makeQuestion();
-  };
-
-  // ---------------------------
-  // Controls
-  // ---------------------------
-  document.getElementById("nextBtn").onclick = makeQuestion;
-
-  document.getElementById("resetBtn").onclick = () => {
-    progress = {};
-    localStorage.removeItem("progress");
-
-    score = 0;
-    correctCount = 0;
-    wrongCount = 0;
-    streak = 0;
+    // init
     updateStatus();
-
     makeQuestion();
-  };
-
-  // init
-  updateStatus();
-  makeQuestion();
-</script>
-
+  </script>
 </body>
 </html>
-
-
-
