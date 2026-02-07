@@ -100,10 +100,6 @@ window.DECKS = {
 { de: "Ancestral trait", en: "Trait present in a common ancestor.", tag: "Phylogenetics" },
 { de: "Derived trait", en: "Trait that evolved from an ancestral condition.", tag: "Phylogenetics" },
 
-// -------------------------
-// NOT INCLUDED IN SORT
-// -------------------------
-{ de: "Microevolution", en: "Changes in allele frequencies within populations.", tag: "Microevolution" }
 
     // -------------------------
     // SPECIATION (species concepts, barriers, modes)
