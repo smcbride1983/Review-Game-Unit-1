@@ -48,7 +48,7 @@ window.DECKS = {
     { de: "Population size", en: "Number of individuals in a population affecting evolutionary processes.", tag: "Microevolution" },
     { de: "Non-adaptive evolution", en: "Evolutionary change not driven by natural selection.", tag: "Microevolution" },
     { de: "Null model", en: "A baseline model assuming no evolutionary forces are acting.", tag: "Microevolution" },
-    { de: "Hardy–Weinberg equilibrium", en: "Condition where allele frequencies remain constant over time.", tag: "Microevolution" },
+    { de: "Hardy-Weinberg equilibrium", en: "Condition where allele frequencies remain constant over time.", tag: "Microevolution" },
     { de: "Population structure", en: "Genetic differences among populations of the same species.", tag: "Microevolution" },
 
     // -------------------------
