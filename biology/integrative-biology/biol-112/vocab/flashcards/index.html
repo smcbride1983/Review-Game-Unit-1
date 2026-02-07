@@ -218,7 +218,7 @@ let streak = 0;
 // ==============================
 function getLevelList() {
   const level = document.getElementById("level").value;
-  const list = getDeck({ type: "CUSTOM", level });
+  const list = getDeck(level);
 
   // Filter out "known" items if possible, but keep fallback if too small
   const base = dedupePairs(list);
@@ -403,6 +403,7 @@ makeQuestion();
 </script>
 </body>
 </html>
+
 
 
 
