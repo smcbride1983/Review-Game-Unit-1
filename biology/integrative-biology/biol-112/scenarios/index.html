@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Scenario Practice</title>
+  <style>
+    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    body { margin: 0; background: #0b0f19; color: #e8eefc; }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 24px; }
+    .card { background: #111a2e; border: 1px solid #223255; border-radius: 14px; padding: 18px; box-shadow: 0 8px 22px rgba(0,0,0,.25); }
+    h1 { margin: 0 0 10px; font-size: 22px; }
+    .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    select, button {
+      background: #0f1730; color: #e8eefc; border: 1px solid #2a3b63;
+      border-radius: 10px; padding: 10px 12px; font-size: 14px;
+    }
+    button { cursor: pointer; }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+    .muted { color: #a8b6da; font-size: 13px; }
+    .prompt { margin: 14px 0 12px; font-size: 16px; line-height: 1.35; }
+    .choices { display: grid; gap: 10px; margin: 12px 0; }
+    .choice {
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 12px; border-radius: 12px; border: 1px solid #2a3b63; background: #0f1730;
+    }
+    .choice input { transform: translateY(2px); }
+    .feedback { margin-top: 10px; padding: 10px 12px; border-radius: 12px; border: 1px solid transparent; }
+    .ok { background: rgba(30, 140, 70, .15); border-color: rgba(30, 140, 70, .45); }
+    .bad { background: rgba(200, 70, 70, .15); border-color: rgba(200, 70, 70, .45); }
+    .topbar { display:flex; justify-content:space-between; gap: 12px; flex-wrap: wrap; align-items:center; margin-bottom: 12px; }
+    .pill { padding: 6px 10px; border-radius: 999px; background:#0f1730; border:1px solid #2a3b63; font-size: 13px; color:#cfe0ff; }
+    .divider { height: 1px; background: #223255; margin: 14px 0; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="topbar">
+        <h1>Scenario Practice</h1>
+        <div class="row">
+          <span class="pill" id="statusPill">Not started</span>
+          <span class="pill" id="scorePill">Score: 0/0</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <label class="muted">Deck</label>
+        <select id="deckSelect"></select>
+
+        <label class="muted">Category</label>
+        <select id="categorySelect" disabled>
+          <option value="__ALL__">All categories</option>
+        </select>
+
+        <button id="startBtn">Start</button>
+        <button id="restartBtn" disabled>Restart</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <div id="gameArea" style="display:none;">
+        <div class="row" style="justify-content:space-between;">
+          <div class="muted" id="progressText"></div>
+          <div class="muted" id="categoryText"></div>
+        </div>
+
+        <div class="prompt" id="promptText"></div>
+
+        <div class="choices" id="choicesArea"></div>
+
+        <div class="row">
+          <button id="submitBtn" disabled>Submit</button>
+          <button id="nextBtn" disabled>Next</button>
+        </div>
+
+        <div id="feedbackBox" class="feedback" style="display:none;"></div>
+      </div>
+
+      <div id="emptyState" class="muted">
+        Choose a deck and click <b>Start</b>.
+      </div>
+    </div>
+  </div>
+
+  <!-- Load scenario decks (path is relative to games/ ) -->
+  <script src="../data/scenario_decks.js"></script>
+
+  <script>
+    // ---------- Helpers ----------
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function unique(arr) {
+      return Array.from(new Set(arr));
+    }
+
+    // ---------- State ----------
+    const state = {
+      deckName: null,
+      category: "__ALL__",
+      pool: [],
+      order: [],
+      idx: 0,
+      correct: 0,
+      total: 0,
+      answered: false,
+      current: null
+    };
+
+    // ---------- Elements ----------
+    const deckSelect = document.getElementById("deckSelect");
+    const categorySelect = document.getElementById("categorySelect");
+    const startBtn = document.getElementById("startBtn");
+    const restartBtn = document.getElementById("restartBtn");
+
+    const gameArea = document.getElementById("gameArea");
+    const emptyState = document.getElementById("emptyState");
+
+    const promptText = document.getElementById("promptText");
+    const choicesArea = document.getElementById("choicesArea");
+    const submitBtn = document.getElementById("submitBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const feedbackBox = document.getElementById("feedbackBox");
+
+    const progressText = document.getElementById("progressText");
+    const categoryText = document.getElementById("categoryText");
+    const statusPill = document.getElementById("statusPill");
+    const scorePill = document.getElementById("scorePill");
+
+    // ---------- Init deck dropdown ----------
+    function initDecks() {
+      const decks = window.SCENARIO_DECKS || {};
+      const names = Object.keys(decks).sort();
+
+      deckSelect.innerHTML = "";
+      if (names.length === 0) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "No scenario decks loaded";
+        deckSelect.appendChild(opt);
+        startBtn.disabled = true;
+        return;
+      }
+
+      for (const name of names) {
+        const opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = name;
+        deckSelect.appendChild(opt);
+      }
+
+      // Default select first deck
+      state.deckName = deckSelect.value;
+      refreshCategories();
+    }
+
+    // ---------- Category dropdown ----------
+    function refreshCategories() {
+      const decks = window.SCENARIO_DECKS || {};
+      const deck = decks[deckSelect.value] || [];
+      const cats = unique(deck.map(q => q.category).filter(Boolean)).sort();
+
+      categorySelect.disabled = (deck.length === 0);
+      categorySelect.innerHTML = "";
+
+      const allOpt = document.createElement("option");
+      allOpt.value = "__ALL__";
+      allOpt.textContent = "All categories";
+      categorySelect.appendChild(allOpt);
+
+      for (const c of cats) {
+        const opt = document.createElement("option");
+        opt.value = c;
+        opt.textContent = c;
+        categorySelect.appendChild(opt);
+      }
+
+      categorySelect.value = "__ALL__";
+      state.category = "__ALL__";
+    }
+
+    // ---------- Build pool/order ----------
+    function buildPool() {
+      const decks = window.SCENARIO_DECKS || {};
+      const deck = decks[state.deckName] || [];
+      let pool = deck;
+
+      if (state.category !== "__ALL__") {
+        pool = deck.filter(q => q.category === state.category);
+      }
+
+      // Basic validation + normalize
+      pool = pool.filter(q =>
+        q && typeof q.prompt === "string" &&
+        Array.isArray(q.choices) && q.choices.length === 4 &&
+        typeof q.answer === "string"
+      );
+
+      state.pool = pool;
+      state.order = shuffle(pool);
+      state.idx = 0;
+      state.correct = 0;
+      state.total = 0;
+      state.answered = false;
+      state.current = null;
+
+      updatePills("In progress");
+      updateScore();
+    }
+
+    // ---------- Render question ----------
+    function renderCurrent() {
+      feedbackBox.style.display = "none";
+      feedbackBox.className = "feedback";
+      feedbackBox.textContent = "";
+
+      const q = state.order[state.idx];
+      state.current = q;
+      state.answered = false;
+
+      if (!q) {
+        // End
+        promptText.textContent = "Done!";
+        choicesArea.innerHTML = "";
+        submitBtn.disabled = true;
+        nextBtn.disabled = true;
+
+        const pct = state.total ? Math.round((state.correct / state.total) * 100) : 0;
+        feedbackBox.style.display = "block";
+        feedbackBox.className = "feedback ok";
+        feedbackBox.textContent = `Finished: ${state.correct}/${state.total} (${pct}%)`;
+
+        updatePills("Finished");
+        return;
+      }
+
+      const currentNum = state.idx + 1;
+      const totalNum = state.order.length;
+      progressText.textContent = `Question ${currentNum} of ${totalNum}`;
+      categoryText.textContent = `Category: ${q.category || "—"}`;
+
+      promptText.textContent = q.prompt;
+
+      // Render choices (shuffle display order but keep answer by string compare)
+      const displayChoices = shuffle(q.choices.slice());
+      choicesArea.innerHTML = "";
+
+      displayChoices.forEach((choice, i) => {
+        const id = `ch_${currentNum}_${i}`;
+        const div = document.createElement("label");
+        div.className = "choice";
+        div.innerHTML = `
+          <input type="radio" name="choice" id="${id}" value="${escapeHtml(choice)}" />
+          <div>
+            <div><b>${escapeHtml(choice)}</b></div>
+          </div>
+        `;
+        choicesArea.appendChild(div);
+      });
+
+      submitBtn.disabled = false;
+      nextBtn.disabled = true;
+
+      // Enable submit only after selection
+      choicesArea.addEventListener("change", onChoiceChange, { once: true });
+    }
+
+    function onChoiceChange() {
+      // keeps submit enabled; could add logic if you want
+    }
+
+    function escapeHtml(s) {
+      return String(s)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function getSelectedChoice() {
+      const checked = document.querySelector('input[name="choice"]:checked');
+      return checked ? checked.value : null;
+    }
+
+    // ---------- Submit/Next ----------
+    function submitAnswer() {
+      if (!state.current || state.answered) return;
+
+      const selected = getSelectedChoice();
+      if (!selected) {
+        feedbackBox.style.display = "block";
+        feedbackBox.className = "feedback bad";
+        feedbackBox.textContent = "Pick an answer first.";
+        return;
+      }
+
+      state.answered = true;
+      state.total += 1;
+
+      const correct = (selected === state.current.answer);
+      if (correct) state.correct += 1;
+
+      updateScore();
+
+      feedbackBox.style.display = "block";
+      feedbackBox.className = "feedback " + (correct ? "ok" : "bad");
+      feedbackBox.textContent = correct
+        ? "Correct."
+        : `Incorrect. Correct answer: ${state.current.answer}`;
+
+      submitBtn.disabled = true;
+      nextBtn.disabled = false;
+    }
+
+    function nextQuestion() {
+      if (!state.current) return;
+      if (state.idx < state.order.length) state.idx += 1;
+      renderCurrent();
+    }
+
+    function updatePills(status) {
+      statusPill.textContent = status;
+    }
+
+    function updateScore() {
+      scorePill.textContent = `Score: ${state.correct}/${state.total}`;
+    }
+
+    // ---------- Events ----------
+    deckSelect.addEventListener("change", () => {
+      state.deckName = deckSelect.value;
+      refreshCategories();
+      // Don’t auto-start; user clicks Start
+    });
+
+    categorySelect.addEventListener("change", () => {
+      state.category = categorySelect.value;
+    });
+
+    startBtn.addEventListener("click", () => {
+      state.deckName = deckSelect.value;
+      state.category = categorySelect.value;
+
+      buildPool();
+
+      emptyState.style.display = "none";
+      gameArea.style.display = "block";
+
+      restartBtn.disabled = false;
+
+      if (state.order.length === 0) {
+        promptText.textContent = "No valid questions found for that deck/category.";
+        choicesArea.innerHTML = "";
+        submitBtn.disabled = true;
+        nextBtn.disabled = true;
+        updatePills("Empty");
+        return;
+      }
+
+      renderCurrent();
+    });
+
+    restartBtn.addEventListener("click", () => {
+      if (!state.deckName) return;
+      buildPool();
+      renderCurrent();
+    });
+
+    submitBtn.addEventListener("click", submitAnswer);
+    nextBtn.addEventListener("click", nextQuestion);
+
+    // ---------- Boot ----------
+    initDecks();
+    // enable category selection after decks load
+    categorySelect.disabled = false;
+  </script>
+</body>
+</html>
