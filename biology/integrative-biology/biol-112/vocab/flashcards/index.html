@@ -239,14 +239,14 @@
         streak += 1;
         setItemState(item, { correct: st.correct + 1 });
         document.getElementById("sub").textContent =
-          "✅ Correct! Now optionally click: I know this / Need practice, then Next.";
+          "✅ Correct! Now click: I know this , Need practice, or Next.";
       } else {
         score = Math.max(0, score - 1);
         wrongCount += 1;
         streak = 0;
         setItemState(item, { wrong: st.wrong + 1, status: "practice" }); // wrong => upweight as practice
         document.getElementById("sub").textContent =
-          `❌ Wrong. Correct answer: ${current.answer}. Now optionally click mastery, then Next.`;
+          `❌ Wrong. Correct answer: ${current.answer}. Now click: I know this , Need practice, or Next.`;
       }
 
       answered = true;
@@ -337,3 +337,4 @@
   </script>
 </body>
 </html>
+
