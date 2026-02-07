@@ -12,7 +12,7 @@ window.INTERPRETATION_DECKS = {
   // -----------------------------
   // DECK 1: Evolution
   // -----------------------------
-  "Selection: Recapture (MM vs A/C)": [
+  "Evolution": [
     {
       category: "Selection type",
       img: "./images/Fitness-graph1.jpg",
@@ -53,7 +53,7 @@ window.INTERPRETATION_DECKS = {
   // -----------------------------
   // DECK 2: Experimental design / controls
   // -----------------------------
-  "Interpretation: Controls & Design": [
+  "TBD": [
     {
       category: "Controls",
       img: "./images/releaseMM.png",
