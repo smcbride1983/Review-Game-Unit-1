@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Games Hub</title>
+  <style>
+    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    body { margin: 0; background:#f6f7fb; color:#111; }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 18px; }
+    .card {
+      background: #fff; border-radius: 16px; padding: 18px;
+      box-shadow: 0 10px 28px rgba(0,0,0,.08);
+    }
+    h1 { margin: 0 0 6px; font-size: 22px; }
+    .sub { color:#555; margin: 0 0 14px; font-size: 14px; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    @media (min-width: 640px) {
+      .grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    a.game {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      border: 1px solid #d7dbe6;
+      background: #fff;
+      border-radius: 14px;
+      padding: 16px;
+      transition: transform .06s ease, box-shadow .06s ease;
+    }
+    a.game:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(0,0,0,.08);
+    }
+    .title { font-weight: 700; font-size: 16px; margin-bottom: 6px; }
+    .desc { color:#555; font-size: 13px; line-height: 1.35; }
+    .tag {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #f0f2f8;
+      border: 1px solid #e1e5f0;
+      color: #333;
+    }
+    .toprow {
+      display:flex; justify-content: space-between; align-items: center;
+      gap: 12px; flex-wrap: wrap;
+    }
+    .back {
+      text-decoration: none;
+      border: 1px solid #d7dbe6;
+      padding: 8px 10px;
+      border-radius: 10px;
+      color: #111;
+      background: #fff;
+      font-size: 13px;
+    }
+    .back:hover { box-shadow: 0 6px 16px rgba(0,0,0,.06); }
+    .footer { margin-top: 14px; color:#666; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="toprow">
+        <div>
+          <h1>Games Hub</h1>
+          <p class="sub">Choose a game mode.</p>
+        </div>
+
+        <!-- Update this link to point back to your vocab hub (or German hub) -->
+        <a class="back" href="../index.html">← Back to Vocab Hub</a>
+      </div>
+
+      <div class="grid">
+        <!-- Update href to your flashcards file -->
+        <a class="game" href="./flashcards.html">
+          <div class="title">Flashcards</div>
+          <div class="desc">Multiple-choice term ↔ definition cards with mastery buttons.</div>
+          <span class="tag">Study</span>
+        </a>
+
+        <!-- Update href to your matching file -->
+        <a class="game" href="./matching.html">
+          <div class="title">Matching</div>
+          <div class="desc">Match terms to definitions using drag/drop or click-to-pair.</div>
+          <span class="tag">Practice</span>
+        </a>
+
+        <!-- Update href to your scenarios file -->
+        <a class="game" href="./scenarios.html">
+          <div class="title">Scenarios</div>
+          <div class="desc">Apply concepts in short scenario questions (great for exam review).</div>
+          <span class="tag">Apply</span>
+        </a>
+      </div>
+
+      <div class="footer">
+        Tip: This page is just a menu. Add more games by copying one of the cards and changing the link + text.
+      </div>
+    </div>
+  </div>
+</body>
+</html>
