@@ -24,32 +24,32 @@ window.DECKS = {
     { de: "Tree of life", en: "A representation of evolutionary relationships among all organisms.", tag: "General" },
 
     // -------------------------
-    // MECHANISMS (Microevolution forces + selection + HW)
+    // Microevolution (Microevolution forces + selection + HW)
     // -------------------------
-    { de: "Natural selection", en: "Differential survival and reproduction based on heritable traits.", tag: "Mechanisms" },
-    { de: "Fitness", en: "An organism’s ability to survive and reproduce.", tag: "Mechanisms" },
-    { de: "Reproductive success", en: "Number of viable offspring produced.", tag: "Mechanisms" },
-    { de: "Differential reproduction", en: "Individuals with certain traits reproduce more than others.", tag: "Mechanisms" },
-    { de: "Directional selection", en: "Selection favoring one extreme trait value.", tag: "Mechanisms" },
-    { de: "Stabilizing selection", en: "Selection favoring intermediate trait values.", tag: "Mechanisms" },
-    { de: "Disruptive selection", en: "Selection favoring extreme trait values over intermediates.", tag: "Mechanisms" },
+    { de: "Natural selection", en: "Differential survival and reproduction based on heritable traits.", tag: "Microevolution" },
+    { de: "Fitness", en: "An organism’s ability to survive and reproduce.", tag: "Microevolution" },
+    { de: "Reproductive success", en: "Number of viable offspring produced.", tag: "Microevolution" },
+    { de: "Differential reproduction", en: "Individuals with certain traits reproduce more than others.", tag: "Microevolution" },
+    { de: "Directional selection", en: "Selection favoring one extreme trait value.", tag: "Microevolution" },
+    { de: "Stabilizing selection", en: "Selection favoring intermediate trait values.", tag: "Microevolution" },
+    { de: "Disruptive selection", en: "Selection favoring extreme trait values over intermediates.", tag: "Microevolution" },
 
-    { de: "Gene flow", en: "Movement of alleles between populations.", tag: "Mechanisms" },
-    { de: "Genetic drift", en: "Random changes in allele frequencies, strongest in small populations.", tag: "Mechanisms" },
-    { de: "Allele frequency", en: "Proportion of a specific allele in a population.", tag: "Mechanisms" },
-    { de: "Bottleneck effect", en: "Loss of genetic diversity due to a sharp population reduction.", tag: "Mechanisms" },
-    { de: "Founder effect", en: "Genetic drift occurring when a small group starts a new population.", tag: "Mechanisms" },
-    { de: "Migration", en: "Movement of individuals between populations.", tag: "Mechanisms" },
-    { de: "Gamete dispersal", en: "Movement of reproductive cells between populations.", tag: "Mechanisms" },
-    { de: "Horizontal gene transfer", en: "Transfer of genes between organisms outside reproduction.", tag: "Mechanisms" },
-    { de: "Random sampling", en: "Chance effects influencing which alleles are passed on.", tag: "Mechanisms" },
-    { de: "Fixation", en: "When an allele reaches 100% frequency in a population.", tag: "Mechanisms" },
-    { de: "Loss of alleles", en: "Complete disappearance of an allele from a population.", tag: "Mechanisms" },
-    { de: "Population size", en: "Number of individuals in a population affecting evolutionary processes.", tag: "Mechanisms" },
-    { de: "Non-adaptive evolution", en: "Evolutionary change not driven by natural selection.", tag: "Mechanisms" },
-    { de: "Null model", en: "A baseline model assuming no evolutionary forces are acting.", tag: "Mechanisms" },
-    { de: "Hardy–Weinberg equilibrium", en: "Condition where allele frequencies remain constant over time.", tag: "Mechanisms" },
-    { de: "Population structure", en: "Genetic differences among populations of the same species.", tag: "Mechanisms" },
+    { de: "Gene flow", en: "Movement of alleles between populations.", tag: "Microevolution" },
+    { de: "Genetic drift", en: "Random changes in allele frequencies, strongest in small populations.", tag: "Microevolution" },
+    { de: "Allele frequency", en: "Proportion of a specific allele in a population.", tag: "Microevolution" },
+    { de: "Bottleneck effect", en: "Loss of genetic diversity due to a sharp population reduction.", tag: "Microevolution" },
+    { de: "Founder effect", en: "Genetic drift occurring when a small group starts a new population.", tag: "Microevolution" },
+    { de: "Migration", en: "Movement of individuals between populations.", tag: "Microevolution" },
+    { de: "Gamete dispersal", en: "Movement of reproductive cells between populations.", tag: "Microevolution" },
+    { de: "Horizontal gene transfer", en: "Transfer of genes between organisms outside reproduction.", tag: "Microevolution" },
+    { de: "Random sampling", en: "Chance effects influencing which alleles are passed on.", tag: "Microevolution" },
+    { de: "Fixation", en: "When an allele reaches 100% frequency in a population.", tag: "Microevolution" },
+    { de: "Loss of alleles", en: "Complete disappearance of an allele from a population.", tag: "Microevolution" },
+    { de: "Population size", en: "Number of individuals in a population affecting evolutionary processes.", tag: "Microevolution" },
+    { de: "Non-adaptive evolution", en: "Evolutionary change not driven by natural selection.", tag: "Microevolution" },
+    { de: "Null model", en: "A baseline model assuming no evolutionary forces are acting.", tag: "Microevolution" },
+    { de: "Hardy–Weinberg equilibrium", en: "Condition where allele frequencies remain constant over time.", tag: "Microevolution" },
+    { de: "Population structure", en: "Genetic differences among populations of the same species.", tag: "Microevolution" },
 
     // -------------------------
     // MUTATION / SOURCES OF VARIATION
@@ -71,30 +71,39 @@ window.DECKS = {
     { de: "Selective environment", en: "Environmental conditions influencing selection.", tag: "Mutation" },
 
     // -------------------------
-    // MACROEVOLUTION + PHYLOGENETICS
     // -------------------------
-    { de: "Macroevolution", en: "Evolutionary change above the species level.", tag: "Macroevo/Phylo" },
-    { de: "Microevolution", en: "Changes in allele frequencies within populations.", tag: "Mechanisms" }, // microevo concept, but fits forces unit
-    { de: "Deep time", en: "Vast geological time over which evolution occurs.", tag: "Macroevo/Phylo" },
-    { de: "Diversification", en: "Increase in species number within a lineage.", tag: "Macroevo/Phylo" },
-    { de: "Extinction", en: "Permanent loss of a species.", tag: "Macroevo/Phylo" },
-    { de: "Phylogeny", en: "Evolutionary history of a group.", tag: "Macroevo/Phylo" },
-    { de: "Phylogenetic tree", en: "Diagram showing evolutionary relationships.", tag: "Macroevo/Phylo" },
-    { de: "Node", en: "Point representing a common ancestor.", tag: "Macroevo/Phylo" },
-    { de: "Branch", en: "Line representing evolutionary lineage.", tag: "Macroevo/Phylo" },
-    { de: "Taxon / taxa", en: "A named group of organisms.", tag: "Macroevo/Phylo" },
-    { de: "Sister taxa", en: "Two lineages sharing an immediate common ancestor.", tag: "Macroevo/Phylo" },
-    { de: "Clade", en: "A group consisting of an ancestor and all descendants.", tag: "Macroevo/Phylo" },
-    { de: "Monophyletic", en: "Group containing an ancestor and all descendants.", tag: "Macroevo/Phylo" },
-    { de: "Paraphyletic", en: "Group containing an ancestor but not all descendants.", tag: "Macroevo/Phylo" },
-    { de: "Polyphyletic", en: "Group lacking a common ancestor.", tag: "Macroevo/Phylo" },
-    { de: "Homology", en: "Similarity due to shared ancestry.", tag: "Macroevo/Phylo" },
-    { de: "Convergent evolution", en: "Independent evolution of similar traits.", tag: "Macroevo/Phylo" },
-    { de: "Ancestral trait", en: "Trait present in a common ancestor.", tag: "Macroevo/Phylo" },
-    { de: "Derived trait", en: "Trait that evolved from an ancestral condition.", tag: "Macroevo/Phylo" },
-    { de: "Adaptive radiation", en: "Rapid diversification into multiple niches.", tag: "Macroevo/Phylo" },
-    { de: "Gradualism", en: "Slow, continuous evolutionary change.", tag: "Macroevo/Phylo" },
-    { de: "Punctuated equilibrium", en: "Long periods of stasis interrupted by rapid change.", tag: "Macroevo/Phylo" },
+// MACROEVOLUTION
+// -------------------------
+{ de: "Macroevolution", en: "Evolutionary change above the species level.", tag: "Macroevolution" },
+{ de: "Deep time", en: "Vast geological time over which evolution occurs.", tag: "Macroevolution" },
+{ de: "Diversification", en: "Increase in species number within a lineage.", tag: "Macroevolution" },
+{ de: "Extinction", en: "Permanent loss of a species.", tag: "Macroevolution" },
+{ de: "Adaptive radiation", en: "Rapid diversification into multiple niches.", tag: "Macroevolution" },
+{ de: "Gradualism", en: "Slow, continuous evolutionary change.", tag: "Macroevolution" },
+{ de: "Punctuated equilibrium", en: "Long periods of stasis interrupted by rapid change.", tag: "Macroevolution" },
+
+// -------------------------
+// PHYLOGENETICS
+// -------------------------
+{ de: "Phylogeny", en: "Evolutionary history of a group.", tag: "Phylogenetics" },
+{ de: "Phylogenetic tree", en: "Diagram showing evolutionary relationships.", tag: "Phylogenetics" },
+{ de: "Node", en: "Point representing a common ancestor.", tag: "Phylogenetics" },
+{ de: "Branch", en: "Line representing an evolutionary lineage.", tag: "Phylogenetics" },
+{ de: "Taxon / taxa", en: "A named group of organisms.", tag: "Phylogenetics" },
+{ de: "Sister taxa", en: "Two lineages sharing an immediate common ancestor.", tag: "Phylogenetics" },
+{ de: "Clade", en: "A group consisting of an ancestor and all descendants.", tag: "Phylogenetics" },
+{ de: "Monophyletic", en: "Group containing an ancestor and all descendants.", tag: "Phylogenetics" },
+{ de: "Paraphyletic", en: "Group containing an ancestor but not all descendants.", tag: "Phylogenetics" },
+{ de: "Polyphyletic", en: "Group lacking a common ancestor.", tag: "Phylogenetics" },
+{ de: "Homology", en: "Similarity due to shared ancestry.", tag: "Phylogenetics" },
+{ de: "Convergent evolution", en: "Independent evolution of similar traits.", tag: "Phylogenetics" },
+{ de: "Ancestral trait", en: "Trait present in a common ancestor.", tag: "Phylogenetics" },
+{ de: "Derived trait", en: "Trait that evolved from an ancestral condition.", tag: "Phylogenetics" },
+
+// -------------------------
+// NOT INCLUDED IN SORT
+// -------------------------
+{ de: "Microevolution", en: "Changes in allele frequencies within populations.", tag: "Microevolution" }
 
     // -------------------------
     // SPECIATION (species concepts, barriers, modes)
