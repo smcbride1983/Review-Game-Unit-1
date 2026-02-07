@@ -391,12 +391,10 @@
         card.dataset.def = defText;
 
         card.addEventListener("dragstart", (e) => {
-          if (usedDefs.has(defText)) {
-            e.preventDefault();
-            return;
-          }
           e.dataTransfer.setData("text/plain", defText);
+          e.dataTransfer.effectAllowed = "move";
         });
+
 
         defsEl.appendChild(card);
       }
