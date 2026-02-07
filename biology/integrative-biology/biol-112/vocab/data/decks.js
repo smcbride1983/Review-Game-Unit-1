@@ -9,6 +9,7 @@
 
 window.DECKS = {
   BIOL112_EVOLUTION: [
+
     // -------------------------
     // GENERAL
     // -------------------------
@@ -24,7 +25,7 @@ window.DECKS = {
     { de: "Tree of life", en: "A representation of evolutionary relationships among all organisms.", tag: "General" },
 
     // -------------------------
-    // Microevolution (Microevolution forces + selection + HW)
+    // MICROEVOLUTION
     // -------------------------
     { de: "Natural selection", en: "Differential survival and reproduction based on heritable traits.", tag: "Microevolution" },
     { de: "Fitness", en: "An organism’s ability to survive and reproduce.", tag: "Microevolution" },
@@ -33,7 +34,6 @@ window.DECKS = {
     { de: "Directional selection", en: "Selection favoring one extreme trait value.", tag: "Microevolution" },
     { de: "Stabilizing selection", en: "Selection favoring intermediate trait values.", tag: "Microevolution" },
     { de: "Disruptive selection", en: "Selection favoring extreme trait values over intermediates.", tag: "Microevolution" },
-
     { de: "Gene flow", en: "Movement of alleles between populations.", tag: "Microevolution" },
     { de: "Genetic drift", en: "Random changes in allele frequencies, strongest in small populations.", tag: "Microevolution" },
     { de: "Allele frequency", en: "Proportion of a specific allele in a population.", tag: "Microevolution" },
@@ -52,7 +52,7 @@ window.DECKS = {
     { de: "Population structure", en: "Genetic differences among populations of the same species.", tag: "Microevolution" },
 
     // -------------------------
-    // MUTATION / SOURCES OF VARIATION
+    // MUTATION / VARIATION
     // -------------------------
     { de: "Mutation", en: "A change in DNA sequence.", tag: "Mutation" },
     { de: "Genetic variation", en: "Differences in DNA among individuals.", tag: "Mutation" },
@@ -71,38 +71,36 @@ window.DECKS = {
     { de: "Selective environment", en: "Environmental conditions influencing selection.", tag: "Mutation" },
 
     // -------------------------
+    // MACROEVOLUTION
     // -------------------------
-// MACROEVOLUTION
-// -------------------------
-{ de: "Macroevolution", en: "Evolutionary change above the species level.", tag: "Macroevolution" },
-{ de: "Deep time", en: "Vast geological time over which evolution occurs.", tag: "Macroevolution" },
-{ de: "Diversification", en: "Increase in species number within a lineage.", tag: "Macroevolution" },
-{ de: "Extinction", en: "Permanent loss of a species.", tag: "Macroevolution" },
-{ de: "Adaptive radiation", en: "Rapid diversification into multiple niches.", tag: "Macroevolution" },
-{ de: "Gradualism", en: "Slow, continuous evolutionary change.", tag: "Macroevolution" },
-{ de: "Punctuated equilibrium", en: "Long periods of stasis interrupted by rapid change.", tag: "Macroevolution" },
-
-// -------------------------
-// PHYLOGENETICS
-// -------------------------
-{ de: "Phylogeny", en: "Evolutionary history of a group.", tag: "Phylogenetics" },
-{ de: "Phylogenetic tree", en: "Diagram showing evolutionary relationships.", tag: "Phylogenetics" },
-{ de: "Node", en: "Point representing a common ancestor.", tag: "Phylogenetics" },
-{ de: "Branch", en: "Line representing an evolutionary lineage.", tag: "Phylogenetics" },
-{ de: "Taxon / taxa", en: "A named group of organisms.", tag: "Phylogenetics" },
-{ de: "Sister taxa", en: "Two lineages sharing an immediate common ancestor.", tag: "Phylogenetics" },
-{ de: "Clade", en: "A group consisting of an ancestor and all descendants.", tag: "Phylogenetics" },
-{ de: "Monophyletic", en: "Group containing an ancestor and all descendants.", tag: "Phylogenetics" },
-{ de: "Paraphyletic", en: "Group containing an ancestor but not all descendants.", tag: "Phylogenetics" },
-{ de: "Polyphyletic", en: "Group lacking a common ancestor.", tag: "Phylogenetics" },
-{ de: "Homology", en: "Similarity due to shared ancestry.", tag: "Phylogenetics" },
-{ de: "Convergent evolution", en: "Independent evolution of similar traits.", tag: "Phylogenetics" },
-{ de: "Ancestral trait", en: "Trait present in a common ancestor.", tag: "Phylogenetics" },
-{ de: "Derived trait", en: "Trait that evolved from an ancestral condition.", tag: "Phylogenetics" },
-
+    { de: "Macroevolution", en: "Evolutionary change above the species level.", tag: "Macroevolution" },
+    { de: "Deep time", en: "Vast geological time over which evolution occurs.", tag: "Macroevolution" },
+    { de: "Diversification", en: "Increase in species number within a lineage.", tag: "Macroevolution" },
+    { de: "Extinction", en: "Permanent loss of a species.", tag: "Macroevolution" },
+    { de: "Adaptive radiation", en: "Rapid diversification into multiple niches.", tag: "Macroevolution" },
+    { de: "Gradualism", en: "Slow, continuous evolutionary change.", tag: "Macroevolution" },
+    { de: "Punctuated equilibrium", en: "Long periods of stasis interrupted by rapid change.", tag: "Macroevolution" },
 
     // -------------------------
-    // SPECIATION (species concepts, barriers, modes)
+    // PHYLOGENETICS
+    // -------------------------
+    { de: "Phylogeny", en: "Evolutionary history of a group.", tag: "Phylogenetics" },
+    { de: "Phylogenetic tree", en: "Diagram showing evolutionary relationships.", tag: "Phylogenetics" },
+    { de: "Node", en: "Point representing a common ancestor.", tag: "Phylogenetics" },
+    { de: "Branch", en: "Line representing an evolutionary lineage.", tag: "Phylogenetics" },
+    { de: "Taxon / taxa", en: "A named group of organisms.", tag: "Phylogenetics" },
+    { de: "Sister taxa", en: "Two lineages sharing an immediate common ancestor.", tag: "Phylogenetics" },
+    { de: "Clade", en: "A group consisting of an ancestor and all descendants.", tag: "Phylogenetics" },
+    { de: "Monophyletic", en: "Group containing an ancestor and all descendants.", tag: "Phylogenetics" },
+    { de: "Paraphyletic", en: "Group containing an ancestor but not all descendants.", tag: "Phylogenetics" },
+    { de: "Polyphyletic", en: "Group lacking a common ancestor.", tag: "Phylogenetics" },
+    { de: "Homology", en: "Similarity due to shared ancestry.", tag: "Phylogenetics" },
+    { de: "Convergent evolution", en: "Independent evolution of similar traits.", tag: "Phylogenetics" },
+    { de: "Ancestral trait", en: "Trait present in a common ancestor.", tag: "Phylogenetics" },
+    { de: "Derived trait", en: "Trait that evolved from an ancestral condition.", tag: "Phylogenetics" },
+
+    // -------------------------
+    // SPECIATION
     // -------------------------
     { de: "Speciation", en: "Formation of new species.", tag: "Speciation" },
     { de: "Species", en: "A group of organisms that form independent lineages.", tag: "Speciation" },
@@ -112,8 +110,8 @@ window.DECKS = {
     { de: "Phylogenetic Species Concept", en: "Species defined by evolutionary history.", tag: "Speciation" },
     { de: "Cryptic species", en: "Distinct species that look very similar.", tag: "Speciation" },
     { de: "Asexual organisms", en: "Organisms reproducing without mating.", tag: "Speciation" },
-    { de: "Fossils", en: "Preserved remains or traces of past life.", tag: "General" }, // evidence term; could also be Macroevo/Phylo
-    { de: "Operational Taxonomic Units (OTUs)", en: "Units used to classify organisms in analyses.", tag: "Macroevo/Phylo" },
+    { de: "Fossils", en: "Preserved remains or traces of past life.", tag: "General" },
+    { de: "Operational Taxonomic Units (OTUs)", en: "Units used to classify organisms in analyses.", tag: "Phylogenetics" },
     { de: "Independently evolving lineages", en: "Groups evolving separately over time.", tag: "Speciation" },
 
     { de: "Prezygotic barrier", en: "Barrier preventing fertilization.", tag: "Speciation" },
@@ -144,5 +142,6 @@ window.DECKS = {
     { de: "Polyploidy", en: "Possession of more than two chromosome sets.", tag: "Speciation" },
     { de: "Host switching", en: "Shift to a new host species.", tag: "Speciation" },
     { de: "Ecological specialization", en: "Adaptation to a specific niche.", tag: "Speciation" }
+
   ]
 };
