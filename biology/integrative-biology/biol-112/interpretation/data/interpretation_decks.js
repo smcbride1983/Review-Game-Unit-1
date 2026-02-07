@@ -10,16 +10,16 @@
 
 window.INTERPRETATION_DECKS = {
   // -----------------------------
-  // DECK 1: Selection from recapture
+  // DECK 1: Evolution
   // -----------------------------
   "Selection: Recapture (MM vs A/C)": [
     {
       category: "Selection type",
-      img: "./images/figureF.png",
-      imgAlt: "Figure F: Recapture MM bar graph comparing Green, Intermediate, and Melanic.",
-      caption: "Figure F (Recapture, MM environment).",
+      img: "./images/Fitness-graph1.jpg",
+      imgAlt: "Figure A: Fitness MM bar graph comparing Green, Intermediate, and Melanic insect fitness.",
+      caption: "Figure A (Fitness, MM environment).",
       prompt:
-        "Based on Figure F, how would you describe the type of selective pressure acting on body color in the MM environment?",
+        "Based on Figure A, how would you describe the type of selective pressure acting on body color of the pictured insects in the MM environment?",
       choices: [
         { text: "Directional selection", hint: "because one extreme phenotype is favored over all others" },
         { text: "Stabilizing selection", hint: "because individuals with intermediate coloration have the highest recapture rate" },
@@ -33,11 +33,11 @@ window.INTERPRETATION_DECKS = {
 
     {
       category: "Selection type",
-      img: "./images/figureG.png",
-      imgAlt: "Figure G: Recapture A/C bar graph comparing Green, Intermediate, and Melanic.",
-      caption: "Figure G (Recapture, A/C environment).",
+      img: "./images/Fitness-graph1.jpg",
+      imgAlt: "Figure B: Fitness A/C bar graph comparing Green, Intermediate, and Melanic insect fitness.",
+      caption: "Figure B (Fitness, A/C environment).",
       prompt:
-        "Based on Figure G, how would you describe the type of selective pressure acting on body color in the A/C environment?",
+        "Based on Figure B, how would you describe the type of selective pressure acting on insect body color in the A/C environment?",
       choices: [
         { text: "Directional selection", hint: "because one phenotype is consistently favored over the others" },
         { text: "Stabilizing selection", hint: "because individuals with intermediate coloration have the highest recapture rate" },
