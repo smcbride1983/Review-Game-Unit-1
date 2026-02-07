@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Biology Review Games</title>
+  <style>
+    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    body { margin: 0; background:#f6f7fb; color:#111; }
+    .wrap { max-width: 920px; margin: 0 auto; padding: 20px; }
+    .card {
+      background:#fff; border-radius: 16px; padding: 18px;
+      box-shadow: 0 10px 28px rgba(0,0,0,.08);
+    }
+    .top { display:flex; justify-content: space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+    h1 { margin: 0; font-size: 24px; }
+    .sub { margin: 6px 0 14px; color:#555; font-size: 14px; line-height: 1.35; }
+    .grid { display:grid; grid-template-columns: 1fr; gap: 12px; margin-top: 12px; }
+    @media (min-width: 720px) { .grid { grid-template-columns: 1fr 1fr 1fr; } }
+    a.tile {
+      display:block; text-decoration:none; color:inherit;
+      border:1px solid #d7dbe6; border-radius: 14px;
+      padding: 16px; background:#fff;
+      transition: transform .06s ease, box-shadow .06s ease;
+    }
+    a.tile:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(0,0,0,.08); }
+    .title { font-weight: 800; font-size: 16px; margin-bottom: 6px; }
+    .desc { color:#555; font-size: 13px; line-height: 1.35; }
+    .tag {
+      display:inline-block; margin-top: 10px;
+      font-size: 12px; padding: 4px 10px;
+      border-radius: 999px; background:#f0f2f8;
+      border: 1px solid #e1e5f0; color:#333;
+    }
+    .back {
+      text-decoration: none;
+      border: 1px solid #d7dbe6;
+      padding: 8px 10px;
+      border-radius: 10px;
+      color: #111;
+      background: #fff;
+      font-size: 13px;
+    }
+    .back:hover { box-shadow: 0 6px 16px rgba(0,0,0,.06); }
+    .footer { margin-top: 14px; color:#666; font-size: 12px; }
+    code { background:#f0f2f8; padding:2px 6px; border-radius:8px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="top">
+        <div>
+          <h1>Biology Review Games</h1>
+          <div class="sub">Choose a course area to start.</div>
+        </div>
+
+        <!-- Back to the site root hub -->
+        <a class="back" href="../">← Review Games Home</a>
+      </div>
+
+      <div class="grid">
+        <!-- Integrative Biology -->
+        <a class="tile" href="./integrative-biology/">
+          <div class="title">Integrative Biology</div>
+          <div class="desc">BIOL 111/112 review: vocab, matching, and scenarios.</div>
+          <span class="tag">BIOL 111/112</span>
+        </a>
+
+        <!-- Microbiology -->
+        <a class="tile" href="./microbiology/">
+          <div class="title">Microbiology</div>
+          <div class="desc">Core micro concepts: metabolism, genetics, ID, and lab techniques.</div>
+          <span class="tag">BIOL 334</span>
+        </a>
+
+        <!-- Microbial Ecology -->
+        <a class="tile" href="./microbial-ecology/">
+          <div class="title">Microbial Ecology</div>
+          <div class="desc">Communities, biogeochemistry, soils, and microbial processes.</div>
+          <span class="tag">Upper-level</span>
+        </a>
+      </div>
+
+      <div class="footer">
+        Tip: Each link expects an <code>index.html</code> inside that folder (e.g., <code>biology/microbiology/index.html</code>).
+      </div>
+    </div>
+  </div>
+</body>
+</html>
