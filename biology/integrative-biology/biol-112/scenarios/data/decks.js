@@ -1,4 +1,4 @@
-window.SCENARIO_DECKS = {
+window.DECKS = {
   BIOL112_EVOLUTION: [ 
 
 /* =========================
