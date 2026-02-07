@@ -351,21 +351,31 @@
         drop.dataset.termid = termId(item);
         drop.innerHTML = `<span class="dropHint">Drop a definition here</span>`;
 
+
+        drop.addEventListener("drop", (e) => {
+  e.preventDefault();
+  drop.classList.remove("over");
+
+  const defText = e.dataTransfer.getData("text/plain");
+  if (!defText) return;
+
+  // If this definition is already assigned to a different term, move it here
+  if (usedDefs.has(defText)) {
+    const oldTid = Object.keys(assignment).find(tid => assignment[tid] === defText);
+    if (oldTid) {
+      delete assignment[oldTid];
+      usedDefs.delete(defText);
+    }
+  }
+
+  setAssignment(item, defText);
+});
+
         drop.addEventListener("dragover", (e) => {
           e.preventDefault();
           drop.classList.add("over");
         });
 
-        drop.addEventListener("dragleave", () => drop.classList.remove("over"));
-
-        drop.addEventListener("drop", (e) => {
-          e.preventDefault();
-          drop.classList.remove("over");
-          const defText = e.dataTransfer.getData("text/plain");
-          if (!defText) return;
-          if (usedDefs.has(defText)) return; // already used somewhere else
-          setAssignment(item, defText);
-        });
 
         row.appendChild(top);
         row.appendChild(drop);
