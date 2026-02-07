@@ -7,7 +7,7 @@
    }
 */
 
-const DECKS = {
+window.DECKS = {
   BIOL112_EVOLUTION: [
     { de: "Evolution", en: "Change in heritable traits of populations over generations." },
     { de: "Descent with modification", en: "Inheritance of traits from ancestors with changes over time." },
