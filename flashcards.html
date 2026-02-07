@@ -122,6 +122,9 @@
     </div>
   </div>
 
+<script src="../data/decks.js"></script>
+<script src="../data/decks.utils.js"></script>
+ 
 <script>
 // ==============================
 // Progress + storage
@@ -171,15 +174,7 @@ function uniqueBy(arr, keyFn) {
   return out;
 }
 
-function dedupePairs(list) {
-  const seen = new Set();
-  return list.filter(w => {
-    const key = `${w.de}|||${w.en}`;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
-}
+
 
 // weights for mastery states
 function weightForStatus(status) {
@@ -223,7 +218,7 @@ let streak = 0;
 // ==============================
 function getLevelList() {
   const level = document.getElementById("level").value;
-  const list = vocab[level] || [];
+  const list = getDeck(level)
 
   // Filter out "known" items if possible, but keep fallback if too small
   const base = dedupePairs(list);
@@ -408,4 +403,5 @@ makeQuestion();
 </script>
 </body>
 </html>
+
 
