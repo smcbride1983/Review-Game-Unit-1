@@ -1,6 +1,6 @@
 /* data/interpretation_decks.js
    Figure Interpretation decks (image + MCQ + per-option hints)
-
+ 
    IMPORTANT PATH RULE:
    - img paths are resolved relative to the HTML file that loads this script.
    - If your HTML is: interpretation/interpretation.html
