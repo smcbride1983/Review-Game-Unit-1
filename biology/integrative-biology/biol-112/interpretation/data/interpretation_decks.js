@@ -15,7 +15,7 @@ window.INTERPRETATION_DECKS = {
   "Evolution": [
     {
       category: "microevolution",
-      img: "./images/fitness-graph1.jpg",
+      img: "./images/Fitness-graph1.jpg",
       imgAlt: "Figure B: Fitness MM bar graph comparing Green, Intermediate, and Melanic insect fitness.",
       caption: "Figure B (Fitness, MM environment).",
       prompt:
@@ -33,7 +33,7 @@ window.INTERPRETATION_DECKS = {
 
     {
       category: "microevolution",
-      img: "./images/fitness-graph1.jpg",
+      img: "./images/Fitness-graph1.jpg",
       imgAlt: "Figure C: Fitness A/C bar graph comparing Green, Intermediate, and Melanic insect fitness.",
       caption: "Figure C (Fitness, A/C environment).",
       prompt:
