@@ -38,6 +38,20 @@
     .pill { padding: 6px 10px; border-radius: 999px; background:#0f1730; border:1px solid #2a3b63; font-size: 13px; color:#cfe0ff; }
     .divider { height: 1px; background: #223255; margin: 14px 0; }
 
+    /* Link button */
+    .btnLink{
+      display: inline-block;
+      background: #0f1730;
+      color: #e8eefc;
+      border: 1px solid #2a3b63;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 14px;
+      text-decoration: none;
+      line-height: 1;
+    }
+    .btnLink:hover { filter: brightness(1.08); }
+
     /* Figure */
     .figureWrap { margin: 10px 0 14px; }
     .figureImg {
@@ -115,9 +129,9 @@
 
         <button id="startBtn">Start</button>
         <button id="restartBtn" disabled>Restart</button>
-        
-        <a href="../" class="btnLink">⬅ BIOL 112</a>
-   
+        <button id="reshuffleBtn" disabled>Reshuffle 20</button>
+
+        <a href="../" class="btnLink" title="Back to BIOL 112">⬅ BIOL 112</a>
       </div>
 
       <div class="divider"></div>
@@ -165,6 +179,11 @@
       return a;
     }
 
+    function getRandomCards(deck, count = 20) {
+      const shuffled = shuffle(deck);
+      return shuffled.slice(0, Math.min(count, shuffled.length));
+    }
+
     function unique(arr) {
       return Array.from(new Set(arr));
     }
@@ -189,7 +208,6 @@
       total: 0,
       answered: false,
       current: null,
-      // For each question, we shuffle displayed choice order but keep their objects
       displayChoices: []
     };
 
@@ -198,6 +216,7 @@
     const categorySelect = document.getElementById("categorySelect");
     const startBtn = document.getElementById("startBtn");
     const restartBtn = document.getElementById("restartBtn");
+    const reshuffleBtn = document.getElementById("reshuffleBtn");
 
     const gameArea = document.getElementById("gameArea");
     const emptyState = document.getElementById("emptyState");
@@ -247,7 +266,6 @@
     function refreshCategories() {
       const decks = window.INTERPRETATION_DECKS || {};
       const deck = decks[deckSelect.value] || [];
-
       const cats = unique(deck.map(q => q.category).filter(Boolean)).sort();
 
       categorySelect.innerHTML = "";
@@ -270,20 +288,10 @@
 
     // ---------- Pool/order ----------
     function normalizeQuestion(q) {
-      // Expected format:
-      // {
-      //   category,
-      //   img, imgAlt, caption,
-      //   prompt,
-      //   choices: [{text, hint}, ...]  (usually 4)
-      //   answer: "Exact text of correct choice",
-      //   explanation: "..."
-      // }
       if (!q || typeof q.prompt !== "string") return null;
       if (!Array.isArray(q.choices) || q.choices.length < 2) return null;
       if (typeof q.answer !== "string") return null;
 
-      // Ensure choice objects have text/hint
       const choices = q.choices
         .map(c => {
           if (typeof c === "string") return { text: c, hint: "" };
@@ -308,17 +316,20 @@
 
     function buildPool() {
       const decks = window.INTERPRETATION_DECKS || {};
-      const deck = decks[state.deckName] || [];
-      let pool = deck;
+      const rawDeck = decks[state.deckName] || [];
 
+      // normalize + validate
+      let pool = rawDeck.map(normalizeQuestion).filter(Boolean);
+
+      // category filter
       if (state.category !== "__ALL__") {
-        pool = deck.filter(q => q.category === state.category);
+        pool = pool.filter(q => q.category === state.category);
       }
 
-      pool = pool.map(normalizeQuestion).filter(Boolean);
-
       state.pool = pool;
-      state.order = shuffle(pool);
+
+      // pick 20 and play ONLY those
+      state.order = shuffle(getRandomCards(pool, 20));
       state.idx = 0;
       state.correct = 0;
       state.total = 0;
@@ -328,6 +339,9 @@
 
       updatePills("In progress");
       updateScore();
+
+      // debug (remove later)
+      console.log("POOL:", pool.length, "ORDER(20):", state.order.length);
     }
 
     // ---------- Render ----------
@@ -368,7 +382,7 @@
       // Figure
       if (q.img) {
         figureWrap.style.display = "block";
-        figureImg.src = q.img; // path is relative to THIS HTML file
+        figureImg.src = q.img;
         figureImg.alt = q.imgAlt || "Figure";
         figureCaption.textContent = q.caption || "";
       } else {
@@ -408,7 +422,7 @@
         choicesArea.appendChild(div);
       });
 
-      submitBtn.disabled = true; // enable after selection
+      submitBtn.disabled = true;
       nextBtn.disabled = true;
 
       updatePills("In progress");
@@ -470,7 +484,6 @@
     deckSelect.addEventListener("change", () => {
       state.deckName = deckSelect.value;
       refreshCategories();
-      // user clicks Start
     });
 
     categorySelect.addEventListener("change", () => {
@@ -486,6 +499,7 @@
       emptyState.style.display = "none";
       gameArea.style.display = "block";
       restartBtn.disabled = false;
+      reshuffleBtn.disabled = false;
 
       if (state.order.length === 0) {
         figureWrap.style.display = "none";
@@ -502,6 +516,12 @@
 
     restartBtn.addEventListener("click", () => {
       if (!state.deckName) return;
+      buildPool();        // new 20 (consistent with your other games); if you want "same 20", tell me
+      renderCurrent();
+    });
+
+    reshuffleBtn.addEventListener("click", () => {
+      if (!state.deckName) return;
       buildPool();
       renderCurrent();
     });
@@ -512,7 +532,6 @@
     // Enable submit once a choice is selected (event delegation)
     document.addEventListener("change", (e) => {
       if (e.target && e.target.name === "choice") {
-        // allow submit when any radio checked
         submitBtn.disabled = false;
       }
     });
@@ -520,8 +539,7 @@
     // Hint button toggle (event delegation)
     choicesArea.addEventListener("click", (e) => {
       const btn = e.target.closest(".hintBtn");
-      if (!btn) return;
-      if (btn.disabled) return;
+      if (!btn || btn.disabled) return;
 
       const forId = btn.getAttribute("data-hint-for");
       const box = document.getElementById("hint_" + forId);
@@ -537,4 +555,3 @@
   </script>
 </body>
 </html>
-
