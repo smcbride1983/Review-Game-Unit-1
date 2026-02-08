@@ -14,7 +14,7 @@ window.INTERPRETATION_DECKS = {
   // -----------------------------
   "Evolution": [
     {
-      category: "Selection type",
+      category: "microevolution",
       img: "./images/Fitness-graph1.jpg",
       imgAlt: "Figure B: Fitness MM bar graph comparing Green, Intermediate, and Melanic insect fitness.",
       caption: "Figure B (Fitness, MM environment).",
@@ -32,7 +32,7 @@ window.INTERPRETATION_DECKS = {
     },
 
     {
-      category: "Selection type",
+      category: "microevolution",
       img: "./images/Fitness-graph1.jpg",
       imgAlt: "Figure C: Fitness A/C bar graph comparing Green, Intermediate, and Melanic insect fitness.",
       caption: "Figure C (Fitness, A/C environment).",
@@ -53,7 +53,7 @@ window.INTERPRETATION_DECKS = {
     // phylo-tree2.png
     // =============================
     {
-      category: "Phylogenetics: Monophyly",
+      category: "Phylogenetics",
       img: "./images/phylo-tree2.png",
       imgAlt: "Three phylogenetic trees labeled A, B, and C showing relationships among taxa A–G. Taxa A, B, and C are highlighted in blue.",
       caption: "Trees A–C showing alternative groupings of taxa A, B, and C.",
@@ -71,7 +71,7 @@ window.INTERPRETATION_DECKS = {
     },
 
     {
-      category: "Phylogenetics: Paraphyly",
+      category: "Phylogenetics",
       img: "./images/phylo-tree2.png",
       imgAlt: "Three phylogenetic trees labeled A, B, and C showing relationships among taxa A–G. Taxa A, B, and C are highlighted in blue.",
       caption: "Trees A–C showing alternative groupings of taxa A, B, and C.",
@@ -89,7 +89,7 @@ window.INTERPRETATION_DECKS = {
     },
 
     {
-      category: "Phylogenetics: Polyphyly",
+      category: "Phylogenetics",
       img: "./images/phylo-tree2.png",
       imgAlt: "Three phylogenetic trees labeled A, B, and C showing relationships among taxa A–G. Taxa A, B, and C are highlighted in blue.",
       caption: "Trees A–C showing alternative groupings of taxa A, B, and C.",
@@ -110,7 +110,7 @@ window.INTERPRETATION_DECKS = {
     // phylo-tree3.png (monophyletic)
     // =============================
     {
-      category: "Phylogenetics: Group type",
+      category: "Phylogenetics",
       img: "./images/phylo-tree3.png",
       imgAlt: "Phylogenetic tree labeled A showing relationships among taxa A–G. Taxa A, B, and C are highlighted in blue.",
       caption: "Tree A showing relationships among taxa A–G.",
@@ -128,7 +128,7 @@ window.INTERPRETATION_DECKS = {
     },
 
     {
-      category: "Phylogenetics: Ancestral vs derived traits",
+      category: "Phylogenetics",
       img: "./images/phylo-tree3.png",
       imgAlt: "Phylogenetic tree labeled A showing relationships among taxa A–G. Taxa A, B, and C are highlighted in blue.",
       caption: "Tree A with taxa A, B, and C highlighted.",
@@ -146,7 +146,7 @@ window.INTERPRETATION_DECKS = {
     },
 
     {
-      category: "Phylogenetics: Homology vs convergence",
+      category: "Phylogenetics",
       img: "./images/phylo-tree3.png",
       imgAlt: "Phylogenetic tree labeled A showing relationships among taxa A–G. Taxa A, B, and C are highlighted in blue.",
       caption: "Tree A showing the distribution of a shared trait in taxa A, B, and C.",
@@ -167,7 +167,7 @@ window.INTERPRETATION_DECKS = {
     // phylo-tree4.png (paraphyletic)
     // =============================
     {
-      category: "Phylogenetics: Group type",
+      category: "Phylogenetics",
       img: "./images/phylo-tree4.png",
       imgAlt: "Phylogenetic tree labeled B showing relationships among taxa A–G. Taxa A, B, and C are highlighted in blue.",
       caption: "Tree B showing relationships among taxa A–G.",
@@ -185,7 +185,7 @@ window.INTERPRETATION_DECKS = {
     },
 
     {
-      category: "Phylogenetics: Trait interpretation",
+      category: "Phylogenetics",
       img: "./images/phylo-tree4.png",
       imgAlt: "Phylogenetic tree labeled B showing relationships among taxa A–G. Taxa A, B, and C are highlighted in blue.",
       caption: "Tree B with taxa A, B, and C highlighted.",
@@ -203,7 +203,7 @@ window.INTERPRETATION_DECKS = {
     },
 
     {
-      category: "Phylogenetics: Ancestral traits and loss",
+      category: "Phylogenetics",
       img: "./images/phylo-tree4.png",
       imgAlt: "Phylogenetic tree labeled B showing relationships among taxa A–G. Taxa A, B, and C are highlighted in blue.",
       caption: "Tree B showing trait distribution among taxa.",
@@ -221,7 +221,7 @@ window.INTERPRETATION_DECKS = {
     },
 
     {
-      category: "Phylogenetics: Homology vs convergence",
+      category: "Phylogenetics",
       img: "./images/phylo-tree5.png",
       imgAlt: "Phylogenetic tree labeled C showing relationships among taxa A–G. Taxa A, B, and C are highlighted in blue.",
       caption: "Tree C showing a shared trait in taxa A, B, and C.",
@@ -239,7 +239,7 @@ window.INTERPRETATION_DECKS = {
     },
 
     {
-      category: "Phylogenetics: Trait evolution",
+      category: "Phylogenetics",
       img: "./images/phylo-tree5.png",
       imgAlt: "Phylogenetic tree labeled C showing relationships among taxa A–G. Taxa A, B, and C are highlighted in blue.",
       caption: "Tree C with taxa A, B, and C highlighted.",
@@ -257,7 +257,7 @@ window.INTERPRETATION_DECKS = {
     },
 
     {
-      category: "Phylogenetics: Group type",
+      category: "Phylogenetics",
       img: "./images/phylo-tree5.png",
       imgAlt: "Phylogenetic tree labeled C showing relationships among taxa A–G. Taxa A, B, and C are highlighted in blue.",
       caption: "Tree C showing relationships among taxa A–G.",
