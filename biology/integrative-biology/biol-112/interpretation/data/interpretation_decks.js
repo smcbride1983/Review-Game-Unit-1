@@ -16,10 +16,10 @@ window.INTERPRETATION_DECKS = {
     {
       category: "Selection type",
       img: "./images/Fitness-graph1.jpg",
-      imgAlt: "Figure A: Fitness MM bar graph comparing Green, Intermediate, and Melanic insect fitness.",
-      caption: "Figure A (Fitness, MM environment).",
+      imgAlt: "Figure B: Fitness MM bar graph comparing Green, Intermediate, and Melanic insect fitness.",
+      caption: "Figure B (Fitness, MM environment).",
       prompt:
-        "Based on Figure A, how would you describe the type of selective pressure acting on body color of the pictured insects in the MM environment?",
+        "Based on Figure B, how would you describe the type of selective pressure acting on body color of the pictured insects in the MM environment?",
       choices: [
         { text: "Directional selection", hint: "because one extreme phenotype is favored over all others" },
         { text: "Stabilizing selection", hint: "because individuals with intermediate coloration have the highest recapture rate" },
@@ -34,10 +34,10 @@ window.INTERPRETATION_DECKS = {
     {
       category: "Selection type",
       img: "./images/Fitness-graph1.jpg",
-      imgAlt: "Figure B: Fitness A/C bar graph comparing Green, Intermediate, and Melanic insect fitness.",
-      caption: "Figure B (Fitness, A/C environment).",
+      imgAlt: "Figure C: Fitness A/C bar graph comparing Green, Intermediate, and Melanic insect fitness.",
+      caption: "Figure C (Fitness, A/C environment).",
       prompt:
-        "Based on Figure B, how would you describe the type of selective pressure acting on insect body color in the A/C environment?",
+        "Based on Figure C, how would you describe the type of selective pressure acting on insect body color in the A/C environment?",
       choices: [
         { text: "Directional selection", hint: "because one phenotype is consistently favored over the others" },
         { text: "Stabilizing selection", hint: "because individuals with intermediate coloration have the highest recapture rate" },
@@ -61,7 +61,7 @@ window.INTERPRETATION_DECKS = {
     { text: "Tree C", hint: "verify whether all descendants of the common ancestor are included" },
     { text: "None of the trees", hint: "consider whether any tree includes all descendants of the group’s most recent common ancestor" }
   ],
-  answer: "Tree B",
+  answer: "Tree A",
   explanation:
     "In Tree B, taxa A, B, and C share a most recent common ancestor and all descendants of that ancestor are included. This satisfies the definition of a monophyletic group."
 },
@@ -79,7 +79,7 @@ window.INTERPRETATION_DECKS = {
     { text: "Tree C", hint: "polyphyletic groups lack a single recent common ancestor" },
     { text: "None of the trees", hint: "check whether any grouping excludes descendants of the common ancestor" }
   ],
-  answer: "Tree A",
+  answer: "Tree B",
   explanation:
     "In Tree A, taxa A, B, and C share a common ancestor, but not all descendants of that ancestor are included in the group. This makes the grouping paraphyletic."
 },
@@ -133,9 +133,9 @@ window.INTERPRETATION_DECKS = {
     { text: "The trait evolved independently in multiple lineages", hint: "polyphyletic distributions often indicate convergence" },
     { text: "The tree provides no information about trait evolution", hint: "phylogenies are commonly used to infer trait history" }
   ],
-  answer: "The trait evolved independently in multiple lineages",
+  answer: "The trait is derived and evolved once in the ancestor of A, B, and C",
   explanation:
-    "Because A, B, and C are polyphyletic on the tree, their shared trait is unlikely to have been inherited from a single recent common ancestor. The most parsimonious explanation is independent evolution in multiple lineages."
+    "Because A, B, and C are monophyletic on the tree, their shared trait is likely to have been inherited from a single recent common ancestor."
 },
      
 {
