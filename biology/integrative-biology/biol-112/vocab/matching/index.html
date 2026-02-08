@@ -121,10 +121,7 @@
     }
     .defCard:active { cursor: grabbing; }
 
-    .defCard.used {
-      opacity: .55;
-      cursor: not-allowed;
-    }
+    .defCard.used { opacity: .55; cursor: not-allowed; }
 
     .status {
       margin-top: 12px;
@@ -161,6 +158,7 @@
           </select>
 
           <button id="newBtn" class="primary">New Round</button>
+          <button id="reshuffleBtn">Reshuffle 20</button>
           <button id="submitBtn">Submit</button>
           <button id="resetBtn" title="Reset score">Reset</button>
         </div>
@@ -169,7 +167,8 @@
       </div>
 
       <div class="note">
-        Drag a definition onto each term. You’ll get <b>6</b> definitions for <b>4</b> terms (2 are distractors).
+        You are playing with a <b>20-card set</b>. Each round uses <b>4</b> terms + <b>2</b> distractors (6 definitions total).
+        Click <b>Reshuffle 20</b> to pull a fresh set.
       </div>
 
       <div class="divider"></div>
@@ -218,7 +217,7 @@
       localStorage.setItem("progress", JSON.stringify(progress));
     }
 
-    // weights for mastery states (same spirit as your quiz cards)
+    // weights for mastery states
     function weightForStatus(status) {
       if (status === "known") return 0.05;
       if (status === "learning") return 2.0;
@@ -262,6 +261,9 @@
     // ==============================
     // App state
     // ==============================
+    const HAND_SIZE = 20;
+    let hand = [];                // 20-card working set
+
     let currentTerms = [];        // 4 items: {de,en}
     let currentDefPool = [];      // 6 strings (definitions)
     let assignment = {};          // termKey -> defText
@@ -274,7 +276,7 @@
     // ==============================
     // Data helpers
     // ==============================
-    function getLevelList() {
+    function getFullPool() {
       const level = document.getElementById("level").value;
       const list = getDeck(level);
       const base = dedupePairs(list);
@@ -292,7 +294,30 @@
       document.getElementById("rounds").textContent = rounds;
       document.getElementById("roundsCorrect").textContent = roundsCorrect;
       document.getElementById("roundsWrong").textContent = roundsWrong;
-      document.getElementById("count").textContent = getLevelList().length;
+      document.getElementById("count").textContent = hand.length;
+    }
+
+    // ==============================
+    // Build / reshuffle the 20-card hand
+    // ==============================
+    function buildNewHand() {
+      const pool = getFullPool();
+      if (pool.length < 6) {
+        alert("Need at least 6 words in this deck.");
+        hand = pool.slice();
+        renderStats();
+        return;
+      }
+
+      // Prefer your shared utils function if present; fallback otherwise
+      if (typeof getRandomCards === "function") {
+        hand = getRandomCards(pool, HAND_SIZE);
+      } else {
+        hand = shuffle(pool).slice(0, Math.min(HAND_SIZE, pool.length));
+      }
+
+      console.log("FULL deck size:", pool.length, "HAND size:", hand.length);
+      renderStats();
     }
 
     // ==============================
@@ -317,7 +342,6 @@
         label.className = "termLabel";
         label.textContent = item.de;
 
-        // optional mastery buttons per-term (quick + useful)
         const buttons = document.createElement("div");
         buttons.className = "row";
         buttons.style.gap = "8px";
@@ -327,7 +351,7 @@
         knowBtn.title = "Show very rarely";
         knowBtn.addEventListener("click", () => {
           setItemState(item, { status: "known" });
-          // new round so it drops out naturally
+          // refresh current round from the same hand (or you can call newRound())
           newRound();
         });
 
@@ -336,7 +360,6 @@
         practiceBtn.title = "Show more often";
         practiceBtn.addEventListener("click", () => {
           setItemState(item, { status: "practice" });
-          // keep going; no need to refresh
           renderStats();
         });
 
@@ -351,31 +374,31 @@
         drop.dataset.termid = termId(item);
         drop.innerHTML = `<span class="dropHint">Drop a definition here</span>`;
 
-
         drop.addEventListener("drop", (e) => {
-  e.preventDefault();
-  drop.classList.remove("over");
+          e.preventDefault();
+          drop.classList.remove("over");
 
-  const defText = e.dataTransfer.getData("text/plain");
-  if (!defText) return;
+          const defText = e.dataTransfer.getData("text/plain");
+          if (!defText) return;
 
-  // If this definition is already assigned to a different term, move it here
-  if (usedDefs.has(defText)) {
-    const oldTid = Object.keys(assignment).find(tid => assignment[tid] === defText);
-    if (oldTid) {
-      delete assignment[oldTid];
-      usedDefs.delete(defText);
-    }
-  }
+          // If this definition is already assigned to a different term, move it here
+          if (usedDefs.has(defText)) {
+            const oldTid = Object.keys(assignment).find(tid => assignment[tid] === defText);
+            if (oldTid) {
+              delete assignment[oldTid];
+              usedDefs.delete(defText);
+            }
+          }
 
-  setAssignment(item, defText);
-});
+          setAssignment(item, defText);
+        });
 
         drop.addEventListener("dragover", (e) => {
           e.preventDefault();
           drop.classList.add("over");
         });
 
+        drop.addEventListener("dragleave", () => drop.classList.remove("over"));
 
         row.appendChild(top);
         row.appendChild(drop);
@@ -395,7 +418,6 @@
           e.dataTransfer.effectAllowed = "move";
         });
 
-
         defsEl.appendChild(card);
       }
 
@@ -404,14 +426,12 @@
     }
 
     function refreshUsedStyles() {
-      // update definition cards
       document.querySelectorAll(".defCard").forEach(el => {
         const defText = el.dataset.def;
         if (usedDefs.has(defText)) el.classList.add("used");
         else el.classList.remove("used");
       });
 
-      // update drop zones
       document.querySelectorAll(".dropZone").forEach(drop => {
         const tid = drop.dataset.termid;
         const defText = assignment[tid];
@@ -434,7 +454,6 @@
         x.textContent = "×";
         x.title = "Remove this match";
         x.addEventListener("click", () => {
-          // free up this definition
           usedDefs.delete(defText);
           delete assignment[tid];
           refreshUsedStyles();
@@ -448,7 +467,6 @@
     function setAssignment(item, defText) {
       const tid = termId(item);
 
-      // if that term already had an assignment, free it up
       const old = assignment[tid];
       if (old) usedDefs.delete(old);
 
@@ -458,52 +476,64 @@
     }
 
     // ==============================
-    // Round generation
+    // Round generation (FROM THE HAND ONLY)
     // ==============================
     function newRound() {
-      const list = getLevelList();
-      if (list.length < 6) {
+      // ensure hand exists
+      if (!hand || hand.length < 6) buildNewHand();
+
+      if (!hand || hand.length < 6) {
         alert("Need at least 6 words in this deck for 4 terms + 2 distractors.");
         return;
       }
 
-      // reset
+      // reset per-round state
       assignment = {};
       usedDefs = new Set();
 
-      // pick 4 terms (weighted; avoid duplicates)
+      // pick 4 terms (weighted) from the HAND
       const picked = [];
-      const pool = list.slice();
+      const pool = hand.slice();
 
-      while (picked.length < 4) {
+      let guard = 0;
+      while (picked.length < 4 && guard < 200) {
+        guard++;
         const item = weightedPick(pool);
-        // ensure uniqueness by key
         if (!picked.some(x => termId(x) === termId(item))) {
           picked.push(item);
         }
-        // small guard to prevent infinite loop
-        if (picked.length < 4 && pool.length > 10) {
-          // reduce chance of repeats by lightly removing
-          pool.splice(pool.findIndex(x => termId(x) === termId(item)), 1);
-        }
       }
 
-      currentTerms = picked;
+      // fallback if weighting had issues
+      if (picked.length < 4) {
+        const fallback = shuffle(hand).slice(0, 4);
+        currentTerms = fallback;
+      } else {
+        currentTerms = picked;
+      }
 
-      // build definition pool: all 4 correct + 2 distractors
+      // build definition pool: all 4 correct + 2 distractors (also from HAND)
       const correctDefs = currentTerms.map(i => i.en);
 
-      // distractor candidates: definitions not in correct set
-      const distractorCandidates = list
+      const distractorCandidates = hand
         .filter(i => !correctDefs.includes(i.en))
         .map(i => i.en);
 
       const uniqueDistractors = uniqueBy(distractorCandidates, x => x);
       const distractors = shuffle(uniqueDistractors).slice(0, 2);
 
-      currentDefPool = shuffle([...correctDefs, ...distractors]);
+      // If hand is small or duplicates exist, ensure we still have 6 by pulling from full pool as backup
+      let defPool = [...correctDefs, ...distractors];
 
-      // wipe any previous correctness coloring
+      if (defPool.length < 6) {
+        const fullPool = getFullPool()
+          .map(i => i.en)
+          .filter(en => !defPool.includes(en));
+        defPool = defPool.concat(shuffle(uniqueBy(fullPool, x => x)).slice(0, 6 - defPool.length));
+      }
+
+      currentDefPool = shuffle(defPool).slice(0, 6);
+
       renderRound();
     }
 
@@ -511,7 +541,6 @@
     // Submit + scoring
     // ==============================
     function submitRound() {
-      // require all 4 matched
       const allMatched = currentTerms.every(item => assignment[termId(item)]);
       if (!allMatched) {
         alert("Match all 4 terms before submitting.");
@@ -554,7 +583,7 @@
             seen: st.seen + 1,
             correct: st.correct,
             wrong: st.wrong + 1,
-            status: "practice" // wrong -> practice
+            status: "practice"
           });
         }
       }
@@ -571,6 +600,11 @@
     document.getElementById("newBtn").addEventListener("click", newRound);
     document.getElementById("submitBtn").addEventListener("click", submitRound);
 
+    document.getElementById("reshuffleBtn").addEventListener("click", () => {
+      buildNewHand();
+      newRound();
+    });
+
     document.getElementById("resetBtn").addEventListener("click", () => {
       rounds = 0; roundsCorrect = 0; roundsWrong = 0;
       // keep progress by default; if you want to wipe progress too, uncomment:
@@ -578,10 +612,14 @@
       newRound();
     });
 
-    document.getElementById("level").addEventListener("change", newRound);
+    document.getElementById("level").addEventListener("change", () => {
+      buildNewHand();
+      newRound();
+    });
 
-    // Boot
+    // Boot (random start within a 20-card hand)
     renderStats();
+    buildNewHand();
     newRound();
   </script>
 </body>
