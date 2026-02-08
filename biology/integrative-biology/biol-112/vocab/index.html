@@ -3,112 +3,610 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Games Hub</title>
+  <title>Category Sort: Evolution Buckets</title>
+
   <style>
     :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
-    body { margin: 0; background:#f6f7fb; color:#111; }
-    .wrap { max-width: 900px; margin: 0 auto; padding: 18px; }
+    body { margin: 0; background: #f6f7fb; color: #111; }
+    .wrap { max-width: 820px; margin: 0 auto; padding: 18px; }
     .card {
-      background: #fff; border-radius: 16px; padding: 18px;
-      box-shadow: 0 10px 28px rgba(0,0,0,.08);
+      background: white; border-radius: 14px; padding: 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.08);
     }
-    h1 { margin: 0 0 6px; font-size: 22px; }
-    .sub { color:#555; margin: 0 0 14px; font-size: 14px; }
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
+    h1 { margin: 0 0 10px; font-size: 20px; }
+
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .topRow { justify-content: space-between; }
+    .leftControls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .rowRight { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+
+    select, button, .btnLink {
+      border: 1px solid #d7dbe6; background: #fff; color: #111;
+      border-radius: 10px; padding: 10px 12px; font-size: 14px;
+      cursor: pointer; text-decoration: none;
+    }
+    button.primary { background: #111; color: #fff; border-color: #111; }
+    button:disabled { opacity: .55; cursor: not-allowed; }
+
+    .small { font-size: 12px; color: #666; }
+    .divider { height: 1px; background: #eceff6; margin: 14px 0; }
+
+    .prompt {
+      margin: 14px 0 6px;
+      font-size: 34px; font-weight: 800; letter-spacing: .2px;
+    }
+    .sub { color: #555; font-size: 13px; margin-bottom: 10px; line-height: 1.35; }
+
+    .choices { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 12px; }
+    @media (min-width: 560px) { .choices { grid-template-columns: 1fr 1fr; } }
+
+    .choice {
+      text-align: left; width: 100%;
+      padding: 14px 12px; border-radius: 12px;
+      border: 1px solid #d7dbe6; background: #fff;
+      transition: transform .02s ease-in-out;
+    }
+    .choice:active { transform: scale(.99); }
+    .choice.correct { border-color: #1f9d55; background: #f3fff7; }
+    .choice.wrong { border-color: #d64545; background: #fff5f5; }
+
+    .status {
       margin-top: 12px;
+      display: flex; gap: 12px; flex-wrap: wrap;
+      color: #333; font-size: 13px;
     }
-    @media (min-width: 640px) {
-      .grid { grid-template-columns: 1fr 1fr 1fr; }
+    .pill {
+      background: #f0f2f8; border: 1px solid #e1e5f0;
+      padding: 6px 10px; border-radius: 999px;
     }
-    a.game {
-      display: block;
-      text-decoration: none;
-      color: inherit;
-      border: 1px solid #d7dbe6;
-      background: #fff;
-      border-radius: 14px;
-      padding: 16px;
-      transition: transform .06s ease, box-shadow .06s ease;
-    }
-    a.game:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 22px rgba(0,0,0,.08);
-    }
-    .title { font-weight: 700; font-size: 16px; margin-bottom: 6px; }
-    .desc { color:#555; font-size: 13px; line-height: 1.35; }
-    .tag {
-      display: inline-block;
-      margin-top: 10px;
-      font-size: 12px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: #f0f2f8;
+
+    .masteryRow { margin-top: 6px; }
+    .masteryHelp { margin-top: 6px; line-height: 1.35; font-size: 12px; color: #666; }
+
+    .tagLine { font-size: 12px; color: #666; margin-top: 6px; }
+    .hidden { display: none; }
+
+    /* Weak panel */
+    .weakPanel {
+      margin-top: 12px;
       border: 1px solid #e1e5f0;
-      color: #333;
+      background: #fbfcff;
+      border-radius: 12px;
+      padding: 12px;
+      display: none;
     }
-    .toprow {
-      display:flex; justify-content: space-between; align-items: center;
-      gap: 12px; flex-wrap: wrap;
-    }
-    .back {
-      text-decoration: none;
-      border: 1px solid #d7dbe6;
-      padding: 8px 10px;
-      border-radius: 10px;
-      color: #111;
+    .weakTitle { font-weight: 800; margin-bottom: 6px; }
+    .weakSub { color: #555; font-size: 12px; margin-bottom: 8px; }
+    .weakGrid { display: grid; gap: 10px; }
+    @media (min-width: 560px) { .weakGrid { grid-template-columns: 1fr 1fr; } }
+    .weakBox {
+      border: 1px solid #e8ebf5;
+      border-radius: 12px;
+      padding: 10px;
       background: #fff;
       font-size: 13px;
     }
-    .back:hover { box-shadow: 0 6px 16px rgba(0,0,0,.06); }
-    .footer { margin-top: 14px; color:#666; font-size: 12px; }
+    .weakBox b { display: block; margin-bottom: 6px; }
+    .smallmuted { color: #666; font-size: 12px; }
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <div class="card">
-      <div class="toprow">
-        <div>
-          <h1>Games Hub</h1>
-          <p class="sub">Choose a game mode.</p>
+      <h1>Category Sort: Evolution Buckets</h1>
+
+      <div class="row topRow">
+        <div class="leftControls">
+          <label class="small">Deck:</label>
+          <select id="level">
+            <option value="BIOL112_EVOLUTION">Evolution</option>
+          </select>
+
+          <button id="nextBtn" class="primary">Next</button>
+          <button id="reshuffleBtn">Reshuffle 20</button>
+          <button id="resetBtn" title="Reset session score">Reset</button>
         </div>
 
-        <!-- Update this link to point back to your BIOL 112 hub (or German hub) -->
-        <a class="back" href="../index.html">← Back to BIOL 112 Hub</a>
+        <div class="rowRight">
+          <button id="weakBtn" title="Show weakest tags + cards">Weak Concepts</button>
+          <button id="studyWeakBtn" title="Rebuild 20-card hand from weak tags">Study Weak Tags</button>
+          <button id="resetStatsBtn" title="Resets only the accuracy tracker (not mastery)">Reset Tracker</button>
+
+          <a href="../" class="btnLink" title="Back to Vocab Hub">⬅ Vocab Games</a>
+        </div>
       </div>
 
-      <div class="grid">
-        <!-- Update href to your flashcards file -->
-        <a class="game" href="./flashcards/">
-          <div class="title">Flashcards</div>
-          <div class="desc">Multiple-choice term ↔ definition cards with mastery buttons.</div>
-          <span class="tag">Study</span>
-        </a>
+      <div class="row masteryRow">
+        <button id="knowBtn" title="Mark as known">I know this</button>
+        <button id="practiceBtn" title="Show more often">Need practice</button>
+        <button id="toggleDefBtn" title="Show/hide definition">Show definition</button>
+      </div>
 
-        <!-- Update href to your matching file -->
-        <a class="game" href="./matching/">
-          <div class="title">Matching</div>
-          <div class="desc">Match terms to definitions using drag/drop or click-to-pair.</div>
-          <span class="tag">Practice</span>
-        </a>
+      <div class="masteryHelp">
+        You are playing from a <b>20-card set</b>. <b>Reshuffle 20</b> pulls a new set. •
+        <b>I know this</b> = show very rarely • <b>Need practice</b> = shows more often • Optional: reveal definition for support
+      </div>
 
-        <!-- Update href to your sorting file -->
-        <a class="game" href="./sorting/">
-          <div class="title">Sorting</div>
-          <div class="desc">Sort terms into the correct categories to practice meaning and usage.</div>
-          <span class="tag">Practice</span>
-        </a>
+      <div class="divider"></div>
 
-      <div class="footer">
-        Tip: This page is just a menu. Add more games by copying one of the cards and changing the link + text.
+      <!-- WEAK CONCEPTS PANEL -->
+      <div id="weakPanel" class="weakPanel">
+        <div class="weakTitle">Weak Concepts</div>
+        <div class="weakSub">Based on your saved accuracy stats in this browser.</div>
+
+        <div class="weakGrid">
+          <div class="weakBox">
+            <b>Weakest tags</b>
+            <div id="weakTagsList" class="smallmuted">—</div>
+          </div>
+
+          <div class="weakBox">
+            <b>Most missed cards</b>
+            <div id="weakCardsList" class="smallmuted">—</div>
+          </div>
+        </div>
+
+        <div style="margin-top:10px;" class="smallmuted">
+          Tip: “Study Weak Tags” rebuilds your 20-card hand from your 3 weakest tags (when enough data exists).
+        </div>
+      </div>
+
+      <div id="prompt" class="prompt">—</div>
+      <div id="sub" class="sub">Pick the correct category for this term.</div>
+      <div id="defBox" class="sub hidden"></div>
+      <div id="tagLine" class="tagLine hidden"></div>
+
+      <div id="choices" class="choices"></div>
+
+      <div class="status">
+        <div class="pill">Score: <span id="score">0</span></div>
+        <div class="pill">Correct: <span id="correct">0</span></div>
+        <div class="pill">Wrong: <span id="wrong">0</span></div>
+        <div class="pill">Streak: <span id="streak">0</span></div>
+        <div class="pill">Words loaded: <span id="count">0</span></div>
+        <div class="pill">Accuracy (this card): <span id="acc">—</span></div>
       </div>
     </div>
   </div>
+
+  <!-- Shared decks + utils -->
+  <script src="../data/decks.js"></script>
+  <script src="../data/decks.utils.js"></script>
+
+  <script>
+    // ==============================
+    // Progress + storage
+    // ==============================
+    let progress = JSON.parse(localStorage.getItem("progress") || "{}");
+
+    function itemKey(item) { return `${item.de}|||${item.en}`; }
+
+    function getItemState(item) {
+      return progress[itemKey(item)] || { status: "new", seen: 0, correct: 0, wrong: 0 };
+    }
+
+    function setItemState(item, patch) {
+      const k = itemKey(item);
+      const cur = getItemState(item);
+      progress[k] = { ...cur, ...patch };
+      localStorage.setItem("progress", JSON.stringify(progress));
+    }
+
+    // ==============================
+    // Tracker helpers (from decks.utils.js)
+    // ==============================
+    function hasTracker() {
+      return !!(window.DECK_UTILS && typeof DECK_UTILS.recordAttempt === "function");
+    }
+
+    function trackerRecord(item, isCorrect) {
+      if (!hasTracker()) return;
+      DECK_UTILS.recordAttempt(item, isCorrect); // requires item.id
+    }
+
+    function trackerStats(item) {
+      if (!hasTracker()) return null;
+      return DECK_UTILS.getStats(item);
+    }
+
+    // ==============================
+    // Helpers
+    // ==============================
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+    // weights for mastery states
+    function weightForStatus(status) {
+      if (status === "known") return 0.05;
+      if (status === "learning") return 2.0;
+      if (status === "practice") return 6.0;
+      return 3.5;
+    }
+
+    function weightedPick(list) {
+      const weights = list.map(item => weightForStatus(getItemState(item).status));
+      const total = weights.reduce((a, b) => a + b, 0);
+      if (total <= 0.001) return pickRandom(list);
+      let r = Math.random() * total;
+      for (let i = 0; i < list.length; i++) {
+        r -= weights[i];
+        if (r <= 0) return list[i];
+      }
+      return list[list.length - 1];
+    }
+
+    function unique(arr) { return Array.from(new Set(arr)); }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[c]));
+    }
+
+    // ==============================
+    // Hand model (20-card set)
+    // ==============================
+    const HAND_SIZE = 20;
+    let hand = [];          // 20 tagged items only
+    let allTagsInHand = []; // categories shown as options (derived from hand)
+
+    // Weak-tags study mode
+    let weakStudyOn = false;
+    let weakStudyTags = [];
+
+    // ==============================
+    // App state
+    // ==============================
+    let current = null; // { item }
+    let locked = false;
+
+    let score = 0;
+    let correct = 0;
+    let wrong = 0;
+    let streak = 0;
+
+    let showDef = false;
+
+    // ==============================
+    // Core data helpers
+    // ==============================
+    function getFullPoolTagged() {
+      const level = document.getElementById("level").value;
+      const list = dedupePairs(getDeck(level));
+
+      // require tag
+      const tagged = list.filter(it => typeof it.tag === "string" && it.tag.trim().length > 0);
+
+      // prefer not-known unless too small
+      const filtered = tagged.filter(item => getItemState(item).status !== "known");
+      return filtered.length >= 4 ? filtered : tagged;
+    }
+
+    function getBaseDeckUnfilteredTagged() {
+      const level = document.getElementById("level").value;
+      const list = dedupePairs(getDeck(level));
+      return list.filter(it => typeof it.tag === "string" && it.tag.trim().length > 0);
+    }
+
+    function computeTagsFromList(list) {
+      return unique(list.map(i => i.tag)).sort();
+    }
+
+    function renderStats() {
+      document.getElementById("score").textContent = score;
+      document.getElementById("correct").textContent = correct;
+      document.getElementById("wrong").textContent = wrong;
+      document.getElementById("streak").textContent = streak;
+      document.getElementById("count").textContent = hand.length;
+    }
+
+    function setPrompt(text, sub) {
+      document.getElementById("prompt").textContent = text;
+      document.getElementById("sub").textContent = sub;
+    }
+
+    function clearChoices() {
+      document.getElementById("choices").innerHTML = "";
+    }
+
+    function renderDefinition() {
+      const defBox = document.getElementById("defBox");
+      const tagLine = document.getElementById("tagLine");
+
+      if (!current) {
+        defBox.classList.add("hidden");
+        tagLine.classList.add("hidden");
+        return;
+      }
+
+      if (showDef) {
+        defBox.textContent = "Definition: " + current.item.en;
+        defBox.classList.remove("hidden");
+      } else {
+        defBox.classList.add("hidden");
+      }
+
+      // keep tag hidden (anti-cheat)
+      tagLine.classList.add("hidden");
+    }
+
+    function renderAccuracyForCurrent() {
+      const accEl = document.getElementById("acc");
+      if (!current || !current.item) { accEl.textContent = "—"; return; }
+
+      const s = trackerStats(current.item);
+      if (!s) { accEl.textContent = "Tracker not loaded"; return; }
+      if (s.pct === null) accEl.textContent = "— (no attempts)";
+      else accEl.textContent = `${Math.round(s.pct * 100)}% (${s.correct}/${s.attempts})`;
+    }
+
+    // ==============================
+    // Build / reshuffle hand
+    // ==============================
+    function buildNewHand() {
+      let pool = getFullPoolTagged();
+      if (pool.length < 4) {
+        hand = pool.slice();
+        allTagsInHand = computeTagsFromList(hand);
+        return;
+      }
+
+      if (weakStudyOn && weakStudyTags.length) {
+        pool = pool.filter(c => weakStudyTags.includes(String(c.tag || "Untagged")));
+        if (pool.length < 4) {
+          weakStudyOn = false;
+          weakStudyTags = [];
+          pool = getFullPoolTagged();
+          document.getElementById("sub").textContent = "Weak-tag filter too small; switched back to normal.";
+        }
+      }
+
+      if (typeof getRandomCards === "function") {
+        hand = getRandomCards(pool, HAND_SIZE);
+      } else {
+        hand = shuffle(pool).slice(0, Math.min(HAND_SIZE, pool.length));
+      }
+
+      // IMPORTANT: derive categories from the hand, so it matches the 20-card set
+      allTagsInHand = computeTagsFromList(hand);
+
+      console.log("FULL tagged deck:", pool.length, "HAND:", hand.length, "TAGS in hand:", allTagsInHand);
+      renderStats();
+    }
+
+    // ==============================
+    // Question generation (from HAND only)
+    // ==============================
+    function makeQuestion() {
+      if (!hand || hand.length < 4) buildNewHand();
+
+      if (!hand || hand.length < 4) {
+        setPrompt("Need at least 4 tagged words", "Add tag fields (or unmark some as Known).");
+        clearChoices();
+        renderStats();
+        return;
+      }
+
+      locked = false;
+      clearChoices();
+
+      const item = weightedPick(hand);
+      current = { item };
+
+      setPrompt(item.de, "Which category does this term belong to?");
+      renderDefinition();
+
+      // Use tags from the hand. If hand has only 1 tag, fall back to full deck tags so choices exist.
+      let tags = allTagsInHand;
+      if (!tags || tags.length < 2) {
+        tags = computeTagsFromList(getFullPoolTagged());
+      }
+
+      const options = shuffle(tags);
+
+      const choicesEl = document.getElementById("choices");
+      for (const opt of options) {
+        const btn = document.createElement("button");
+        btn.className = "choice";
+        btn.type = "button";
+        btn.textContent = opt;
+        btn.addEventListener("click", () => handleAnswer(btn, opt));
+        choicesEl.appendChild(btn);
+      }
+
+      renderStats();
+      renderAccuracyForCurrent();
+    }
+
+    // ==============================
+    // Answer handling
+    // ==============================
+    function handleAnswer(buttonEl, chosenTag) {
+      if (locked) return;
+      locked = true;
+
+      const buttons = Array.from(document.querySelectorAll(".choice"));
+      const correctTag = current.item.tag;
+      const isCorrect = chosenTag === correctTag;
+
+      // ✅ record tracker attempt
+      trackerRecord(current.item, isCorrect);
+
+      if (isCorrect) {
+        buttonEl.classList.add("correct");
+        score += 1;
+        correct += 1;
+        streak += 1;
+        document.getElementById("sub").textContent = `Correct ✅  (${correctTag})`;
+      } else {
+        buttonEl.classList.add("wrong");
+        wrong += 1;
+        streak = 0;
+        document.getElementById("sub").textContent = `Not quite ❌  Correct category: ${correctTag}`;
+
+        for (const b of buttons) {
+          if (b.textContent === correctTag) b.classList.add("correct");
+        }
+      }
+
+      const st = getItemState(current.item);
+      const nextStatus =
+        st.status === "known"
+          ? "known"
+          : (isCorrect
+              ? (st.status === "practice" ? "learning" : st.status)
+              : "practice");
+
+      setItemState(current.item, {
+        seen: st.seen + 1,
+        correct: st.correct + (isCorrect ? 1 : 0),
+        wrong: st.wrong + (isCorrect ? 0 : 1),
+        status: nextStatus
+      });
+
+      for (const b of buttons) b.disabled = true;
+      renderStats();
+      renderAccuracyForCurrent();
+
+      // refresh weak panel if open
+      const panel = document.getElementById("weakPanel");
+      if (panel.style.display === "block") showWeakPanel();
+    }
+
+    // ==============================
+    // Weak concepts UI
+    // ==============================
+    function showWeakPanel() {
+      const panel = document.getElementById("weakPanel");
+      const tagsEl = document.getElementById("weakTagsList");
+      const cardsEl = document.getElementById("weakCardsList");
+
+      panel.style.display = "block";
+
+      if (!hasTracker()) {
+        tagsEl.innerHTML = "Tracker not loaded. Make sure your decks.utils.js exposes <b>window.DECK_UTILS</b> with tracker functions.";
+        cardsEl.innerHTML = "—";
+        return;
+      }
+
+      const baseDeck = getBaseDeckUnfilteredTagged();
+
+      const weakTags = DECK_UTILS.getWeakTags(baseDeck, { minAttemptsPerTag: 5 });
+      const weakCards = DECK_UTILS.getWeakCards(baseDeck, { limit: 10, minAttempts: 2, includeUnseen: true });
+
+      if (!weakTags.length) {
+        tagsEl.innerHTML = "Not enough data yet. Answer a few questions first.";
+      } else {
+        tagsEl.innerHTML = weakTags.slice(0, 6).map(t => {
+          const pct = (t.pct == null) ? "—" : `${Math.round(t.pct * 100)}%`;
+          return `• <b>${escapeHtml(t.tag)}</b>: ${pct} (${t.correct}/${t.attempts})`;
+        }).join("<br>");
+      }
+
+      if (!weakCards.length) {
+        cardsEl.innerHTML = "Not enough data yet.";
+      } else {
+        cardsEl.innerHTML = weakCards.map(row => {
+          const pct = (row.pct == null) ? "—" : `${Math.round(row.pct * 100)}%`;
+          const label = row.card && row.card.de ? row.card.de : "(missing term)";
+          return `• <b>${escapeHtml(label)}</b>: ${pct} (${row.correct}/${row.attempts})`;
+        }).join("<br>");
+      }
+    }
+
+    function activateWeakStudyMode() {
+      if (!hasTracker()) {
+        document.getElementById("sub").textContent = "Tracker not loaded. Replace decks.utils.js with the tracker version first.";
+        return;
+      }
+
+      const baseDeck = getBaseDeckUnfilteredTagged();
+      const weakTags = DECK_UTILS.getWeakTags(baseDeck, { minAttemptsPerTag: 5 });
+
+      if (!weakTags.length) {
+        document.getElementById("sub").textContent = "Not enough data yet for weak tags—answer a few questions first.";
+        return;
+      }
+
+      weakStudyTags = weakTags.slice(0, 3).map(t => t.tag);
+      weakStudyOn = true;
+
+      buildNewHand();
+      makeQuestion();
+
+      document.getElementById("sub").textContent =
+        `🎯 Weak-tag study mode: ${weakStudyTags.join(", ")} (hand rebuilt).`;
+
+      showWeakPanel();
+    }
+
+    // ==============================
+    // Controls
+    // ==============================
+    document.getElementById("nextBtn").addEventListener("click", () => makeQuestion());
+
+    document.getElementById("reshuffleBtn").addEventListener("click", () => {
+      buildNewHand();
+      makeQuestion();
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      score = 0; correct = 0; wrong = 0; streak = 0;
+      makeQuestion();
+    });
+
+    document.getElementById("level").addEventListener("change", () => {
+      weakStudyOn = false;
+      weakStudyTags = [];
+      buildNewHand();
+      makeQuestion();
+    });
+
+    document.getElementById("knowBtn").addEventListener("click", () => {
+      if (!current) return;
+      setItemState(current.item, { status: "known" });
+      makeQuestion();
+    });
+
+    document.getElementById("practiceBtn").addEventListener("click", () => {
+      if (!current) return;
+      setItemState(current.item, { status: "practice" });
+      makeQuestion();
+    });
+
+    document.getElementById("toggleDefBtn").addEventListener("click", () => {
+      showDef = !showDef;
+      document.getElementById("toggleDefBtn").textContent = showDef ? "Hide definition" : "Show definition";
+      renderDefinition();
+    });
+
+    // Weak concepts buttons
+    document.getElementById("weakBtn").addEventListener("click", showWeakPanel);
+    document.getElementById("studyWeakBtn").addEventListener("click", activateWeakStudyMode);
+
+    // Reset tracker only (accuracy)
+    document.getElementById("resetStatsBtn").addEventListener("click", () => {
+      if (!hasTracker()) { alert("Tracker not loaded."); return; }
+      if (!confirm("Reset accuracy tracker stats for this browser?")) return;
+      DECK_UTILS.resetTracker();
+      renderAccuracyForCurrent();
+      const panel = document.getElementById("weakPanel");
+      if (panel.style.display === "block") showWeakPanel();
+    });
+
+    // Boot: start with a random item from a 20-card hand
+    renderStats();
+    buildNewHand();
+    makeQuestion();
+  </script>
 </body>
 </html>
-
-
-
-
