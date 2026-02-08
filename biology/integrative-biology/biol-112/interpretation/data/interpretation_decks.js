@@ -1191,27 +1191,8 @@ window.INTERPRETATION_DECKS = {
     answer: "Panel A would show geographic overlap while Panel B still shows two lineages",
     explanation:
       "Sympatric speciation occurs without geographic separation, so the populations would overlap spatially but still be distinct lineages if speciation occurred."
-  },
-
-  // =============================
-  // CONTROLS (release panels)
-  // =============================
-  {
-    category: "General",
-    img: "./images/releaseMM.png",
-    imgAlt: "Release MM bar graph.",
-    caption: "Release panel (MM).",
-    prompt: "Why is the release panel important for interpreting the recapture results?",
-    choices: [
-      { text: "It checks whether phenotypes were released in unequal numbers", hint: "starting bias could explain differences in recapture" },
-      { text: "It directly measures fitness in the field", hint: "release counts are not a fitness measure" },
-      { text: "It proves selection occurred", hint: "controls help interpretation but don’t prove a mechanism alone" },
-      { text: "It shows mutation rate differences among phenotypes", hint: "release counts do not measure mutation rates" }
-    ],
-    answer: "It checks whether phenotypes were released in unequal numbers",
-    explanation:
-      "If one phenotype were released more often, it might be recaptured more often even without selection. Release panels help rule out that starting-number confound."
   }
+
 
   ],
 
