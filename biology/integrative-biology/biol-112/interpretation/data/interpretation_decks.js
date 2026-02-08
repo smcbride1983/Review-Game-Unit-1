@@ -852,21 +852,7 @@ window.INTERPRETATION_DECKS = {
     answer: "Panel A",
     explanation: "Reduced gene flow allows drift and selection to act independently in each population."
   },
-  {
-    category: "Macroevolution",
-    img: "./images/habitats-stacked.png",
-    imgAlt: "Four panels (A–D) showing stacked bar charts of habitat use by two populations (Pop 1 and Pop 2) across Hab1, Hab2, and Both habitats.",
-    caption: "Panels A–D: Habitat use by Pop 1 and Pop 2.",
-    prompt: "If hybrids between Pop 1 and Pop 2 have reduced fitness, which change would be most consistent with reinforcement?",
-    choices: [
-      { text: "A shift from Panel B toward Panel A over time", hint: "selection would favor reduced overlap" },
-      { text: "A shift from Panel A toward Panel D over time", hint: "this would increase hybridization" },
-      { text: "No change in habitat use patterns", hint: "reinforcement predicts stronger isolation" },
-      { text: "Increased use of the same habitat by both populations", hint: "this would increase gene flow" }
-    ],
-    answer: "A shift from Panel B toward Panel A over time",
-    explanation: "Reinforcement strengthens prezygotic barriers when hybrids are costly."
-  },
+     
   {
     category: "Microevolution",
     img: "./images/habitats-stacked.png",
