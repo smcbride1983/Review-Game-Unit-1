@@ -61,3 +61,15 @@ function getRandomCards(deck, { count = 20, filterFn = null } = {}) {
 
   return pool.slice(0, Math.min(count, pool.length));
 }
+
+
+/**
+ * Wire a reshuffle button to rerun a render function with a fresh sample.
+ * @param {string} buttonId
+ * @param {Function} drawFn - should redraw the UI
+ */
+function attachReshuffle(buttonId, drawFn) {
+  const btn = document.getElementById(buttonId);
+  if (!btn) return; // game might not have the button
+  btn.addEventListener("click", () => drawFn());
+}
