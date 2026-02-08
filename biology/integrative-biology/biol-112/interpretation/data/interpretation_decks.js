@@ -1211,25 +1211,7 @@ window.INTERPRETATION_DECKS = {
     answer: "It checks whether phenotypes were released in unequal numbers",
     explanation:
       "If one phenotype were released more often, it might be recaptured more often even without selection. Release panels help rule out that starting-number confound."
-  },
-  {
-    category: "General",
-    img: "./images/releaseAC.png",
-    imgAlt: "Release A/C bar graph.",
-    caption: "Release panel (A/C).",
-    prompt:
-      "If the release panel showed far fewer intermediate individuals released than the other colors, what would that do to your confidence in interpreting recapture patterns as selection?",
-    choices: [
-      { text: "Increase confidence, because fewer intermediates makes selection easier to detect", hint: "starting imbalance is a confound, not a benefit" },
-      { text: "Decrease confidence, because recapture differences could reflect starting numbers", hint: "unequal release can mimic selection signals" },
-      { text: "No effect, because release numbers never matter", hint: "starting numbers can strongly affect counts" },
-      { text: "Prove disruptive selection, because intermediates are rare", hint: "rarity alone does not prove a selection mode" }
-    ],
-    answer: "Decrease confidence, because recapture differences could reflect starting numbers",
-    explanation:
-      "Unequal release creates a confound: recapture differences might simply mirror starting numbers rather than differential survival or detectability."
   }
-
 
   ],
 
