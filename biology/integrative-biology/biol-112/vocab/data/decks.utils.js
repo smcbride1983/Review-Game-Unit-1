@@ -35,3 +35,29 @@ function dedupePairs(list) {
 
   return out;
 }
+
+/**
+ * Get up to N random cards, optionally filtered
+ * @param {Array} deck
+ * @param {Object} options
+ * @param {number} options.count
+ * @param {Function} options.filterFn
+ */
+function getRandomCards(deck, { count = 20, filterFn = null } = {}) {
+  if (!Array.isArray(deck)) {
+    throw new Error("Deck must be an array");
+  }
+
+  let pool = [...deck];
+
+  if (filterFn) {
+    pool = pool.filter(filterFn);
+  }
+
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+
+  return pool.slice(0, Math.min(count, pool.length));
+}
