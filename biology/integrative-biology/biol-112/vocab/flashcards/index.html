@@ -94,6 +94,32 @@
 
     .masteryRow { margin-top: 6px; }
     .masteryHelp { margin-top: 6px; font-size: 12px; color: #666; }
+
+    /* Weak panel */
+    .weakPanel {
+      margin-top: 12px;
+      border: 1px solid #e1e5f0;
+      background: #fbfcff;
+      border-radius: 12px;
+      padding: 12px;
+      display: none;
+    }
+    .weakTitle { font-weight: 800; margin-bottom: 6px; }
+    .weakSub { color: #555; font-size: 12px; margin-bottom: 8px; }
+    .weakGrid { display: grid; gap: 10px; }
+    @media (min-width: 560px) {
+      .weakGrid { grid-template-columns: 1fr 1fr; }
+    }
+    .weakBox {
+      border: 1px solid #e8ebf5;
+      border-radius: 12px;
+      padding: 10px;
+      background: #fff;
+      font-size: 13px;
+    }
+    .weakBox b { display: block; margin-bottom: 6px; }
+    .smallmuted { color: #666; font-size: 12px; }
+    .rowRight { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
   </style>
 </head>
 
@@ -123,14 +149,20 @@
           <button id="resetBtn">Reset</button>
         </div>
 
-        <!-- BACK ONE LEVEL -->
-        <a href="../" class="btnLink" title="Back to Vocab Hub">⬅ Vocab Games</a>
+        <div class="rowRight">
+          <button id="weakBtn" title="Show weakest tags + cards">Weak Concepts</button>
+          <button id="studyWeakBtn" title="Build your 20-card hand from weakest tags">Study Weak Tags</button>
+
+          <!-- BACK ONE LEVEL -->
+          <a href="../" class="btnLink" title="Back to Vocab Hub">⬅ Vocab Games</a>
+        </div>
       </div>
 
       <!-- MASTERY CONTROLS -->
       <div class="row masteryRow">
         <button id="knowBtn">I know this</button>
         <button id="practiceBtn">Need practice</button>
+        <button id="resetStatsBtn" title="Resets only the accuracy tracker (not mastery)">Reset Tracker</button>
       </div>
 
       <div class="masteryHelp">
@@ -144,6 +176,28 @@
       <div id="sub" class="sub">Pick the correct answer.</div>
       <div id="choices" class="choices"></div>
 
+      <!-- WEAK CONCEPTS PANEL -->
+      <div id="weakPanel" class="weakPanel">
+        <div class="weakTitle">Weak Concepts</div>
+        <div class="weakSub">Based on your saved accuracy stats in this browser.</div>
+
+        <div class="weakGrid">
+          <div class="weakBox">
+            <b>Weakest tags</b>
+            <div id="weakTagsList" class="smallmuted">—</div>
+          </div>
+
+          <div class="weakBox">
+            <b>Most missed cards</b>
+            <div id="weakCardsList" class="smallmuted">—</div>
+          </div>
+        </div>
+
+        <div style="margin-top:10px;" class="smallmuted">
+          Tip: “Study Weak Tags” rebuilds your 20-card hand from your 3 weakest tags (when enough data exists).
+        </div>
+      </div>
+
       <!-- STATUS -->
       <div class="status">
         <div class="pill">Score: <span id="score">0</span></div>
@@ -151,6 +205,7 @@
         <div class="pill">Wrong: <span id="wrong">0</span></div>
         <div class="pill">Streak: <span id="streak">0</span></div>
         <div class="pill">Words loaded: <span id="count">0</span></div>
+        <div class="pill">Accuracy (this card): <span id="acc">—</span></div>
       </div>
 
     </div>
@@ -163,7 +218,7 @@
   <!-- APP SCRIPT -->
   <script>
     // ---------------------------
-    // Persistent per-card progress
+    // Persistent per-card progress (your mastery system)
     // ---------------------------
     let progress = JSON.parse(localStorage.getItem("progress") || "{}");
 
@@ -176,6 +231,25 @@
     function setItemState(item, patch) {
       progress[itemKey(item)] = { ...getItemState(item), ...patch };
       localStorage.setItem("progress", JSON.stringify(progress));
+    }
+
+    // ---------------------------
+    // Tracker helpers (from decks.utils.js)
+    // We support both: DECK_UTILS.* (recommended) or legacy global funcs.
+    // ---------------------------
+    function hasTracker() {
+      return !!(window.DECK_UTILS && typeof DECK_UTILS.recordAttempt === "function");
+    }
+
+    function trackerRecord(item, isCorrect) {
+      if (!hasTracker()) return;
+      // item must have id for stable tracking (EVO_Terms_###)
+      DECK_UTILS.recordAttempt(item, isCorrect);
+    }
+
+    function trackerStats(item) {
+      if (!hasTracker()) return null;
+      return DECK_UTILS.getStats(item);
     }
 
     // ---------------------------
@@ -194,8 +268,12 @@
     // "Hand" model: we only quiz from these 20 cards until reshuffle
     // ---------------------------
     const HAND_SIZE = 20;
-    let hand = [];        // the 20 cards we are currently using
-    let handIndex = 0;    // optional sequential walk; we still random-pick within hand by default
+    let hand = [];
+    let handIndex = 0;
+
+    // Weak-tags study mode
+    let weakStudyOn = false;
+    let weakStudyTags = []; // array of tag names
 
     function updateStatus() {
       document.getElementById("score").textContent = score;
@@ -204,7 +282,7 @@
       document.getElementById("streak").textContent = streak;
     }
 
-    // Fallback shuffle (safe even if utils isn't loaded for some reason)
+    // Fallback shuffle
     function shuffle(a) {
       for (let i = a.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -219,34 +297,66 @@
     function getLevelList() {
       const level = document.getElementById("level").value;
 
-      // Your utils likely provides these. If not, you can remove dedupePairs/getDeck usage.
-      const base = dedupePairs(getDeck(level));
+      // Prefer shared utils if present
+      const base = (typeof dedupePairs === "function" && typeof getDeck === "function")
+        ? dedupePairs(getDeck(level))
+        : (window.DECKS && Array.isArray(window.DECKS[level]) ? window.DECKS[level] : []);
 
       // Hide "known" if possible (but don't allow <4, because we need 4 options)
       const filtered = base.filter(i => getItemState(i).status !== "known");
       return filtered.length >= 4 ? filtered : base;
     }
 
+    function getLevelBaseDeckUnfiltered() {
+      const level = document.getElementById("level").value;
+      const base = (typeof dedupePairs === "function" && typeof getDeck === "function")
+        ? dedupePairs(getDeck(level))
+        : (window.DECKS && Array.isArray(window.DECKS[level]) ? window.DECKS[level] : []);
+      return base;
+    }
+
     // ---------------------------
     // Hand creation: pick 20 (or fewer if deck is small)
-    // Uses getRandomCards from utils if present; otherwise fallback.
+    // If weakStudyOn, filter pool by weakStudyTags (tags).
     // ---------------------------
     function buildNewHand() {
-      const pool = getLevelList();
+      let pool = getLevelList();
 
-      // Prefer the shared utils function (what you wanted)
+      if (weakStudyOn && weakStudyTags.length) {
+        pool = pool.filter(c => weakStudyTags.includes(String(c.tag || "Untagged")));
+        // fallback: if filter makes it too small, turn off weak study
+        if (pool.length < 4) {
+          weakStudyOn = false;
+          weakStudyTags = [];
+          pool = getLevelList();
+          document.getElementById("sub").textContent = "Weak-tag filter had too few cards; switched back to normal.";
+        }
+      }
+
       if (typeof getRandomCards === "function") {
         hand = getRandomCards(pool, HAND_SIZE);
+      } else if (window.DECK_UTILS && typeof DECK_UTILS.getRandomCards === "function") {
+        hand = DECK_UTILS.getRandomCards(pool, { count: HAND_SIZE });
       } else {
-        // fallback: shuffle + slice
         hand = shuffle([...pool]).slice(0, Math.min(HAND_SIZE, pool.length));
       }
 
       handIndex = 0;
       document.getElementById("count").textContent = hand.length;
+      console.log("POOL size:", pool.length, "HAND size:", hand.length, "weakStudyOn:", weakStudyOn, "tags:", weakStudyTags);
+    }
 
-      // debug (remove later)
-      console.log("FULL deck size:", pool.length, "HAND size:", hand.length);
+    // ---------------------------
+    // Accuracy line for current card
+    // ---------------------------
+    function renderAccuracyForCurrent() {
+      const accEl = document.getElementById("acc");
+      if (!current || !current.item) { accEl.textContent = "—"; return; }
+
+      const s = trackerStats(current.item);
+      if (!s) { accEl.textContent = "Tracker not loaded"; return; }
+      if (s.pct === null) accEl.textContent = "— (no attempts)";
+      else accEl.textContent = `${Math.round(s.pct * 100)}% (${s.correct}/${s.attempts})`;
     }
 
     // ---------------------------
@@ -267,8 +377,12 @@
       });
       if (!isCorrect) buttonEl.classList.add("wrong");
 
-      // update persistent progress
       const item = current.item;
+
+      // ✅ Record attempt in the tracker (ID-based)
+      trackerRecord(item, isCorrect);
+
+      // update persistent mastery progress
       const st = getItemState(item);
       setItemState(item, { seen: st.seen + 1 });
 
@@ -291,16 +405,14 @@
 
       answered = true;
       updateStatus();
+      renderAccuracyForCurrent();
     }
 
     // ---------------------------
     // Question creation (ONLY from the 20-card hand)
     // ---------------------------
     function makeQuestion() {
-      // ensure we have a hand
-      if (!hand || hand.length < 4) {
-        buildNewHand();
-      }
+      if (!hand || hand.length < 4) buildNewHand();
       if (hand.length < 4) return;
 
       answered = false;
@@ -311,7 +423,6 @@
         ? (Math.random() < 0.5 ? "de-en" : "en-de")
         : directionSelect;
 
-      // random start within the 20-card hand (so it doesn't always start at index 0)
       const item = hand[Math.floor(Math.random() * hand.length)];
       const prompt = dir === "de-en" ? item.de : item.en;
       const answer = dir === "de-en" ? item.en : item.de;
@@ -323,7 +434,6 @@
       const choicesEl = document.getElementById("choices");
       choicesEl.innerHTML = "";
 
-      // distractors drawn from within hand (keeps options consistent with this 20-card set)
       const distractors = shuffle(hand.filter(x => x !== item))
         .slice(0, 3)
         .map(x => dir === "de-en" ? x.en : x.de);
@@ -337,6 +447,80 @@
         b.onclick = () => handleAnswer(opt, b);
         choicesEl.appendChild(b);
       });
+
+      renderAccuracyForCurrent();
+    }
+
+    // ---------------------------
+    // Weak concepts UI
+    // ---------------------------
+    function showWeakPanel() {
+      const panel = document.getElementById("weakPanel");
+      const tagsEl = document.getElementById("weakTagsList");
+      const cardsEl = document.getElementById("weakCardsList");
+
+      panel.style.display = "block";
+
+      if (!hasTracker()) {
+        tagsEl.innerHTML = "Tracker not loaded. Make sure you replaced <b>decks.utils.js</b> with the tracker version.";
+        cardsEl.innerHTML = "—";
+        return;
+      }
+
+      const baseDeck = getLevelBaseDeckUnfiltered();
+
+      const weakTags = DECK_UTILS.getWeakTags(baseDeck, { minAttemptsPerTag: 5 });
+      const weakCards = DECK_UTILS.getWeakCards(baseDeck, { limit: 10, minAttempts: 2, includeUnseen: true });
+
+      if (!weakTags.length) {
+        tagsEl.innerHTML = "Not enough data yet. Answer a few cards first (then this will populate).";
+      } else {
+        tagsEl.innerHTML = weakTags.slice(0, 6).map(t => {
+          const pct = (t.pct == null) ? "—" : `${Math.round(t.pct * 100)}%`;
+          return `• <b>${escapeHtml(t.tag)}</b>: ${pct} (${t.correct}/${t.attempts})`;
+        }).join("<br>");
+      }
+
+      if (!weakCards.length) {
+        cardsEl.innerHTML = "Not enough data yet.";
+      } else {
+        cardsEl.innerHTML = weakCards.map(row => {
+          const pct = (row.pct == null) ? "—" : `${Math.round(row.pct * 100)}%`;
+          const label = row.card && row.card.de ? row.card.de : "(missing term)";
+          return `• <b>${escapeHtml(label)}</b>: ${pct} (${row.correct}/${row.attempts})`;
+        }).join("<br>");
+      }
+    }
+
+    // simple HTML escape for panel display
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[c]));
+    }
+
+    function activateWeakStudyMode() {
+      if (!hasTracker()) {
+        document.getElementById("sub").textContent = "Tracker not loaded. Replace decks.utils.js with the tracker version first.";
+        return;
+      }
+
+      const baseDeck = getLevelBaseDeckUnfiltered();
+      const weakTags = DECK_UTILS.getWeakTags(baseDeck, { minAttemptsPerTag: 5 });
+
+      if (!weakTags.length) {
+        document.getElementById("sub").textContent = "Not enough data yet for weak tags—answer a few cards first.";
+        return;
+      }
+
+      weakStudyTags = weakTags.slice(0, 3).map(t => t.tag);
+      weakStudyOn = true;
+
+      buildNewHand();
+      makeQuestion();
+
+      document.getElementById("sub").textContent =
+        `🎯 Weak-tag study mode: ${weakStudyTags.join(", ")} (20-card hand rebuilt).`;
     }
 
     // ---------------------------
@@ -346,14 +530,13 @@
       makeQuestion();
     };
 
-    // Reshuffle: rebuild the 20-card hand and immediately show a new random card
     document.getElementById("reshuffleBtn").onclick = () => {
       buildNewHand();
       makeQuestion();
       document.getElementById("sub").textContent = "🔁 New set loaded. Pick the correct answer.";
     };
 
-    // Reset: clears progress + score, then rebuilds hand and starts fresh
+    // Reset: clears mastery progress + session score (keeps tracker unless you click Reset Tracker)
     document.getElementById("resetBtn").onclick = () => {
       progress = {};
       localStorage.removeItem("progress");
@@ -364,11 +547,28 @@
       streak = 0;
       updateStatus();
 
+      // keep weak study mode as-is; but rebuild
       buildNewHand();
       makeQuestion();
+      document.getElementById("sub").textContent = "Reset mastery + session score. (Tracker kept.)";
     };
 
-    // Mastery buttons: only allowed AFTER answering (prevents accidental mark)
+    // Reset tracker only (accuracy)
+    document.getElementById("resetStatsBtn").onclick = () => {
+      if (!hasTracker()) {
+        document.getElementById("sub").textContent = "Tracker not loaded.";
+        return;
+      }
+      if (!confirm("Reset accuracy tracker stats for this browser?")) return;
+      DECK_UTILS.resetTracker();
+      renderAccuracyForCurrent();
+      document.getElementById("sub").textContent = "Tracker reset.";
+      // refresh weak panel if open
+      const panel = document.getElementById("weakPanel");
+      if (panel.style.display === "block") showWeakPanel();
+    };
+
+    // Mastery buttons: only allowed AFTER answering
     document.getElementById("knowBtn").onclick = () => {
       if (!current) return;
       if (!answered) { document.getElementById("sub").textContent = "Answer first, then mark mastery."; return; }
@@ -383,21 +583,34 @@
       makeQuestion();
     };
 
+    // Weak concepts buttons
+    document.getElementById("weakBtn").onclick = () => {
+      showWeakPanel();
+    };
+
+    document.getElementById("studyWeakBtn").onclick = () => {
+      activateWeakStudyMode();
+      showWeakPanel();
+    };
+
     // If you change level/direction, rebuild hand so it reflects the new choice
     document.getElementById("level").addEventListener("change", () => {
+      // changing level should disable weak study mode (tags might not match)
+      weakStudyOn = false;
+      weakStudyTags = [];
       buildNewHand();
       makeQuestion();
+      document.getElementById("sub").textContent = "Level changed. Weak-tag study mode off.";
     });
 
     document.getElementById("direction").addEventListener("change", () => {
-      // direction doesn't require a new hand, but it's fine to just show a new question
       makeQuestion();
     });
 
     // init
     updateStatus();
-    buildNewHand();  // <-- important: only 20 cards loaded into the "hand"
-    makeQuestion();  // <-- starts on a random card from the hand
+    buildNewHand();
+    makeQuestion();
   </script>
 </body>
 </html>
