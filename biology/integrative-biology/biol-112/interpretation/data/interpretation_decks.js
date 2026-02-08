@@ -4,7 +4,7 @@
    IMPORTANT PATH RULE:
    - img paths are resolved relative to the HTML file that loads this script.
    - If your HTML is: interpretation/interpretation.html
-     and your images are in: interpretation/images/
+     and your images are in: interpretation/interpretation/images/
      then use: "./images/figureF.png"
 */
 
@@ -51,7 +51,6 @@ window.INTERPRETATION_DECKS = {
 
     // =============================
     // phylo-tree2.png
-    // A = monophyletic, B = paraphyletic, C = polyphyletic
     // =============================
     {
       category: "Phylogenetics: Monophyly",
@@ -221,60 +220,59 @@ window.INTERPRETATION_DECKS = {
         "If the trait evolved in the common ancestor of C, D, A, and B, a subsequent loss in lineage D could explain why A, B, and C retain the trait while D does not."
     },
 
-{
-  category: "Phylogenetics: Homology vs convergence",
-  img: "./images/phylo-tree5.png",
-  imgAlt: "Phylogenetic tree labeled C showing relationships among taxa A–G. Taxa A, B, and C are highlighted in blue.",
-  caption: "Tree C showing a shared trait in taxa A, B, and C.",
-  prompt:
-    "How should the shared trait in taxa A, B, and C most accurately be interpreted?",
-  choices: [
-    { text: "Homologous, because the trait is shared", hint: "shared traits are not always inherited from a recent common ancestor" },
-    { text: "Homologous, because A, B, and C are part of the same group", hint: "the tree does not show them as a clade" },
-    { text: "Convergent, because the trait likely evolved independently", hint: "polyphyletic distributions suggest convergence" },
-    { text: "Neutral, because the tree provides no evolutionary context", hint: "phylogenies are used specifically to infer trait history" }
-  ],
-  answer: "Convergent, because the trait likely evolved independently",
-  explanation:
-    "The polyphyletic distribution of the trait across the tree indicates that it did not arise from a single recent common ancestor. Instead, similar selective pressures likely led to convergent evolution."
-},
+    {
+      category: "Phylogenetics: Homology vs convergence",
+      img: "./images/phylo-tree5.png",
+      imgAlt: "Phylogenetic tree labeled C showing relationships among taxa A–G. Taxa A, B, and C are highlighted in blue.",
+      caption: "Tree C showing a shared trait in taxa A, B, and C.",
+      prompt:
+        "How should the shared trait in taxa A, B, and C most accurately be interpreted?",
+      choices: [
+        { text: "Homologous, because the trait is shared", hint: "shared traits are not always inherited from a recent common ancestor" },
+        { text: "Homologous, because A, B, and C are part of the same group", hint: "the tree does not show them as a clade" },
+        { text: "Convergent, because the trait likely evolved independently", hint: "polyphyletic distributions suggest convergence" },
+        { text: "Neutral, because the tree provides no evolutionary context", hint: "phylogenies are used specifically to infer trait history" }
+      ],
+      answer: "Convergent, because the trait likely evolved independently",
+      explanation:
+        "The polyphyletic distribution of the trait across the tree indicates that it did not arise from a single recent common ancestor. Instead, similar selective pressures likely led to convergent evolution."
+    },
 
-{
-  category: "Phylogenetics: Trait evolution",
-  img: "./images/phylo-tree5.png",
-  imgAlt: "Phylogenetic tree labeled C showing relationships among taxa A–G. Taxa A, B, and C are highlighted in blue.",
-  caption: "Tree C with taxa A, B, and C highlighted.",
-  prompt:
-    "Suppose taxa A, B, and C all share a similar adaptive trait. Based on the tree, what is the most likely explanation?",
-  choices: [
-    { text: "The trait evolved once in a recent common ancestor of A, B, and C", hint: "this would require A, B, and C to form a clade" },
-    { text: "The trait is ancestral and was lost in all other lineages", hint: "this would require multiple independent losses" },
-    { text: "The trait evolved independently in response to similar selective pressures", hint: "similar environments can favor similar adaptations" },
-    { text: "The similarity is due to random mutation alone", hint: "random mutation does not consistently produce adaptive similarity" }
-  ],
-  answer: "The trait evolved independently in response to similar selective pressures",
-  explanation:
-    "Because A, B, and C are not closely related on the tree, their shared adaptive trait is unlikely to reflect shared ancestry. Independent evolution driven by similar selective pressures is the most parsimonious explanation."
-},
+    {
+      category: "Phylogenetics: Trait evolution",
+      img: "./images/phylo-tree5.png",
+      imgAlt: "Phylogenetic tree labeled C showing relationships among taxa A–G. Taxa A, B, and C are highlighted in blue.",
+      caption: "Tree C with taxa A, B, and C highlighted.",
+      prompt:
+        "Suppose taxa A, B, and C all share a similar adaptive trait. Based on the tree, what is the most likely explanation?",
+      choices: [
+        { text: "The trait evolved once in a recent common ancestor of A, B, and C", hint: "this would require A, B, and C to form a clade" },
+        { text: "The trait is ancestral and was lost in all other lineages", hint: "this would require multiple independent losses" },
+        { text: "The trait evolved independently in response to similar selective pressures", hint: "similar environments can favor similar adaptations" },
+        { text: "The similarity is due to random mutation alone", hint: "random mutation does not consistently produce adaptive similarity" }
+      ],
+      answer: "The trait evolved independently in response to similar selective pressures",
+      explanation:
+        "Because A, B, and C are not closely related on the tree, their shared adaptive trait is unlikely to reflect shared ancestry. Independent evolution driven by similar selective pressures is the most parsimonious explanation."
+    },
 
-{
-  category: "Phylogenetics: Group type",
-  img: "./images/phylo-tree5.png",
-  imgAlt: "Phylogenetic tree labeled C showing relationships among taxa A–G. Taxa A, B, and C are highlighted in blue.",
-  caption: "Tree C showing relationships among taxa A–G.",
-  prompt:
-    "If taxa A, B, and C are grouped together as a single group, how should that grouping be classified?",
-  choices: [
-    { text: "Monophyletic", hint: "monophyletic groups include all descendants of a single common ancestor" },
-    { text: "Paraphyletic", hint: "paraphyletic groups include a common ancestor but exclude some descendants" },
-    { text: "Polyphyletic", hint: "polyphyletic groups are composed of taxa from different evolutionary lineages" },
-    { text: "Sister taxa", hint: "sister taxa refers to two lineages, not a multi-taxon group" }
-  ],
-  answer: "Polyphyletic",
-  explanation:
-    "Taxa A, B, and C do not share a single recent common ancestor exclusive to them. They are scattered across different branches of the tree, making the grouping polyphyletic."
-}
-     
+    {
+      category: "Phylogenetics: Group type",
+      img: "./images/phylo-tree5.png",
+      imgAlt: "Phylogenetic tree labeled C showing relationships among taxa A–G. Taxa A, B, and C are highlighted in blue.",
+      caption: "Tree C showing relationships among taxa A–G.",
+      prompt:
+        "If taxa A, B, and C are grouped together as a single group, how should that grouping be classified?",
+      choices: [
+        { text: "Monophyletic", hint: "monophyletic groups include all descendants of a single common ancestor" },
+        { text: "Paraphyletic", hint: "paraphyletic groups include a common ancestor but exclude some descendants" },
+        { text: "Polyphyletic", hint: "polyphyletic groups are composed of taxa from different evolutionary lineages" },
+        { text: "Sister taxa", hint: "sister taxa refers to two lineages, not a multi-taxon group" }
+      ],
+      answer: "Polyphyletic",
+      explanation:
+        "Taxa A, B, and C do not share a single recent common ancestor exclusive to them. They are scattered across different branches of the tree, making the grouping polyphyletic."
+    }
   ],
 
   // -----------------------------
