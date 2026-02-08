@@ -1,0 +1,61 @@
+<!-- language/Russian/index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Russian Hub</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    body{margin:0;background:#f6f7fb;color:#111}
+    .wrap{max-width:900px;margin:0 auto;padding:18px}
+    .card{background:#fff;border-radius:14px;padding:18px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+    h1{margin:0 0 10px;font-size:22px}
+    p{margin:0 0 14px;color:#555}
+    .top{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+    a.back{border:1px solid #d7dbe6;border-radius:10px;padding:8px 10px;text-decoration:none;color:#111;background:#fff}
+    .grid{display:grid;gap:12px}
+    @media(min-width:640px){.grid{grid-template-columns:1fr 1fr}}
+    a.btn{
+      display:block;text-decoration:none;color:#111;background:#fff;
+      border:1px solid #d7dbe6;border-radius:14px;padding:14px 14px;
+    }
+    a.btn:hover{box-shadow:0 8px 20px rgba(0,0,0,.06)}
+    .title{font-weight:700;margin-bottom:4px}
+    .sub{font-size:13px;color:#666;line-height:1.35}
+    .note{margin-top:14px;font-size:12px;color:#777;line-height:1.45}
+    .tag{display:inline-block;font-size:12px;border:1px solid #e1e5f0;background:#f0f2f8;padding:3px 8px;border-radius:999px;margin-left:6px;color:#444}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="top">
+        <a class="back" href="../index.html">← Language Hub</a>
+        <a class="back" href="../../index.html">← Home</a>
+      </div>
+
+      <h1>Russian Hub</h1>
+      <p>Choose a practice mode.</p>
+
+<div class="grid">
+  <a class="btn" href="./vocab/index.html">
+    <div class="title">Vocabulary Hub <span class="tag">decks + games</span></div>
+    <div class="sub">A1–C2 + themed lists (animals, travel, food, etc.). Quiz cards, fill-in-the-blank, matching.</div>
+  </a>
+
+  <a class="btn" href="./grammar/index.html">
+    <div class="title">Grammar Hub <span class="tag">cases + verbs</span></div>
+    <div class="sub">Quick checks and games: accusative vs dative, prepositions, pronouns, verb position, separable verbs.</div>
+  </a>
+</div>
+
+
+      <div class="note">
+        Tip: You can keep everything fully offline. Put these files in the same folder and open
+        <code>index.html</code> in a browser. Each game can reuse the same vocab lists and progress tracking.
+      </div>
+    </div>
+  </div>
+</body>
+</html>
