@@ -80,10 +80,10 @@
           </select>
 
           <button id="nextBtn" class="primary">Next</button>
+          <button id="reshuffleBtn">Reshuffle 20</button>
           <button id="resetBtn" title="Reset session score">Reset</button>
         </div>
 
-        <!-- back one level (from /vocab/category-sort/ to /vocab/) -->
         <a href="../" class="btnLink" title="Back to Vocab Hub">⬅ Vocab Games</a>
       </div>
 
@@ -94,6 +94,7 @@
       </div>
 
       <div class="masteryHelp">
+        You are playing from a <b>20-card set</b>. <b>Reshuffle 20</b> pulls a new set. •
         <b>I know this</b> = show very rarely • <b>Need practice</b> = shows more often • Optional: reveal definition for support
       </div>
 
@@ -122,7 +123,7 @@
 
   <script>
     // ==============================
-    // Progress + storage (same style as your other games)
+    // Progress + storage
     // ==============================
     let progress = JSON.parse(localStorage.getItem("progress") || "{}");
 
@@ -155,10 +156,10 @@
 
     // weights for mastery states
     function weightForStatus(status) {
-      if (status === "known") return 0.05;      // almost never
-      if (status === "learning") return 2.0;    // medium
-      if (status === "practice") return 6.0;    // frequent
-      return 3.5;                                // "new"
+      if (status === "known") return 0.05;
+      if (status === "learning") return 2.0;
+      if (status === "practice") return 6.0;
+      return 3.5;
     }
 
     function weightedPick(list) {
@@ -173,9 +174,14 @@
       return list[list.length - 1];
     }
 
-    function unique(arr) {
-      return Array.from(new Set(arr));
-    }
+    function unique(arr) { return Array.from(new Set(arr)); }
+
+    // ==============================
+    // Hand model (20-card set)
+    // ==============================
+    const HAND_SIZE = 20;
+    let hand = [];          // 20 tagged items only
+    let allTagsInHand = []; // categories shown as options (derived from hand)
 
     // ==============================
     // App state
@@ -191,22 +197,21 @@
     let showDef = false;
 
     // ==============================
-    // Core UI helpers
+    // Core data helpers
     // ==============================
-    function getLevelList() {
+    function getFullPoolTagged() {
       const level = document.getElementById("level").value;
-      const list = getDeck(level);
-      const base = dedupePairs(list);
+      const list = dedupePairs(getDeck(level));
 
-      // keep only items that have a tag (required for this game)
-      const tagged = base.filter(it => typeof it.tag === "string" && it.tag.trim().length > 0);
+      // require tag
+      const tagged = list.filter(it => typeof it.tag === "string" && it.tag.trim().length > 0);
 
-      // Filter out "known" items if possible, but keep fallback if too small
+      // prefer not-known unless too small
       const filtered = tagged.filter(item => getItemState(item).status !== "known");
       return filtered.length >= 4 ? filtered : tagged;
     }
 
-    function getAllTags(list) {
+    function computeTagsFromList(list) {
       return unique(list.map(i => i.tag)).sort();
     }
 
@@ -215,7 +220,7 @@
       document.getElementById("correct").textContent = correct;
       document.getElementById("wrong").textContent = wrong;
       document.getElementById("streak").textContent = streak;
-      document.getElementById("count").textContent = getLevelList().length;
+      document.getElementById("count").textContent = hand.length;
     }
 
     function setPrompt(text, sub) {
@@ -244,16 +249,41 @@
         defBox.classList.add("hidden");
       }
 
-      // keep tag hidden by default (so students can't cheat); useful for debugging if you want
+      // keep tag hidden (anti-cheat); toggle if you want for debugging
       tagLine.classList.add("hidden");
     }
 
     // ==============================
-    // Question generation
+    // Build / reshuffle hand
+    // ==============================
+    function buildNewHand() {
+      const pool = getFullPoolTagged();
+      if (pool.length < 4) {
+        hand = pool.slice();
+        allTagsInHand = computeTagsFromList(hand);
+        return;
+      }
+
+      if (typeof getRandomCards === "function") {
+        hand = getRandomCards(pool, HAND_SIZE);
+      } else {
+        hand = shuffle(pool).slice(0, Math.min(HAND_SIZE, pool.length));
+      }
+
+      // IMPORTANT: derive categories from the hand, so it matches the 20-card set
+      allTagsInHand = computeTagsFromList(hand);
+
+      console.log("FULL tagged deck:", pool.length, "HAND:", hand.length, "TAGS in hand:", allTagsInHand);
+      renderStats();
+    }
+
+    // ==============================
+    // Question generation (from HAND only)
     // ==============================
     function makeQuestion() {
-      const list = getLevelList();
-      if (list.length < 4) {
+      if (!hand || hand.length < 4) buildNewHand();
+
+      if (!hand || hand.length < 4) {
         setPrompt("Need at least 4 tagged words", "Add tag fields (or unmark some as Known).");
         clearChoices();
         renderStats();
@@ -263,16 +293,24 @@
       locked = false;
       clearChoices();
 
-      const item = weightedPick(list);
+      const item = weightedPick(hand);
       current = { item };
 
       setPrompt(item.de, "Which category does this term belong to?");
       renderDefinition();
 
-      const tags = getAllTags(list);
-      // If you have more than 6 tags later, keep UI manageable:
-      const choices = tags.length <= 6 ? tags : tags; // keep all for now (you currently have ~5)
-      const options = shuffle(choices);
+      // Use tags from the hand. If hand has only 1 tag, fall back to full deck tags so choices exist.
+      let tags = allTagsInHand;
+      if (!tags || tags.length < 2) {
+        tags = computeTagsFromList(getFullPoolTagged());
+      }
+
+      // If you eventually have lots of tags, you can limit to 6:
+      // const correctTag = item.tag;
+      // const otherTags = shuffle(tags.filter(t => t !== correctTag)).slice(0, 5);
+      // const options = shuffle([correctTag, ...otherTags]);
+
+      const options = shuffle(tags);
 
       const choicesEl = document.getElementById("choices");
       for (const opt of options) {
@@ -310,21 +348,18 @@
         streak = 0;
         document.getElementById("sub").textContent = `Not quite ❌  Correct category: ${correctTag}`;
 
-        // highlight the correct button
         for (const b of buttons) {
           if (b.textContent === correctTag) b.classList.add("correct");
         }
       }
 
-      // --- Progress tracking ---
       const st = getItemState(current.item);
-
       const nextStatus =
         st.status === "known"
           ? "known"
           : (isCorrect
-              ? (st.status === "practice" ? "learning" : st.status) // practice → learning on success
-              : "practice"); // wrong → practice
+              ? (st.status === "practice" ? "learning" : st.status)
+              : "practice");
 
       setItemState(current.item, {
         seen: st.seen + 1,
@@ -342,12 +377,20 @@
     // ==============================
     document.getElementById("nextBtn").addEventListener("click", () => makeQuestion());
 
+    document.getElementById("reshuffleBtn").addEventListener("click", () => {
+      buildNewHand();
+      makeQuestion();
+    });
+
     document.getElementById("resetBtn").addEventListener("click", () => {
       score = 0; correct = 0; wrong = 0; streak = 0;
       makeQuestion();
     });
 
-    document.getElementById("level").addEventListener("change", () => makeQuestion());
+    document.getElementById("level").addEventListener("change", () => {
+      buildNewHand();
+      makeQuestion();
+    });
 
     document.getElementById("knowBtn").addEventListener("click", () => {
       if (!current) return;
@@ -367,8 +410,9 @@
       renderDefinition();
     });
 
-    // Boot
+    // Boot: start with a random item from a 20-card hand
     renderStats();
+    buildNewHand();
     makeQuestion();
   </script>
 </body>
