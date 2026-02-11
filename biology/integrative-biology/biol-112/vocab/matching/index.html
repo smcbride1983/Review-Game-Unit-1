@@ -6,168 +6,236 @@
   <title>Matching: Term ↔ Definition</title>
 
   <style>
-    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
-    body { margin: 0; background: #f6f7fb; color: #111; }
-    .wrap { max-width: 980px; margin: 0 auto; padding: 18px; }
-    .card {
-      background: #fff; border-radius: 14px; padding: 18px;
-      box-shadow: 0 8px 24px rgba(0,0,0,.08);
+    /* =========================
+       THEME (DARK, same as Flashcards)
+       ========================= */
+    :root{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+      --bg: #0b0f19;
+      --card: #0f1629;
+      --panel: #111a2e;
+
+      --text: #e8eefc;
+      --muted: #aeb9d6;
+
+      --border: #223255;
+      --borderSoft: rgba(255,255,255,.10);
+
+      --btnBg: #111a2e;
+      --btnText: #e8eefc;
+      --btnBorder: #223255;
+
+      --primaryBg: #e8eefc;
+      --primaryText: #0b0f19;
+
+      --good: #1f9d55;
+      --bad: #d64545;
     }
-    h1 { margin: 0 0 10px; font-size: 20px; }
 
-    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-    .topRow { justify-content: space-between; }
-    .leftControls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-    .rowRight { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    body{ margin:0; background:var(--bg); color:var(--text); }
+    .wrap{ max-width: 980px; margin: 0 auto; padding: 18px; }
 
-    select, button, .btnLink {
-      border: 1px solid #d7dbe6; background: #fff; color: #111;
-      border-radius: 10px; padding: 10px 12px; font-size: 14px;
-      cursor: pointer; text-decoration: none;
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
     }
-    button.primary { background: #111; color: #fff; border-color: #111; }
-    button:disabled { opacity: .55; cursor: not-allowed; }
 
-    .small { font-size: 12px; color: #666; }
-    .divider { height: 1px; background: #eceff6; margin: 14px 0; }
+    h1{ margin:0 0 10px; font-size:20px; letter-spacing:.2px; }
 
-    .grid {
-      display: grid;
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .topRow{ justify-content:space-between; }
+    .leftControls{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .rowRight{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+
+    .small{ font-size:12px; color:var(--muted); }
+    .divider{ height:1px; background:var(--borderSoft); margin:14px 0; }
+
+    select, button, .btnLink{
+      border: 1px solid var(--btnBorder);
+      background: var(--btnBg);
+      color: var(--btnText);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      line-height: 1;
+    }
+
+    button.primary{
+      background: var(--primaryBg);
+      color: var(--primaryText);
+      border-color: var(--primaryBg);
+      font-weight: 800;
+    }
+
+    button.ghost{
+      background: transparent;
+      border: 1px solid var(--btnBorder);
+      color: var(--btnText);
+    }
+
+    button:disabled{ opacity:.55; cursor:not-allowed; }
+
+    .note{
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    /* Layout grid */
+    .grid{
+      display:grid;
       grid-template-columns: 1fr;
       gap: 14px;
     }
-    @media (min-width: 860px) {
-      .grid { grid-template-columns: 1fr 1fr; }
+    @media (min-width: 860px){
+      .grid{ grid-template-columns: 1fr 1fr; }
     }
 
-    .panel {
-      border: 1px solid #eceff6;
-      background: #fbfcff;
+    .panel{
+      border: 1px solid var(--border);
+      background: var(--panel);
       border-radius: 14px;
       padding: 14px;
     }
-    .panel h2 { margin: 0 0 10px; font-size: 14px; color: #333; }
+    .panel h2{
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: var(--text);
+      opacity: .9;
+    }
 
-    .termRow {
-      display: grid;
+    /* Terms list */
+    .termRow{
+      display:grid;
       grid-template-columns: 1fr;
       gap: 8px;
       padding: 10px;
       border-radius: 12px;
-      background: #fff;
-      border: 1px solid #e7eaf3;
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--border);
       margin-bottom: 10px;
     }
-    .termTop {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      justify-content: space-between;
-      flex-wrap: wrap;
+
+    .termTop{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
     }
-    .termLabel {
-      font-weight: 700;
+
+    .termLabel{
+      font-weight: 800;
       font-size: 16px;
       margin-right: 10px;
     }
 
-    .dropZone {
+    .dropZone{
       min-height: 46px;
       padding: 10px 12px;
       border-radius: 12px;
-      border: 2px dashed #cfd6ea;
-      background: #f6f8ff;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      border: 2px dashed rgba(255,255,255,.18);
+      background: rgba(0,0,0,.12);
+      display:flex;
+      align-items:center;
+      gap:10px;
     }
-    .dropZone.over { border-color: #111; }
-    .dropHint { color: #667; font-size: 13px; }
-    .droppedChip {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+    .dropZone.over{ border-color: var(--text); }
+    .dropHint{ color: var(--muted); font-size: 13px; }
+
+    .droppedChip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
       padding: 8px 10px;
       border-radius: 999px;
-      background: #fff;
-      border: 1px solid #d7dbe6;
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--border);
       font-size: 13px;
     }
-    .xBtn {
-      border: 1px solid #d7dbe6;
+
+    .xBtn{
+      border: 1px solid var(--border);
       border-radius: 999px;
       padding: 2px 8px;
-      background: #fff;
-      cursor: pointer;
+      background: transparent;
+      color: var(--text);
+      cursor:pointer;
       font-size: 12px;
       line-height: 1.2;
     }
 
-    .defs {
-      display: grid;
+    /* Definitions */
+    .defs{
+      display:grid;
       grid-template-columns: 1fr;
       gap: 10px;
     }
-    @media (min-width: 520px) {
-      .defs { grid-template-columns: 1fr 1fr; }
+    @media (min-width: 520px){
+      .defs{ grid-template-columns: 1fr 1fr; }
     }
 
-    .defCard {
-      background: #fff;
-      border: 1px solid #d7dbe6;
+    .defCard{
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--border);
       border-radius: 12px;
       padding: 12px;
       cursor: grab;
-      user-select: none;
+      user-select:none;
     }
-    .defCard:active { cursor: grabbing; }
+    .defCard:active{ cursor: grabbing; }
+    .defCard.used{ opacity:.55; cursor:not-allowed; }
 
-    .defCard.used { opacity: .55; cursor: not-allowed; }
-
-    .status {
+    /* Status pills */
+    .status{
       margin-top: 12px;
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      color: #333;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      color: var(--muted);
       font-size: 13px;
     }
-    .pill {
-      background: #f0f2f8;
-      border: 1px solid #e1e5f0;
+    .pill{
+      background: var(--panel);
+      border: 1px solid var(--border);
       padding: 6px 10px;
       border-radius: 999px;
     }
 
-    .ok { border-color: #1f9d55 !important; background: #f3fff7 !important; }
-    .bad { border-color: #d64545 !important; background: #fff5f5 !important; }
-
-    .note { margin-top: 8px; font-size: 12px; color: #666; line-height: 1.35; }
+    .ok{ border-color: var(--good) !important; background: rgba(31,157,85,.12) !important; }
+    .bad{ border-color: var(--bad) !important; background: rgba(214,69,69,.12) !important; }
 
     /* Weak panel */
-    .weakPanel {
+    .weakPanel{
       margin-top: 12px;
-      border: 1px solid #e1e5f0;
-      background: #fbfcff;
-      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      border-radius: 14px;
       padding: 12px;
       display: none;
     }
-    .weakTitle { font-weight: 800; margin-bottom: 6px; }
-    .weakSub { color: #555; font-size: 12px; margin-bottom: 8px; }
-    .weakGrid { display: grid; gap: 10px; }
-    @media (min-width: 860px) {
-      .weakGrid { grid-template-columns: 1fr 1fr; }
+    .weakTitle{ font-weight: 900; margin-bottom: 6px; }
+    .weakSub{ color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+    .weakGrid{ display:grid; gap:10px; }
+    @media (min-width: 860px){
+      .weakGrid{ grid-template-columns: 1fr 1fr; }
     }
-    .weakBox {
-      border: 1px solid #e8ebf5;
-      border-radius: 12px;
+    .weakBox{
+      border: 1px solid var(--border);
+      border-radius: 14px;
       padding: 10px;
-      background: #fff;
+      background: rgba(255,255,255,.03);
       font-size: 13px;
     }
-    .weakBox b { display: block; margin-bottom: 6px; }
-    .smallmuted { color: #666; font-size: 12px; }
+    .weakBox b{ display:block; margin-bottom: 6px; }
+    .smallmuted{ color: var(--muted); font-size: 12px; }
   </style>
 </head>
 
@@ -181,20 +249,19 @@
           <label class="small">Deck:</label>
           <select id="level">
             <option value="BIOL112_EVOLUTION">Evolution</option>
-            <option value=" BIOL112_GenesAndCells">Genes and Cells</option>
-
+            <option value="BIOL112_GenesAndCells">Genes and Cells</option>
           </select>
 
           <button id="newBtn" class="primary">New Round</button>
-          <button id="reshuffleBtn">Reshuffle 20</button>
-          <button id="submitBtn">Submit</button>
-          <button id="resetBtn" title="Reset score">Reset</button>
+          <button id="reshuffleBtn" class="ghost">Reshuffle 20</button>
+          <button id="submitBtn" class="ghost">Submit</button>
+          <button id="resetBtn" class="ghost" title="Reset score">Reset</button>
         </div>
 
         <div class="rowRight">
-          <button id="weakBtn" title="Show weakest tags + cards">Weak Concepts</button>
-          <button id="studyWeakBtn" title="Rebuild 20-card hand from weak tags">Study Weak Tags</button>
-          <button id="resetStatsBtn" title="Resets only the accuracy tracker (not mastery)">Reset Tracker</button>
+          <button id="weakBtn" class="ghost" title="Show weakest tags + cards">Weak Concepts</button>
+          <button id="studyWeakBtn" class="ghost" title="Rebuild 20-card hand from weak tags">Study Weak Tags</button>
+          <button id="resetStatsBtn" class="ghost" title="Resets only the accuracy tracker (not mastery)">Reset Tracker</button>
 
           <a href="../" class="btnLink" title="Back to Vocab Hub">⬅ Vocab Games</a>
         </div>
@@ -282,7 +349,7 @@
 
     function trackerRecord(item, isCorrect) {
       if (!hasTracker()) return;
-      DECK_UTILS.recordAttempt(item, isCorrect); // requires item.id
+      DECK_UTILS.recordAttempt(item, isCorrect);
     }
 
     // ==============================
@@ -355,7 +422,6 @@
       const list = getDeck(level);
       const base = dedupePairs(list);
 
-      // prefer not-known unless too small
       const filtered = base.filter(item => getItemState(item).status !== "known");
       return filtered.length >= 6 ? filtered : base;
     }
@@ -379,7 +445,6 @@
 
     // ==============================
     // Build / reshuffle the 20-card hand
-    // Supports weak-tag study mode by filtering pool by tag.
     // ==============================
     function buildNewHand() {
       let pool = getFullPool();
@@ -399,7 +464,6 @@
         }
       }
 
-      // Prefer shared utils function if present; fallback otherwise
       if (typeof getRandomCards === "function") {
         hand = getRandomCards(pool, HAND_SIZE);
       } else if (window.DECK_UTILS && typeof DECK_UTILS.getRandomCards === "function") {
@@ -439,6 +503,7 @@
         buttons.style.gap = "8px";
 
         const knowBtn = document.createElement("button");
+        knowBtn.className = "ghost";
         knowBtn.textContent = "I know this";
         knowBtn.title = "Show very rarely";
         knowBtn.addEventListener("click", () => {
@@ -447,6 +512,7 @@
         });
 
         const practiceBtn = document.createElement("button");
+        practiceBtn.className = "ghost";
         practiceBtn.textContent = "Need practice";
         practiceBtn.title = "Show more often";
         practiceBtn.addEventListener("click", () => {
@@ -571,7 +637,6 @@
     // ==============================
     function newRound() {
       if (!hand || hand.length < 6) buildNewHand();
-
       if (!hand || hand.length < 6) {
         alert("Need at least 6 words in this deck for 4 terms + 2 distractors.");
         return;
@@ -580,7 +645,6 @@
       assignment = {};
       usedDefs = new Set();
 
-      // pick 4 terms (weighted) from the HAND
       const picked = [];
       const pool = hand.slice();
 
@@ -588,18 +652,11 @@
       while (picked.length < 4 && guard < 200) {
         guard++;
         const item = weightedPick(pool);
-        if (!picked.some(x => termId(x) === termId(item))) {
-          picked.push(item);
-        }
+        if (!picked.some(x => termId(x) === termId(item))) picked.push(item);
       }
 
-      if (picked.length < 4) {
-        currentTerms = shuffle(hand).slice(0, 4);
-      } else {
-        currentTerms = picked;
-      }
+      currentTerms = (picked.length < 4) ? shuffle(hand).slice(0, 4) : picked;
 
-      // build definition pool: all 4 correct + 2 distractors (also from HAND)
       const correctDefs = currentTerms.map(i => i.en);
 
       const distractorCandidates = hand
@@ -619,7 +676,6 @@
       }
 
       currentDefPool = shuffle(defPool).slice(0, 6);
-
       renderRound();
     }
 
@@ -645,9 +701,6 @@
         if (!drop) continue;
 
         const isCorrect = (chosen === correct);
-
-        // ✅ RECORD ATTEMPT (per-term) in the tracker
-        // This counts as one attempt for each of the 4 terms per round.
         trackerRecord(item, isCorrect);
 
         if (isCorrect) {
@@ -655,9 +708,8 @@
 
           const st = getItemState(item);
           const nextStatus =
-            st.status === "known"
-              ? "known"
-              : (st.status === "practice" ? "learning" : st.status);
+            st.status === "known" ? "known" :
+            (st.status === "practice" ? "learning" : st.status);
 
           setItemState(item, {
             seen: st.seen + 1,
@@ -683,7 +735,6 @@
       else roundsWrong += 1;
 
       renderStats();
-      // refresh weak panel if open
       const panel = document.getElementById("weakPanel");
       if (panel.style.display === "block") showWeakPanel();
     }
@@ -770,8 +821,6 @@
 
     document.getElementById("resetBtn").addEventListener("click", () => {
       rounds = 0; roundsCorrect = 0; roundsWrong = 0;
-      // keep progress by default; if you want to wipe progress too, uncomment:
-      // localStorage.removeItem("progress"); progress = {};
       newRound();
     });
 
@@ -782,11 +831,9 @@
       newRound();
     });
 
-    // Weak concepts buttons
     document.getElementById("weakBtn").addEventListener("click", showWeakPanel);
     document.getElementById("studyWeakBtn").addEventListener("click", activateWeakStudyMode);
 
-    // Reset tracker only (accuracy)
     document.getElementById("resetStatsBtn").addEventListener("click", () => {
       if (!hasTracker()) { alert("Tracker not loaded."); return; }
       if (!confirm("Reset accuracy tracker stats for this browser?")) return;
@@ -795,7 +842,7 @@
       if (panel.style.display === "block") showWeakPanel();
     });
 
-    // Boot (random start within a 20-card hand)
+    // Boot
     renderStats();
     buildNewHand();
     newRound();
