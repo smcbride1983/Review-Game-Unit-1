@@ -1,4 +1,4 @@
-/* scenario_decks_evolution.js
+/* scenario_decks.js
    Future-proof scenario deck file (does not overwrite other decks).
 
    Put this in:
