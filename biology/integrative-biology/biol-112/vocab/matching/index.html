@@ -111,6 +111,8 @@
       opacity: .9;
     }
 
+    #toolsPanel{ margin-top: 10px; }
+
     /* Terms list */
     .termRow{
       display:grid;
@@ -253,23 +255,32 @@
           </select>
 
           <button id="newBtn" class="primary">New Round</button>
-          <button id="reshuffleBtn" class="ghost">Reshuffle 20</button>
           <button id="submitBtn" class="ghost">Submit</button>
-          <button id="resetBtn" class="ghost" title="Reset score">Reset</button>
         </div>
 
         <div class="rowRight">
-          <button id="weakBtn" class="ghost" title="Show weakest tags + cards">Weak Concepts</button>
-          <button id="studyWeakBtn" class="ghost" title="Rebuild 20-card hand from weak tags">Study Weak Tags</button>
-          <button id="resetStatsBtn" class="ghost" title="Resets only the accuracy tracker (not mastery)">Reset Tracker</button>
-
+          <button id="toolsToggle" class="ghost" aria-expanded="false">More ▾</button>
           <a href="../" class="btnLink" title="Back to Vocab Hub">⬅ Vocab Games</a>
+        </div>
+      </div>
+
+      <!-- TOOLS PANEL (hidden by default) -->
+      <div id="toolsPanel" class="panel" hidden>
+        <div class="row">
+          <button id="reshuffleBtn" class="ghost">Reshuffle 20</button>
+          <button id="resetBtn" class="ghost" title="Reset score">Reset score</button>
+          <button id="weakBtn" class="ghost">Weak Concepts</button>
+          <button id="studyWeakBtn" class="ghost">Study Weak Tags</button>
+          <button id="resetStatsBtn" class="ghost">Reset Tracker</button>
+        </div>
+
+        <div class="small" style="margin-top:8px; line-height:1.35;">
+          Tip: Use <b>Weak Concepts</b> after you’ve played a few rounds—it's based on saved accuracy stats in this browser.
         </div>
       </div>
 
       <div class="note">
         You are playing with a <b>20-card set</b>. Each round uses <b>4</b> terms + <b>2</b> distractors (6 definitions total).
-        Click <b>Reshuffle 20</b> to pull a fresh set.
       </div>
 
       <div class="divider"></div>
@@ -323,7 +334,32 @@
 
   <script>
     // ==============================
-    // Progress + storage (your mastery system)
+    // Panel toggle helpers
+    // ==============================
+    function setToggleLabel(btn, isOpen, baseText) {
+      btn.setAttribute("aria-expanded", String(isOpen));
+      btn.textContent = `${baseText} ${isOpen ? "▴" : "▾"}`;
+    }
+
+    function togglePanel(btn, panel) {
+      const isHidden = panel.hasAttribute("hidden");
+      if (isHidden) panel.removeAttribute("hidden");
+      else panel.setAttribute("hidden", "");
+
+      const base = btn.textContent.replace(/[▴▾]/g, "").trim();
+      setToggleLabel(btn, isHidden, base);
+    }
+
+    function closeTools() {
+      const btn = document.getElementById("toolsToggle");
+      const panel = document.getElementById("toolsPanel");
+      if (!btn || !panel) return;
+      panel.setAttribute("hidden", "");
+      setToggleLabel(btn, false, "More");
+    }
+
+    // ==============================
+    // Progress + storage (mastery)
     // ==============================
     let progress = JSON.parse(localStorage.getItem("progress") || "{}");
 
@@ -399,12 +435,12 @@
     // App state
     // ==============================
     const HAND_SIZE = 20;
-    let hand = [];                // 20-card working set
+    let hand = [];
 
-    let currentTerms = [];        // 4 items: {de,en}
-    let currentDefPool = [];      // 6 strings (definitions)
-    let assignment = {};          // termKey -> defText
-    let usedDefs = new Set();     // defText used
+    let currentTerms = [];
+    let currentDefPool = [];
+    let assignment = {};
+    let usedDefs = new Set();
 
     let rounds = 0;
     let roundsCorrect = 0;
@@ -412,15 +448,17 @@
 
     // Weak-tags study mode
     let weakStudyOn = false;
-    let weakStudyTags = []; // array of tag names
+    let weakStudyTags = [];
 
     // ==============================
     // Data helpers
     // ==============================
     function getFullPool() {
       const level = document.getElementById("level").value;
-      const list = getDeck(level);
-      const base = dedupePairs(list);
+
+      const base = (typeof dedupePairs === "function" && typeof getDeck === "function")
+        ? dedupePairs(getDeck(level))
+        : (window.DECKS && Array.isArray(window.DECKS[level]) ? window.DECKS[level] : []);
 
       const filtered = base.filter(item => getItemState(item).status !== "known");
       return filtered.length >= 6 ? filtered : base;
@@ -428,8 +466,10 @@
 
     function getBaseDeckUnfiltered() {
       const level = document.getElementById("level").value;
-      const list = getDeck(level);
-      return dedupePairs(list);
+      const base = (typeof dedupePairs === "function" && typeof getDeck === "function")
+        ? dedupePairs(getDeck(level))
+        : (window.DECKS && Array.isArray(window.DECKS[level]) ? window.DECKS[level] : []);
+      return base;
     }
 
     function termId(item) {
@@ -472,7 +512,6 @@
         hand = shuffle(pool).slice(0, Math.min(HAND_SIZE, pool.length));
       }
 
-      console.log("POOL size:", pool.length, "HAND size:", hand.length, "weakStudyOn:", weakStudyOn, "tags:", weakStudyTags);
       renderStats();
     }
 
@@ -485,7 +524,6 @@
       termsEl.innerHTML = "";
       defsEl.innerHTML = "";
 
-      // TERMS
       for (const item of currentTerms) {
         const row = document.createElement("div");
         row.className = "termRow";
@@ -534,11 +572,9 @@
         drop.addEventListener("drop", (e) => {
           e.preventDefault();
           drop.classList.remove("over");
-
           const defText = e.dataTransfer.getData("text/plain");
           if (!defText) return;
 
-          // If this definition is already assigned to a different term, move it here
           if (usedDefs.has(defText)) {
             const oldTid = Object.keys(assignment).find(tid => assignment[tid] === defText);
             if (oldTid) {
@@ -546,15 +582,10 @@
               usedDefs.delete(defText);
             }
           }
-
           setAssignment(item, defText);
         });
 
-        drop.addEventListener("dragover", (e) => {
-          e.preventDefault();
-          drop.classList.add("over");
-        });
-
+        drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("over"); });
         drop.addEventListener("dragleave", () => drop.classList.remove("over"));
 
         row.appendChild(top);
@@ -562,7 +593,6 @@
         termsEl.appendChild(row);
       }
 
-      // DEFINITIONS
       for (const defText of currentDefPool) {
         const card = document.createElement("div");
         card.className = "defCard";
@@ -623,7 +653,6 @@
 
     function setAssignment(item, defText) {
       const tid = termId(item);
-
       const old = assignment[tid];
       if (old) usedDefs.delete(old);
 
@@ -663,8 +692,7 @@
         .filter(i => !correctDefs.includes(i.en))
         .map(i => i.en);
 
-      const uniqueDistractors = uniqueBy(distractorCandidates, x => x);
-      const distractors = shuffle(uniqueDistractors).slice(0, 2);
+      const distractors = shuffle(uniqueBy(distractorCandidates, x => x)).slice(0, 2);
 
       let defPool = [...correctDefs, ...distractors];
 
@@ -735,8 +763,9 @@
       else roundsWrong += 1;
 
       renderStats();
-      const panel = document.getElementById("weakPanel");
-      if (panel.style.display === "block") showWeakPanel();
+
+      const wp = document.getElementById("weakPanel");
+      if (wp.style.display === "block") showWeakPanel();
     }
 
     // ==============================
@@ -806,22 +835,33 @@
       buildNewHand();
       newRound();
       showWeakPanel();
+      closeTools();
     }
 
     // ==============================
     // Controls
     // ==============================
-    document.getElementById("newBtn").addEventListener("click", newRound);
-    document.getElementById("submitBtn").addEventListener("click", submitRound);
+    document.getElementById("toolsToggle").addEventListener("click", () => {
+      togglePanel(
+        document.getElementById("toolsToggle"),
+        document.getElementById("toolsPanel")
+      );
+    });
+
+    document.getElementById("newBtn").addEventListener("click", () => newRound());
+    document.getElementById("submitBtn").addEventListener("click", () => submitRound());
 
     document.getElementById("reshuffleBtn").addEventListener("click", () => {
       buildNewHand();
       newRound();
+      closeTools();
     });
 
     document.getElementById("resetBtn").addEventListener("click", () => {
       rounds = 0; roundsCorrect = 0; roundsWrong = 0;
+      renderStats();
       newRound();
+      closeTools();
     });
 
     document.getElementById("level").addEventListener("change", () => {
@@ -829,10 +869,17 @@
       weakStudyTags = [];
       buildNewHand();
       newRound();
+      closeTools();
     });
 
-    document.getElementById("weakBtn").addEventListener("click", showWeakPanel);
-    document.getElementById("studyWeakBtn").addEventListener("click", activateWeakStudyMode);
+    document.getElementById("weakBtn").addEventListener("click", () => {
+      showWeakPanel();
+      closeTools();
+    });
+
+    document.getElementById("studyWeakBtn").addEventListener("click", () => {
+      activateWeakStudyMode();
+    });
 
     document.getElementById("resetStatsBtn").addEventListener("click", () => {
       if (!hasTracker()) { alert("Tracker not loaded."); return; }
@@ -840,6 +887,7 @@
       DECK_UTILS.resetTracker();
       const panel = document.getElementById("weakPanel");
       if (panel.style.display === "block") showWeakPanel();
+      closeTools();
     });
 
     // Boot
