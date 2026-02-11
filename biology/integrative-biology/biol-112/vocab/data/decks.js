@@ -143,5 +143,58 @@ window.DECKS = {
     { id: "EVO_Terms_105", de: "Host switching", en: "Shift to a new host species.", tag: "Speciation" },
     { id: "EVO_Terms_106", de: "Ecological specialization", en: "Adaptation to a specific niche.", tag: "Speciation" }
 
-  ]
+  ],
+
+
+BIOL112_Genetics: [
+  // Big-Picture Concepts
+  { id: "GEN_Terms_001", tag: "cell division", de: "Cell division", en: "One parent cell divides to produce daughter cells." },
+  { id: "GEN_Terms_002", tag: "cell division", de: "Genome", en: "All of an organism’s genetic material (all its DNA)." },
+  { id: "GEN_Terms_003", tag: "cell division", de: "Genetic information", en: "The instructions stored in DNA that cells use to build and run an organism." },
+  { id: "GEN_Terms_004", tag: "cell division", de: "Somatic cells", en: "Body cells (non-reproductive cells) that divide by mitosis." },
+  { id: "GEN_Terms_005", tag: "cell division", de: "Gametes", en: "Reproductive cells (sperm or egg) that carry one set of chromosomes." },
+  { id: "GEN_Terms_006", tag: "cell division", de: "Sexual reproduction", en: "Reproduction involving fusion of gametes from two parents." },
+  { id: "GEN_Terms_007", tag: "cell division", de: "Genetic diversity", en: "Differences in genetic traits among individuals in a population." },
+
+  // DNA & Chromosomes
+  { id: "GEN_Terms_008", tag: "cell division", de: "DNA", en: "The molecule that stores genetic instructions in cells." },
+  { id: "GEN_Terms_009", tag: "cell division", de: "Chromosome", en: "A packaged DNA molecule containing many genes." },
+  { id: "GEN_Terms_010", tag: "cell division", de: "Chromatin", en: "Loosely packed DNA and proteins found in the nucleus most of the time." },
+  { id: "GEN_Terms_011", tag: "cell division", de: "Sister chromatids", en: "Identical copies of a chromosome produced during DNA replication." },
+  { id: "GEN_Terms_012", tag: "cell division", de: "Homologous chromosomes", en: "A chromosome pair (one from each parent) with the same genes in the same order." },
+  { id: "GEN_Terms_013", tag: "cell division", de: "Diploid (2n)", en: "Having two sets of chromosomes, one from each parent." },
+  { id: "GEN_Terms_014", tag: "cell division", de: "Haploid (n)", en: "Having one set of chromosomes." },
+
+  // The Cell Cycle
+  { id: "GEN_Terms_015", tag: "cell division", de: "Cell cycle", en: "The repeating sequence of growth, DNA replication, and division." },
+  { id: "GEN_Terms_016", tag: "cell division", de: "G1 phase", en: "Growth phase when the cell increases in size and builds cellular components." },
+  { id: "GEN_Terms_017", tag: "cell division", de: "S phase", en: "DNA synthesis phase when DNA is replicated." },
+  { id: "GEN_Terms_018", tag: "cell division", de: "G2 phase", en: "Growth and preparation phase after DNA replication and before division." },
+  { id: "GEN_Terms_019", tag: "cell division", de: "DNA replication", en: "The process of copying DNA so each daughter cell receives a complete genome." },
+
+  // Mitosis
+  { id: "GEN_Terms_020", tag: "cell division", de: "Mitosis", en: "Nuclear division that produces two genetically identical nuclei." },
+  { id: "GEN_Terms_021", tag: "cell division", de: "Prophase", en: "Chromosomes condense and the nucleus breaks down." },
+  { id: "GEN_Terms_022", tag: "cell division", de: "Metaphase", en: "Chromosomes align at the middle of the cell." },
+  { id: "GEN_Terms_023", tag: "cell division", de: "Anaphase", en: "Sister chromatids separate and move to opposite poles." },
+  { id: "GEN_Terms_024", tag: "cell division", de: "Telophase", en: "New nuclei form around each set of chromosomes." },
+  { id: "GEN_Terms_025", tag: "cell division", de: "Cytokinesis", en: "Division of the cytoplasm to produce two daughter cells." },
+
+  // Meiosis
+  { id: "GEN_Terms_026", tag: "cell division", de: "Meiosis", en: "Cell division that produces haploid gametes and increases genetic variation." },
+  { id: "GEN_Terms_027", tag: "cell division", de: "Meiosis I", en: "Division that separates homologous chromosomes and reduces chromosome number." },
+  { id: "GEN_Terms_028", tag: "cell division", de: "Meiosis II", en: "Division that separates sister chromatids, similar to mitosis." },
+  { id: "GEN_Terms_029", tag: "cell division", de: "Reduction division", en: "Division that reduces chromosome number from diploid to haploid." },
+
+  // Sources of Genetic Variation
+  { id: "GEN_Terms_030", tag: "cell division", de: "Crossing over", en: "Exchange of DNA between homologous chromosomes during meiosis." },
+  { id: "GEN_Terms_031", tag: "cell division", de: "Independent assortment", en: "Random distribution of homologous chromosomes into gametes." },
+
+  // Outcomes of Cell Division
+  { id: "GEN_Terms_032", tag: "cell division", de: "Identical daughter cells", en: "The outcome of mitosis: two cells with the same genetic information." },
+  { id: "GEN_Terms_033", tag: "cell division", de: "Haploid cells", en: "The outcome of meiosis: cells with one set of chromosomes." },
+  { id: "GEN_Terms_034", tag: "cell division", de: "Chromosome number", en: "The total number of chromosomes in a cell." },
+  { id: "GEN_Terms_035", tag: "cell division", de: "Genetic variation", en: "Differences among gametes or individuals caused by meiosis." }
+]
+
 };
