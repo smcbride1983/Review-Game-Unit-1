@@ -37,3 +37,453 @@
 </div>
 
 <div class="divider"></div>
+
+<script>
+  // ---------------------------
+  // Persistent per-card progress (your mastery system)
+  // ---------------------------
+  let progress = JSON.parse(localStorage.getItem("progress") || "{}");
+
+  function itemKey(item) { return `${item.de}|||${item.en}`; }
+
+  function getItemState(item) {
+    return progress[itemKey(item)] || { status: "new", seen: 0, correct: 0, wrong: 0 };
+  }
+
+  function setItemState(item, patch) {
+    progress[itemKey(item)] = { ...getItemState(item), ...patch };
+    localStorage.setItem("progress", JSON.stringify(progress));
+  }
+
+  // ---------------------------
+  // Tracker helpers (from decks.utils.js)
+  // We support both: DECK_UTILS.* (recommended) or legacy global funcs.
+  // ---------------------------
+  function hasTracker() {
+    return !!(window.DECK_UTILS && typeof DECK_UTILS.recordAttempt === "function");
+  }
+
+  function trackerRecord(item, isCorrect) {
+    if (!hasTracker()) return;
+    // item must have id for stable tracking
+    DECK_UTILS.recordAttempt(item, isCorrect);
+  }
+
+  function trackerStats(item) {
+    if (!hasTracker()) return null;
+    return DECK_UTILS.getStats(item);
+  }
+
+  // ---------------------------
+  // Session scoreboard (not persisted)
+  // ---------------------------
+  let score = 0;
+  let correctCount = 0;
+  let wrongCount = 0;
+  let streak = 0;
+
+  // Tracks current question + whether it's been answered
+  let current = null;   // { item, dir, prompt, answer }
+  let answered = false; // prevents "mark mastery" before answering
+
+  // ---------------------------
+  // "Hand" model: we only quiz from these 20 cards until reshuffle
+  // ---------------------------
+  const HAND_SIZE = 20;
+  let hand = [];
+  let handIndex = 0;
+
+  // Weak-tags study mode
+  let weakStudyOn = false;
+  let weakStudyTags = []; // array of tag names
+
+  function updateStatus() {
+    document.getElementById("score").textContent = score;
+    document.getElementById("correct").textContent = correctCount;
+    document.getElementById("wrong").textContent = wrongCount;
+    document.getElementById("streak").textContent = streak;
+  }
+
+  // Fallback shuffle
+  function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // ---------------------------
+  // Deck source: full list (pruned of "known" if possible)
+  // ---------------------------
+  function getLevelList() {
+    const level = document.getElementById("level").value;
+
+    // Prefer shared utils if present
+    const base = (typeof dedupePairs === "function" && typeof getDeck === "function")
+      ? dedupePairs(getDeck(level))
+      : (window.DECKS && Array.isArray(window.DECKS[level]) ? window.DECKS[level] : []);
+
+    // Hide "known" if possible (but don't allow <4, because we need 4 options)
+    const filtered = base.filter(i => getItemState(i).status !== "known");
+    return filtered.length >= 4 ? filtered : base;
+  }
+
+  function getLevelBaseDeckUnfiltered() {
+    const level = document.getElementById("level").value;
+    const base = (typeof dedupePairs === "function" && typeof getDeck === "function")
+      ? dedupePairs(getDeck(level))
+      : (window.DECKS && Array.isArray(window.DECKS[level]) ? window.DECKS[level] : []);
+    return base;
+  }
+
+  // ---------------------------
+  // Hand creation: pick 20 (or fewer if deck is small)
+  // If weakStudyOn, filter pool by weakStudyTags (tags).
+  // ---------------------------
+  function buildNewHand() {
+    let pool = getLevelList();
+
+    if (weakStudyOn && weakStudyTags.length) {
+      pool = pool.filter(c => weakStudyTags.includes(String(c.tag || "Untagged")));
+      // fallback: if filter makes it too small, turn off weak study
+      if (pool.length < 4) {
+        weakStudyOn = false;
+        weakStudyTags = [];
+        pool = getLevelList();
+        document.getElementById("sub").textContent =
+          "Weak-tag filter had too few cards; switched back to normal.";
+      }
+    }
+
+    if (typeof getRandomCards === "function") {
+      hand = getRandomCards(pool, HAND_SIZE);
+    } else if (window.DECK_UTILS && typeof DECK_UTILS.getRandomCards === "function") {
+      hand = DECK_UTILS.getRandomCards(pool, { count: HAND_SIZE });
+    } else {
+      hand = shuffle([...pool]).slice(0, Math.min(HAND_SIZE, pool.length));
+    }
+
+    handIndex = 0;
+    document.getElementById("count").textContent = hand.length;
+    console.log("POOL size:", pool.length, "HAND size:", hand.length, "weakStudyOn:", weakStudyOn, "tags:", weakStudyTags);
+  }
+
+  // ---------------------------
+  // Accuracy line for current card
+  // ---------------------------
+  function renderAccuracyForCurrent() {
+    const accEl = document.getElementById("acc");
+    if (!current || !current.item) { accEl.textContent = "—"; return; }
+
+    const s = trackerStats(current.item);
+    if (!s) { accEl.textContent = "Tracker not loaded"; return; }
+    if (s.pct === null) accEl.textContent = "— (no attempts)";
+    else accEl.textContent = `${Math.round(s.pct * 100)}% (${s.correct}/${s.attempts})`;
+  }
+
+  // ---------------------------
+  // Answer handling
+  // ---------------------------
+  function handleAnswer(clickedText, buttonEl) {
+    if (!current) return;
+
+    // prevent double scoring
+    const buttons = [...document.querySelectorAll(".choice")];
+    buttons.forEach(b => b.disabled = true);
+
+    const isCorrect = clickedText === current.answer;
+
+    // mark correct button, and wrong if applicable
+    buttons.forEach(b => {
+      if (b.textContent === current.answer) b.classList.add("correct");
+    });
+    if (!isCorrect) buttonEl.classList.add("wrong");
+
+    const item = current.item;
+
+    // ✅ Record attempt in the tracker (ID-based)
+    trackerRecord(item, isCorrect);
+
+    // update persistent mastery progress
+    const st = getItemState(item);
+    setItemState(item, { seen: st.seen + 1 });
+
+    // update session scoreboard
+    if (isCorrect) {
+      score += 1;
+      correctCount += 1;
+      streak += 1;
+      setItemState(item, { correct: st.correct + 1 });
+      document.getElementById("sub").textContent =
+        "✅ Correct! Mark mastery (optional) or click Next.";
+    } else {
+      score = Math.max(0, score - 1);
+      wrongCount += 1;
+      streak = 0;
+      setItemState(item, { wrong: st.wrong + 1, status: "practice" }); // wrong => upweight as practice
+      document.getElementById("sub").textContent =
+        `❌ Wrong. Correct answer: ${current.answer}. Mark mastery (optional) or click Next.`;
+    }
+
+    answered = true;
+    updateStatus();
+    renderAccuracyForCurrent();
+
+    // Show mastery buttons AFTER answering (Option A)
+    const afterRow = document.getElementById("afterAnswerRow");
+    if (afterRow) afterRow.removeAttribute("hidden");
+  }
+
+  // ---------------------------
+  // Question creation (ONLY from the 20-card hand)
+  // ---------------------------
+  function makeQuestion() {
+    if (!hand || hand.length < 4) buildNewHand();
+    if (hand.length < 4) return;
+
+    answered = false;
+    document.getElementById("sub").textContent = "Pick the correct answer.";
+
+    // Hide mastery row until answered
+    const afterRow = document.getElementById("afterAnswerRow");
+    if (afterRow) afterRow.setAttribute("hidden", "");
+
+    const directionSelect = document.getElementById("direction").value;
+    const dir = directionSelect === "mixed"
+      ? (Math.random() < 0.5 ? "de-en" : "en-de")
+      : directionSelect;
+
+    const item = hand[Math.floor(Math.random() * hand.length)];
+    const prompt = dir === "de-en" ? item.de : item.en;
+    const answer = dir === "de-en" ? item.en : item.de;
+
+    current = { item, dir, prompt, answer };
+
+    document.getElementById("prompt").textContent = prompt;
+
+    const choicesEl = document.getElementById("choices");
+    choicesEl.innerHTML = "";
+
+    const distractors = shuffle(hand.filter(x => x !== item))
+      .slice(0, 3)
+      .map(x => dir === "de-en" ? x.en : x.de);
+
+    const options = shuffle([answer, ...distractors]);
+
+    options.forEach(opt => {
+      const b = document.createElement("button");
+      b.className = "choice";
+      b.textContent = opt;
+      b.onclick = () => handleAnswer(opt, b);
+      choicesEl.appendChild(b);
+    });
+
+    renderAccuracyForCurrent();
+  }
+
+  // ---------------------------
+  // Weak concepts UI
+  // ---------------------------
+  function showWeakPanel() {
+    const panel = document.getElementById("weakPanel");
+    const tagsEl = document.getElementById("weakTagsList");
+    const cardsEl = document.getElementById("weakCardsList");
+
+    // Ensure Insights panel is open if you’re using Option A layout
+    const insightsPanel = document.getElementById("insightsPanel");
+    const insightsToggle = document.getElementById("insightsToggle");
+    if (insightsPanel && insightsToggle) {
+      insightsPanel.removeAttribute("hidden");
+      insightsToggle.setAttribute("aria-expanded", "true");
+      insightsToggle.textContent = "Insights ▴";
+    }
+
+    panel.style.display = "block";
+
+    if (!hasTracker()) {
+      tagsEl.innerHTML =
+        "Tracker not loaded. Make sure you replaced <b>decks.utils.js</b> with the tracker version.";
+      cardsEl.innerHTML = "—";
+      return;
+    }
+
+    const baseDeck = getLevelBaseDeckUnfiltered();
+
+    const weakTags = DECK_UTILS.getWeakTags(baseDeck, { minAttemptsPerTag: 5 });
+    const weakCards = DECK_UTILS.getWeakCards(baseDeck, { limit: 10, minAttempts: 2, includeUnseen: true });
+
+    if (!weakTags.length) {
+      tagsEl.innerHTML = "Not enough data yet. Answer a few cards first (then this will populate).";
+    } else {
+      tagsEl.innerHTML = weakTags.slice(0, 6).map(t => {
+        const pct = (t.pct == null) ? "—" : `${Math.round(t.pct * 100)}%`;
+        return `• <b>${escapeHtml(t.tag)}</b>: ${pct} (${t.correct}/${t.attempts})`;
+      }).join("<br>");
+    }
+
+    if (!weakCards.length) {
+      cardsEl.innerHTML = "Not enough data yet.";
+    } else {
+      cardsEl.innerHTML = weakCards.map(row => {
+        const pct = (row.pct == null) ? "—" : `${Math.round(row.pct * 100)}%`;
+        const label = row.card && row.card.de ? row.card.de : "(missing term)";
+        return `• <b>${escapeHtml(label)}</b>: ${pct} (${row.correct}/${row.attempts})`;
+      }).join("<br>");
+    }
+  }
+
+  // simple HTML escape for panel display
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[c]));
+  }
+
+  function activateWeakStudyMode() {
+    if (!hasTracker()) {
+      document.getElementById("sub").textContent =
+        "Tracker not loaded. Replace decks.utils.js with the tracker version first.";
+      return;
+    }
+
+    const baseDeck = getLevelBaseDeckUnfiltered();
+    const weakTags = DECK_UTILS.getWeakTags(baseDeck, { minAttemptsPerTag: 5 });
+
+    if (!weakTags.length) {
+      document.getElementById("sub").textContent =
+        "Not enough data yet for weak tags—answer a few cards first.";
+      return;
+    }
+
+    weakStudyTags = weakTags.slice(0, 3).map(t => t.tag);
+    weakStudyOn = true;
+
+    buildNewHand();
+    makeQuestion();
+
+    document.getElementById("sub").textContent =
+      `🎯 Weak-tag study mode: ${weakStudyTags.join(", ")} (20-card hand rebuilt).`;
+  }
+
+  // ---------------------------
+  // Panel toggles (Option A)
+  // ---------------------------
+  function togglePanel(btn, panel) {
+    const isHidden = panel.hasAttribute("hidden");
+    if (isHidden) panel.removeAttribute("hidden");
+    else panel.setAttribute("hidden", "");
+
+    btn.setAttribute("aria-expanded", String(isHidden));
+    btn.textContent = btn.textContent.replace(isHidden ? "▾" : "▴", isHidden ? "▴" : "▾");
+  }
+
+  // ---------------------------
+  // Controls
+  // ---------------------------
+  document.getElementById("nextBtn").onclick = () => {
+    makeQuestion();
+  };
+
+  document.getElementById("reshuffleBtn").onclick = () => {
+    buildNewHand();
+    makeQuestion();
+    document.getElementById("sub").textContent = "🔁 New set loaded. Pick the correct answer.";
+  };
+
+  // Reset: clears mastery progress + session score (keeps tracker unless you click Clear accuracy stats)
+  document.getElementById("resetBtn").onclick = () => {
+    progress = {};
+    localStorage.removeItem("progress");
+
+    score = 0;
+    correctCount = 0;
+    wrongCount = 0;
+    streak = 0;
+    updateStatus();
+
+    // keep weak study mode as-is; but rebuild
+    buildNewHand();
+    makeQuestion();
+    document.getElementById("sub").textContent = "Reset mastery + session score. (Accuracy stats kept.)";
+  };
+
+  // Reset tracker only (accuracy)
+  document.getElementById("resetStatsBtn").onclick = () => {
+    if (!hasTracker()) {
+      document.getElementById("sub").textContent = "Tracker not loaded.";
+      return;
+    }
+    if (!confirm("Clear accuracy stats for this browser?")) return;
+    DECK_UTILS.resetTracker();
+    renderAccuracyForCurrent();
+    document.getElementById("sub").textContent = "Accuracy stats cleared.";
+    // refresh weak panel if open
+    const panel = document.getElementById("weakPanel");
+    if (panel && panel.style.display === "block") showWeakPanel();
+  };
+
+  // Mastery buttons: only allowed AFTER answering
+  document.getElementById("knowBtn").onclick = () => {
+    if (!current) return;
+    if (!answered) { document.getElementById("sub").textContent = "Answer first, then mark mastery."; return; }
+    setItemState(current.item, { status: "known" });
+    makeQuestion();
+  };
+
+  document.getElementById("practiceBtn").onclick = () => {
+    if (!current) return;
+    if (!answered) { document.getElementById("sub").textContent = "Answer first, then mark mastery."; return; }
+    setItemState(current.item, { status: "practice" });
+    makeQuestion();
+  };
+
+  // Weak concepts buttons (inside Insights panel)
+  document.getElementById("weakBtn").onclick = () => {
+    showWeakPanel();
+  };
+
+  document.getElementById("studyWeakBtn").onclick = () => {
+    activateWeakStudyMode();
+    showWeakPanel();
+  };
+
+  // If you change level/direction, rebuild hand so it reflects the new choice
+  document.getElementById("level").addEventListener("change", () => {
+    // changing level should disable weak study mode (tags might not match)
+    weakStudyOn = false;
+    weakStudyTags = [];
+    buildNewHand();
+    makeQuestion();
+    document.getElementById("sub").textContent = "Level changed. Weak study mode off.";
+  });
+
+  document.getElementById("direction").addEventListener("change", () => {
+    makeQuestion();
+  });
+
+  // Panel toggle buttons (safe even if you haven’t added the panels yet)
+  const toolsToggle = document.getElementById("toolsToggle");
+  const toolsPanel = document.getElementById("toolsPanel");
+  if (toolsToggle && toolsPanel) {
+    toolsToggle.onclick = () => togglePanel(toolsToggle, toolsPanel);
+  }
+
+  const insightsToggle = document.getElementById("insightsToggle");
+  const insightsPanel = document.getElementById("insightsPanel");
+  if (insightsToggle && insightsPanel) {
+    insightsToggle.onclick = () => togglePanel(insightsToggle, insightsPanel);
+  }
+
+  const statsToggle = document.getElementById("statsToggle");
+  const statsLine = document.getElementById("statsLine");
+  if (statsToggle && statsLine) {
+    statsToggle.onclick = () => togglePanel(statsToggle, statsLine);
+  }
+
+  // init
+  updateStatus();
+  buildNewHand();
+  makeQuestion();
+</script>
+
