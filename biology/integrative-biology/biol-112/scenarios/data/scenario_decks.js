@@ -472,3 +472,289 @@
     }
   ];
 })();
+
+       (function () {
+  window.SCENARIO_DECKS = window.SCENARIO_DECKS || {};
+  window.SCENARIO_DECKS_META = window.SCENARIO_DECKS_META || {};
+
+  const DECK_KEY = "BIOL112_CELL_DIVISION";
+
+  window.SCENARIO_DECKS_META[DECK_KEY] = {
+    course: "BIOL 112",
+    topic: "Cell Division",
+    title: "BIOL 112 — Cell Division Scenarios",
+    version: "1.1.0",
+    created: "2026-02-10"
+  };
+
+  window.SCENARIO_DECKS[DECK_KEY] = [
+
+    /* =========================
+       CELL CYCLE (5)
+       ========================= */
+    {
+      category: "Cell Division",
+      prompt: "A newly divided cell is much smaller than the original parent cell and contains only one copy of its genome. What must happen before it can divide again?",
+      choices: [
+        "Chromosomes must condense immediately",
+        "The cell must grow and replicate its DNA",
+        "Sister chromatids must separate",
+        "The nuclear membrane must break down"
+      ],
+      answer: "The cell must grow and replicate its DNA"
+    },
+    {
+      category: "Cell Division",
+      prompt: "Why does a cell spend most of its life outside of mitosis?",
+      choices: [
+        "Chromosomes cannot condense for long periods",
+        "Growth and DNA replication take substantial time",
+        "Cells only divide when mutations occur",
+        "Mitosis is energetically impossible most of the time"
+      ],
+      answer: "Growth and DNA replication take substantial time"
+    },
+    {
+      category: "Cell Division",
+      prompt: "DNA exists as loosely packed chromatin during most of the cell cycle. What problem does this arrangement help solve?",
+      choices: [
+        "Preventing chromosome loss",
+        "Allowing access for replication and transcription",
+        "Ensuring equal chromosome separation",
+        "Reducing mutation rates"
+      ],
+      answer: "Allowing access for replication and transcription"
+    },
+    {
+      category: "Cell Division",
+      prompt: "A cell has completed DNA replication but has not yet begun dividing. Which challenge now becomes most important?",
+      choices: [
+        "Copying the genome accurately",
+        "Moving and separating DNA without damage",
+        "Increasing cell surface area",
+        "Generating genetic diversity"
+      ],
+      answer: "Moving and separating DNA without damage"
+    },
+    {
+      category: "Cell Division",
+      prompt: "Why does cell division help solve problems associated with increasing cell size?",
+      choices: [
+        "It increases mutation rates",
+        "It improves surface area–to–volume ratio",
+        "It creates genetic diversity",
+        "It slows metabolism"
+      ],
+      answer: "It improves surface area–to–volume ratio"
+    },
+
+    /* =========================
+       MITOSIS (5)
+       ========================= */
+    {
+      category: "Cell Division",
+      prompt: "A somatic cell divides to replace damaged tissue. What outcome is most critical for this division?",
+      choices: [
+        "Each daughter cell is genetically unique",
+        "Chromosome number is reduced by half",
+        "Each daughter cell is genetically identical to the parent",
+        "Homologous chromosomes exchange DNA"
+      ],
+      answer: "Each daughter cell is genetically identical to the parent"
+    },
+    {
+      category: "Cell Division",
+      prompt: "Why must DNA be fully replicated before mitosis begins?",
+      choices: [
+        "To increase genetic diversity",
+        "So each daughter cell receives a complete genome",
+        "To allow chromosomes to condense",
+        "To reduce chromosome number"
+      ],
+      answer: "So each daughter cell receives a complete genome"
+    },
+    {
+      category: "Cell Division",
+      prompt: "During mitosis, chromosomes line up at the center of the cell before separating. What problem does this alignment help prevent?",
+      choices: [
+        "Incomplete DNA replication",
+        "Unequal distribution of chromosomes",
+        "Loss of genetic variation",
+        "Failure of cytokinesis"
+      ],
+      answer: "Unequal distribution of chromosomes"
+    },
+    {
+      category: "Cell Division",
+      prompt: "A cell fails to properly attach all chromosomes to the spindle before separation begins. What is the most likely consequence?",
+      choices: [
+        "Identical daughter cells",
+        "Unequal chromosome numbers in daughter cells",
+        "Increased genetic diversity",
+        "Failure of DNA replication"
+      ],
+      answer: "Unequal chromosome numbers in daughter cells"
+    },
+    {
+      category: "Cell Division",
+      prompt: "Which statement best explains why mitosis alone cannot produce gametes?",
+      choices: [
+        "Mitosis does not involve DNA replication",
+        "Mitosis produces genetically identical cells",
+        "Mitosis reduces chromosome number",
+        "Mitosis includes crossing over"
+      ],
+      answer: "Mitosis produces genetically identical cells"
+    },
+
+    /* =========================
+       MEIOSIS (5)
+       ========================= */
+    {
+      category: "Cell Division",
+      prompt: "Why would producing gametes that are exact genetic copies be problematic for sexual reproduction?",
+      choices: [
+        "It would prevent fertilization",
+        "It would eliminate genetic variation",
+        "It would double chromosome number",
+        "It would stop DNA replication"
+      ],
+      answer: "It would eliminate genetic variation"
+    },
+     
+    {
+      category: "Cell Division",
+      prompt: "During meiosis, homologous chromosomes pair and exchange segments of DNA. What is the primary result of this process?",
+      choices: [
+        "Reduced chromosome number",
+        "Genetically identical gametes",
+        "New combinations of alleles",
+        "Faster cell division"
+      ],
+      answer: "New combinations of alleles"
+    },
+     
+    {
+      category: "Cell Division",
+      prompt: "Independent assortment during meiosis explains why:",
+      choices: [
+        "All gametes from an individual are identical",
+        "Chromosome number is reduced",
+        "Gametes contain different combinations of chromosomes",
+        "DNA replication occurs only once"
+      ],
+      answer: "Gametes contain different combinations of chromosomes"
+    },
+     
+    {
+      category: "Cell Division",
+      prompt: "What is the key goal of meiosis I that distinguishes it from meiosis II?",
+      choices: [
+        "Separating sister chromatids",
+        "Reducing chromosome number",
+        "Creating identical daughter cells",
+        "Completing DNA replication"
+      ],
+      answer: "Reducing chromosome number"
+    },
+    {
+      category: "Cell Division",
+      prompt: "After meiosis is complete, how do the resulting cells differ from the original parent cell?",
+      choices: [
+        "They are diploid and genetically identical",
+        "They are haploid and genetically variable",
+        "They are larger and contain more DNA",
+        "They are somatic cells"
+      ],
+      answer: "They are haploid and genetically variable"
+    },
+     {
+  category: "Cell Division",
+  prompt: "If meiosis included DNA replication but only one cell division, what would be the most likely outcome after fertilization?",
+  choices: [
+    "Normal diploid offspring",
+    "Genetically identical offspring",
+    "Progressive doubling of chromosome number each generation",
+    "Loss of genetic variation"
+  ],
+  answer: "Progressive doubling of chromosome number each generation"
+},
+
+     {
+  category: "Cell Division",
+  prompt: "Two gametes from the same individual contain different combinations of maternal and paternal chromosomes, even when no crossing over occurs. Which meiotic process best explains this difference?",
+  choices: [
+    "Crossing over",
+    "Independent assortment",
+    "DNA replication",
+    "Cytokinesis"
+  ],
+  answer: "Independent assortment"
+},
+     {
+  category: "Cell Division",
+  prompt: "Why is chromosome condensation a critical event during prophase?",
+  choices: [
+    "It allows DNA to be replicated",
+    "It prevents chromosomes from becoming entangled during movement",
+    "It increases genetic variation",
+    "It reduces chromosome number"
+  ],
+  answer: "It prevents chromosomes from becoming entangled during movement"
+},
+     {
+  category: "Cell Division",
+  prompt: "What is the primary purpose of aligning chromosomes at the metaphase plate?",
+  choices: [
+    "To initiate cytokinesis",
+    "To ensure equal chromosome distribution to daughter cells",
+    "To allow crossing over to occur",
+    "To complete DNA replication"
+  ],
+  answer: "To ensure equal chromosome distribution to daughter cells"
+},
+
+        {
+  category: "Cell Division",
+  prompt: "During anaphase, sister chromatids separate and move toward opposite poles. What problem is this step directly solving?",
+  choices: [
+    "Preventing DNA replication errors",
+    "Ensuring each daughter cell receives one copy of each chromosome",
+    "Increasing genetic diversity",
+    "Reforming the nuclear membrane"
+  ],
+  answer: "Ensuring each daughter cell receives one copy of each chromosome"
+},
+
+{
+  category: "Cell Division",
+  prompt: "Why is re-formation of the nuclear envelope during telophase an important step in cell division?",
+  choices: [
+    "It allows chromosomes to condense",
+    "It separates the cytoplasm",
+    "It establishes two distinct nuclei before the cell fully divides",
+    "It initiates spindle attachment"
+  ],
+  answer: "It establishes two distinct nuclei before the cell fully divides"
+},
+
+
+{
+  category: "Cell Division",
+  prompt: "Which sequence of goals best matches the order of mitotic phases?",
+  choices: [
+    "DNA replication → chromosome separation → alignment → nuclear reformation",
+    "Condense and prepare → align and check → separate → reorganize into two cells",
+    "Align → replicate → separate → divide",
+    "Separate → condense → align → reform nuclei"
+  ],
+  answer: "Condense and prepare → align and check → separate → reorganize into two cells"
+}
+
+
+
+          
+
+  ];
+})();
+
