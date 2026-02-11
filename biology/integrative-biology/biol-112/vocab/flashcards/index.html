@@ -135,7 +135,7 @@
           <label class="small">Level:</label>
           <select id="level">
             <option value="BIOL112_EVOLUTION">Evolution</option>
-            <option value=" BIOL112_GenesAndCells">Genes and Cells</option>
+            <option value="BIOL112_GenesAndCells">Genes and Cells</option>
 
           </select>
 
@@ -152,8 +152,6 @@
         </div>
 
         <div class="rowRight">
-          <button id="weakBtn" title="Show weakest tags + cards">Weak Concepts</button>
-          <button id="studyWeakBtn" title="Build your 20-card hand from weakest tags">Study Weak Tags</button>
 
           <!-- BACK ONE LEVEL -->
           <a href="../" class="btnLink" title="Back to Vocab Hub">⬅ Vocab Games</a>
@@ -177,6 +175,12 @@
       <div id="prompt" class="prompt">—</div>
       <div id="sub" class="sub">Pick the correct answer.</div>
       <div id="choices" class="choices"></div>
+<!-- QUIZ ACTIONS (moved down to reduce top clutter) -->
+
+      <div class="row quizActions">
+        <button id="weakBtn" title="Show weakest tags + cards">Weak Concepts</button>
+        <button id="studyWeakBtn" title="Build your 20-card hand from weakest tags">Study Weak Tags</button>
+</div>
 
       <!-- WEAK CONCEPTS PANEL -->
       <div id="weakPanel" class="weakPanel">
@@ -616,6 +620,7 @@
   </script>
 </body>
 </html>
+
 
 
 
