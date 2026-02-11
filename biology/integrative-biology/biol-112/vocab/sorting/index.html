@@ -6,64 +6,141 @@
   <title>Category Sort: Evolution Buckets</title>
 
   <style>
-    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
-    body { margin: 0; background: #f6f7fb; color: #111; }
-    .wrap { max-width: 820px; margin: 0 auto; padding: 18px; }
-    .card {
-      background: white; border-radius: 14px; padding: 18px;
-      box-shadow: 0 8px 24px rgba(0,0,0,.08);
+    /* =========================
+       THEME (DARK, same as Matching/Flashcards)
+       ========================= */
+    :root{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+      --bg: #0b0f19;
+      --card: #0f1629;
+      --panel: #111a2e;
+
+      --text: #e8eefc;
+      --muted: #aeb9d6;
+
+      --border: #223255;
+      --borderSoft: rgba(255,255,255,.10);
+
+      --btnBg: #111a2e;
+      --btnText: #e8eefc;
+      --btnBorder: #223255;
+
+      --primaryBg: #e8eefc;
+      --primaryText: #0b0f19;
+
+      --good: #1f9d55;
+      --bad: #d64545;
     }
-    h1 { margin: 0 0 10px; font-size: 20px; }
 
-    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-    .topRow { justify-content: space-between; }
-    .leftControls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    body{ margin:0; background:var(--bg); color:var(--text); }
+    .wrap{ max-width: 980px; margin: 0 auto; padding: 18px; }
 
-    select, button, .btnLink {
-      border: 1px solid #d7dbe6; background: #fff; color: #111;
-      border-radius: 10px; padding: 10px 12px; font-size: 14px;
-      cursor: pointer; text-decoration: none;
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
     }
-    button.primary { background: #111; color: #fff; border-color: #111; }
-    button:disabled { opacity: .55; cursor: not-allowed; }
 
-    .small { font-size: 12px; color: #666; }
-    .divider { height: 1px; background: #eceff6; margin: 14px 0; }
+    h1{ margin:0 0 10px; font-size:20px; letter-spacing:.2px; }
 
-    .prompt {
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .topRow{ justify-content:space-between; }
+    .leftControls{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .rowRight{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+
+    .small{ font-size:12px; color:var(--muted); }
+    .divider{ height:1px; background:var(--borderSoft); margin:14px 0; }
+
+    select, button, .btnLink{
+      border: 1px solid var(--btnBorder);
+      background: var(--btnBg);
+      color: var(--btnText);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      line-height: 1;
+    }
+
+    button.primary{
+      background: var(--primaryBg);
+      color: var(--primaryText);
+      border-color: var(--primaryBg);
+      font-weight: 800;
+    }
+
+    button.ghost{
+      background: transparent;
+      border: 1px solid var(--btnBorder);
+      color: var(--btnText);
+    }
+
+    button:disabled{ opacity:.55; cursor:not-allowed; }
+
+    /* Prompt */
+    .prompt{
       margin: 14px 0 6px;
-      font-size: 34px; font-weight: 800; letter-spacing: .2px;
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: .2px;
     }
-    .sub { color: #555; font-size: 13px; margin-bottom: 10px; line-height: 1.35; }
 
-    .choices { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 12px; }
-    @media (min-width: 560px) { .choices { grid-template-columns: 1fr 1fr; } }
+    .sub{ color: var(--muted); font-size: 13px; margin-bottom: 10px; line-height: 1.35; }
 
-    .choice {
-      text-align: left; width: 100%;
-      padding: 14px 12px; border-radius: 12px;
-      border: 1px solid #d7dbe6; background: #fff;
+    /* Choices */
+    .choices{
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    @media (min-width: 560px){
+      .choices{ grid-template-columns: 1fr 1fr; }
+    }
+
+    .choice{
+      text-align:left;
+      width:100%;
+      padding: 14px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
       transition: transform .02s ease-in-out;
     }
-    .choice:active { transform: scale(.99); }
-    .choice.correct { border-color: #1f9d55; background: #f3fff7; }
-    .choice.wrong { border-color: #d64545; background: #fff5f5; }
+    .choice:active{ transform: scale(.99); }
+    .choice.correct{ border-color: var(--good); background: rgba(31,157,85,.12); }
+    .choice.wrong{ border-color: var(--bad); background: rgba(214,69,69,.12); }
 
-    .status {
+    /* Panels */
+    .panel{
+      border: 1px solid var(--border);
+      background: var(--panel);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    #toolsPanel{ margin-top: 10px; }
+
+    /* Status */
+    .status{
       margin-top: 12px;
-      display: flex; gap: 12px; flex-wrap: wrap;
-      color: #333; font-size: 13px;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      color: var(--muted);
+      font-size: 13px;
     }
-    .pill {
-      background: #f0f2f8; border: 1px solid #e1e5f0;
-      padding: 6px 10px; border-radius: 999px;
+    .pill{
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      border-radius: 999px;
     }
 
-    .masteryRow { margin-top: 6px; }
-    .masteryHelp { margin-top: 6px; line-height: 1.35; font-size: 12px; color: #666; }
-
-    .tagLine { font-size: 12px; color: #666; margin-top: 6px; }
-    .hidden { display: none; }
+    .hidden{ display:none; }
   </style>
 </head>
 
@@ -78,26 +155,32 @@
           <select id="level">
             <option value="BIOL112_EVOLUTION">Evolution</option>
             <option value="BIOL112_Genetics">Genes and Cells</option>
-           
           </select>
 
           <button id="nextBtn" class="primary">Next</button>
-          <button id="reshuffleBtn">Reshuffle 20</button>
-          <button id="resetBtn" title="Reset session score">Reset</button>
         </div>
 
-        <a href="../" class="btnLink" title="Back to Vocab Hub">⬅ Vocab Games</a>
+        <div class="rowRight">
+          <button id="toolsToggle" class="ghost" aria-expanded="false">More ▾</button>
+          <a href="../" class="btnLink" title="Back to Vocab Hub">⬅ Vocab Games</a>
+        </div>
       </div>
 
-      <div class="row masteryRow">
-        <button id="knowBtn" title="Mark as known">I know this</button>
-        <button id="practiceBtn" title="Show more often">Need practice</button>
-        <button id="toggleDefBtn" title="Show/hide definition">Show definition</button>
-      </div>
+      <!-- TOOLS PANEL (hidden by default) -->
+      <div id="toolsPanel" class="panel" hidden>
+        <div class="row">
+          <button id="reshuffleBtn" class="ghost">Reshuffle 20</button>
+          <button id="resetBtn" class="ghost" title="Reset session score">Reset</button>
 
-      <div class="masteryHelp">
-        You are playing from a <b>20-card set</b>. <b>Reshuffle 20</b> pulls a new set. •
-        <b>I know this</b> = show very rarely • <b>Need practice</b> = shows more often • Optional: reveal definition for support
+          <button id="knowBtn" class="ghost" title="Mark as known">I know this</button>
+          <button id="practiceBtn" class="ghost" title="Show more often">Need practice</button>
+
+          <button id="toggleDefBtn" class="ghost" title="Show/hide definition">Show definition</button>
+        </div>
+
+        <div class="small" style="margin-top:8px; line-height:1.35;">
+          You are playing from a <b>20-card set</b>. Reshuffle pulls a new set. “I know this” hides cards; “Need practice” shows them more often.
+        </div>
       </div>
 
       <div class="divider"></div>
@@ -105,7 +188,6 @@
       <div id="prompt" class="prompt">—</div>
       <div id="sub" class="sub">Pick the correct category for this term.</div>
       <div id="defBox" class="sub hidden"></div>
-      <div id="tagLine" class="tagLine hidden"></div>
 
       <div id="choices" class="choices"></div>
 
@@ -124,6 +206,28 @@
   <script src="../data/decks.utils.js"></script>
 
   <script>
+    // ==============================
+    // Panel toggle helpers
+    // ==============================
+    function setToggleLabel(btn, isOpen, baseText) {
+      btn.setAttribute("aria-expanded", String(isOpen));
+      btn.textContent = `${baseText} ${isOpen ? "▴" : "▾"}`;
+    }
+    function togglePanel(btn, panel) {
+      const isHidden = panel.hasAttribute("hidden");
+      if (isHidden) panel.removeAttribute("hidden");
+      else panel.setAttribute("hidden", "");
+      const base = btn.textContent.replace(/[▴▾]/g, "").trim();
+      setToggleLabel(btn, isHidden, base || "More");
+    }
+    function closeTools() {
+      const btn = document.getElementById("toolsToggle");
+      const panel = document.getElementById("toolsPanel");
+      if (!btn || !panel) return;
+      panel.setAttribute("hidden", "");
+      setToggleLabel(btn, false, "More");
+    }
+
     // ==============================
     // Progress + storage
     // ==============================
@@ -182,8 +286,8 @@
     // Hand model (20-card set)
     // ==============================
     const HAND_SIZE = 20;
-    let hand = [];          // 20 tagged items only
-    let allTagsInHand = []; // categories shown as options (derived from hand)
+    let hand = [];
+    let allTagsInHand = [];
 
     // ==============================
     // App state
@@ -236,23 +340,16 @@
 
     function renderDefinition() {
       const defBox = document.getElementById("defBox");
-      const tagLine = document.getElementById("tagLine");
-
       if (!current) {
         defBox.classList.add("hidden");
-        tagLine.classList.add("hidden");
         return;
       }
-
       if (showDef) {
         defBox.textContent = "Definition: " + current.item.en;
         defBox.classList.remove("hidden");
       } else {
         defBox.classList.add("hidden");
       }
-
-      // keep tag hidden (anti-cheat); toggle if you want for debugging
-      tagLine.classList.add("hidden");
     }
 
     // ==============================
@@ -263,6 +360,7 @@
       if (pool.length < 4) {
         hand = pool.slice();
         allTagsInHand = computeTagsFromList(hand);
+        renderStats();
         return;
       }
 
@@ -272,10 +370,7 @@
         hand = shuffle(pool).slice(0, Math.min(HAND_SIZE, pool.length));
       }
 
-      // IMPORTANT: derive categories from the hand, so it matches the 20-card set
       allTagsInHand = computeTagsFromList(hand);
-
-      console.log("FULL tagged deck:", pool.length, "HAND:", hand.length, "TAGS in hand:", allTagsInHand);
       renderStats();
     }
 
@@ -301,13 +396,13 @@
       setPrompt(item.de, "Which category does this term belong to?");
       renderDefinition();
 
-      // Use tags from the hand. If hand has only 1 tag, fall back to full deck tags so choices exist.
+      // Use tags from the hand; if only 1 tag, fall back to full tagged pool
       let tags = allTagsInHand;
       if (!tags || tags.length < 2) {
         tags = computeTagsFromList(getFullPoolTagged());
       }
 
-      // If you eventually have lots of tags, you can limit to 6:
+      // If you want fewer options, uncomment this block:
       // const correctTag = item.tag;
       // const otherTags = shuffle(tags.filter(t => t !== correctTag)).slice(0, 5);
       // const options = shuffle([correctTag, ...otherTags]);
@@ -343,13 +438,12 @@
         score += 1;
         correct += 1;
         streak += 1;
-        document.getElementById("sub").textContent = `Correct ✅  (${correctTag})`;
+        document.getElementById("sub").textContent = `Correct ✅ (${correctTag})`;
       } else {
         buttonEl.classList.add("wrong");
         wrong += 1;
         streak = 0;
-        document.getElementById("sub").textContent = `Not quite ❌  Correct category: ${correctTag}`;
-
+        document.getElementById("sub").textContent = `Not quite ❌ Correct category: ${correctTag}`;
         for (const b of buttons) {
           if (b.textContent === correctTag) b.classList.add("correct");
         }
@@ -377,33 +471,46 @@
     // ==============================
     // Controls
     // ==============================
+    document.getElementById("toolsToggle").addEventListener("click", () => {
+      togglePanel(
+        document.getElementById("toolsToggle"),
+        document.getElementById("toolsPanel")
+      );
+    });
+
     document.getElementById("nextBtn").addEventListener("click", () => makeQuestion());
 
     document.getElementById("reshuffleBtn").addEventListener("click", () => {
       buildNewHand();
       makeQuestion();
+      closeTools();
     });
 
     document.getElementById("resetBtn").addEventListener("click", () => {
       score = 0; correct = 0; wrong = 0; streak = 0;
+      renderStats();
       makeQuestion();
+      closeTools();
     });
 
     document.getElementById("level").addEventListener("change", () => {
       buildNewHand();
       makeQuestion();
+      closeTools();
     });
 
     document.getElementById("knowBtn").addEventListener("click", () => {
       if (!current) return;
       setItemState(current.item, { status: "known" });
       makeQuestion();
+      closeTools();
     });
 
     document.getElementById("practiceBtn").addEventListener("click", () => {
       if (!current) return;
       setItemState(current.item, { status: "practice" });
       makeQuestion();
+      closeTools();
     });
 
     document.getElementById("toggleDefBtn").addEventListener("click", () => {
@@ -412,7 +519,7 @@
       renderDefinition();
     });
 
-    // Boot: start with a random item from a 20-card hand
+    // Boot
     renderStats();
     buildNewHand();
     makeQuestion();
