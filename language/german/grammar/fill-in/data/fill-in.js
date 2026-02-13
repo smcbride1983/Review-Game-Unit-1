@@ -334,9 +334,12 @@
         if (e.key === "Escape") closeTutorial();
         return;
       }
-      if (e.key.toLowerCase() === "h") doHint();
-      if (e.key.toLowerCase() === "n") doNext();
-      if (e.key === "?") openTutorial();
+       
+        if (!e.altKey) return;
+        if (e.key.toLowerCase() === "h") doHint();
+        if (e.key.toLowerCase() === "n") doNext();
+        if (e.key === "?") openTutorial();
+
     });
 
     // tutorial modal hookups (only if modal exists in your HTML)
