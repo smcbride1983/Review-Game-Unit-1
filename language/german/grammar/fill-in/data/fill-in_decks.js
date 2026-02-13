@@ -1,6 +1,6 @@
-/* grammar_drill_decks_akk_prep_fillin.js
+/* grammar_FILLIN_decks_akk_prep_fillin.js
    Deck: Verb + Preposition (Akkusativ) — Fill-in-the-blank
-   Deck key: GRAMMAR_DRILL_PREPOSITION_AKK_FILLIN
+   Deck key: GRAMMAR_FILLIN_PREPOSITION_AKK_FILLIN
 
    Notes:
    - IDs are informative: AKK_PREP-001, ...
@@ -12,12 +12,12 @@
 */
 
 (function () {
-  window.DRILL_DECKS = window.DRILL_DECKS || {};
-  window.DRILL_DECKS_META = window.DRILL_DECKS_META || {};
+  window.FILLIN_DECKS = window.FILLIN_DECKS || {};
+  window.FILLIN_DECKS_META = window.FILLIN_DECKS_META || {};
 
-  const DECK_KEY = "GRAMMAR_DRILL_PREPOSITION_AKK_FILLIN";
+  const DECK_KEY = "GRAMMAR_FILLIN_PREPOSITION_AKK_FILLIN";
 
-  window.DRILL_DECKS_META[DECK_KEY] = {
+  window.FILLIN_DECKS_META[DECK_KEY] = {
     title: "Verb + Präposition (Akkusativ) — Fill-in",
     category: "Grammar",
     level: "easy",
@@ -25,7 +25,7 @@
     description: "Fill in the missing preposition for common verb–preposition combinations that take Akkusativ."
   };
 
-  window.DRILL_DECKS[DECK_KEY] = [
+  window.FILLIN_DECKS[DECK_KEY] = [
     // AUF + Akk
     { id: "AKK_PREP-001", prompt_de: "Ich warte ____ den Bus.", answer: "auf", hint_en: "warten auf", tags: ["Grammar","verb-prep","Akk","fill-in"] },
     { id: "AKK_PREP-002", prompt_de: "Wir hoffen ____ gutes Wetter.", answer: "auf", hint_en: "hoffen auf", tags: ["Grammar","verb-prep","Akk","fill-in"] },
