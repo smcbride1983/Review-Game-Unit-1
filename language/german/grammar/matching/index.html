@@ -1,1 +1,615 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Matching Game (Dark Mode)</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#111a33;
+      --panel2:#0f1730;
+      --text:#e7ecff;
+      --muted:#a9b3d6;
+      --border:rgba(255,255,255,.10);
+      --shadow:0 18px 50px rgba(0,0,0,.45);
+      --ok:#4ade80;
+      --bad:#fb7185;
+      --accent:#60a5fa;
+      --accent2:#a78bfa;
+      --card:#0c1430;
+      --cardFace:#101b3a;
+      --cardHover:rgba(255,255,255,.06);
+      --focus:0 0 0 3px rgba(96,165,250,.35);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(900px 500px at 20% -10%, rgba(96,165,250,.18), transparent 60%),
+                     radial-gradient(900px 500px at 90% 10%, rgba(167,139,250,.14), transparent 60%),
+                     var(--bg);
+         color:var(--text);}
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:1100px;margin:0 auto;padding:18px}
+    .topbar{
+      display:flex;gap:12px;align-items:center;justify-content:space-between;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--border); border-radius:16px; padding:12px 14px; box-shadow:var(--shadow);
+    }
+    .left, .right{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .title{
+      display:flex;align-items:center;gap:10px;
+      font-weight:800;letter-spacing:.2px
+    }
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;
+      border:1px solid var(--border); background:rgba(0,0,0,.18);
+      color:var(--muted); font-size:12px;
+    }
+    .btn, select{
+      height:38px; border-radius:12px; border:1px solid var(--border);
+      background:rgba(0,0,0,.20); color:var(--text);
+      padding:0 12px; outline:none;
+    }
+    .btn{cursor:pointer; display:inline-flex; align-items:center; gap:8px; font-weight:700}
+    .btn:hover{background:rgba(255,255,255,.06)}
+    .btn:focus, select:focus{box-shadow:var(--focus)}
+    .btn.primary{background:linear-gradient(180deg, rgba(96,165,250,.25), rgba(96,165,250,.12))}
+    .btn.primary:hover{background:linear-gradient(180deg, rgba(96,165,250,.32), rgba(96,165,250,.15))}
+    .btn.ghost{background:transparent}
+    .btn.link{
+      background:transparent;
+      border:1px solid var(--border);
+    }
+    .main{display:grid;grid-template-columns: 320px 1fr; gap:14px; margin-top:14px}
+    @media (max-width: 920px){
+      .main{grid-template-columns:1fr}
+    }
+    .panel{
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      border:1px solid var(--border); border-radius:16px; padding:14px; box-shadow:var(--shadow);
+    }
+    .panel h2{margin:0 0 10px;font-size:16px}
+    .muted{color:var(--muted);font-size:13px;line-height:1.35}
+    .statRow{display:grid;grid-template-columns:1fr 1fr; gap:10px; margin-top:12px}
+    .stat{
+      border:1px solid var(--border); border-radius:14px; padding:10px 12px;
+      background:rgba(0,0,0,.16)
+    }
+    .stat .k{color:var(--muted);font-size:12px}
+    .stat .v{font-size:18px;font-weight:900;margin-top:2px}
+    .note{
+      margin-top:12px; padding:10px 12px; border-radius:14px;
+      border:1px dashed rgba(255,255,255,.18);
+      color:var(--muted); background:rgba(0,0,0,.14); font-size:13px;
+    }
+
+    /* Board */
+    .boardPanel{padding:14px}
+    .boardTop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+    .boardTop .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .status{
+      display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+      color:var(--muted); font-size:13px;
+    }
+    .toast{
+      padding:6px 10px;border-radius:999px;border:1px solid var(--border);
+      background:rgba(0,0,0,.16)
+    }
+    .toast.ok{border-color:rgba(74,222,128,.35); color:#caffdd}
+    .toast.bad{border-color:rgba(251,113,133,.35); color:#ffd1d8}
+
+    .grid{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns: repeat(6, minmax(120px, 1fr));
+      gap:10px;
+    }
+    @media (max-width: 920px){
+      .grid{grid-template-columns: repeat(4, minmax(120px, 1fr));}
+    }
+    @media (max-width: 560px){
+      .grid{grid-template-columns: repeat(2, minmax(120px, 1fr));}
+    }
+
+    .card{
+      position:relative;
+      height:86px;
+      border-radius:16px;
+      border:1px solid var(--border);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      cursor:pointer;
+      overflow:hidden;
+      transition: transform .08s ease, background .12s ease;
+      user-select:none;
+    }
+    .card:hover{background:rgba(255,255,255,.06)}
+    .card:active{transform:scale(.99)}
+    .card[aria-disabled="true"]{opacity:.55;cursor:default}
+    .face{
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      padding:10px;
+      text-align:center;
+      font-weight:850;
+      letter-spacing:.2px;
+      background:radial-gradient(160px 80px at 20% 20%, rgba(96,165,250,.10), transparent 55%),
+                 radial-gradient(160px 80px at 85% 10%, rgba(167,139,250,.10), transparent 55%),
+                 rgba(0,0,0,.16);
+    }
+    .face span{display:block; line-height:1.08}
+    .back{
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      border-radius:16px;
+      background:linear-gradient(180deg, rgba(96,165,250,.16), rgba(167,139,250,.10));
+      color:rgba(255,255,255,.9);
+      font-weight:900;
+      letter-spacing:.6px;
+    }
+    .card.revealed .back{display:none}
+    .card:not(.revealed) .face{display:none}
+
+    .card.matched{
+      border-color:rgba(74,222,128,.40);
+      box-shadow: 0 0 0 2px rgba(74,222,128,.12) inset;
+    }
+    .card.wrong{
+      border-color:rgba(251,113,133,.50);
+      box-shadow: 0 0 0 2px rgba(251,113,133,.14) inset;
+    }
+
+    /* Modal */
+    .modalOverlay{
+      position:fixed; inset:0; background:rgba(0,0,0,.55);
+      display:none; align-items:center; justify-content:center; padding:16px;
+    }
+    .modal{
+      width:min(640px, 100%);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--border);
+      border-radius:18px; box-shadow:var(--shadow);
+      padding:14px;
+    }
+    .modal h3{margin:0 0 8px}
+    .modal .muted{margin:0 0 12px}
+    .modal .row{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:12px; padding:2px 6px; border:1px solid var(--border); border-radius:8px;
+      background:rgba(0,0,0,.18); color:var(--muted)
+    }
+    .show{display:flex}
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="left">
+      <div class="title">🧠 Matching — Pattern Recognition</div>
+      <div class="pill">Flip 2 cards → find the pair</div>
+    </div>
+    <div class="right">
+      <button id="helpBtn" class="btn ghost" title="How to play">Tutorial</button>
+      <a class="btn link" href="../" title="Back one level to Hub">⬅ Back to Hub</a>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <div class="panel">
+      <h2>Setup</h2>
+      <p class="muted">
+        Pick a deck (wo/da + prepositions, pronoun cases, etc.), then start.
+        Each “pair” shares a hidden key.
+      </p>
+
+      <div style="display:grid; gap:10px; margin-top:10px">
+        <label class="muted" for="deckSelect" style="font-weight:700">Deck</label>
+        <select id="deckSelect" aria-label="Choose a deck"></select>
+
+        <label class="muted" for="pairCount" style="font-weight:700">Pairs</label>
+        <select id="pairCount" aria-label="Number of pairs">
+          <option value="8">8 pairs (16 cards)</option>
+          <option value="10" selected>10 pairs (20 cards)</option>
+          <option value="12">12 pairs (24 cards)</option>
+          <option value="15">15 pairs (30 cards)</option>
+        </select>
+
+        <button id="startBtn" class="btn primary">▶ Start / Restart</button>
+        <button id="reshuffleBtn" class="btn">🔀 Reshuffle</button>
+      </div>
+
+      <div class="statRow">
+        <div class="stat">
+          <div class="k">Matches</div>
+          <div class="v"><span id="matches">0</span> / <span id="totalPairs">0</span></div>
+        </div>
+        <div class="stat">
+          <div class="k">Moves</div>
+          <div class="v" id="moves">0</div>
+        </div>
+      </div>
+
+      <div class="note">
+        Tip: decks are just arrays of pairs:
+        <span class="kbd">{ a: "warten", b: "auf + Akk", key:"warten_auf" }</span>
+        or
+        <span class="kbd">{ a:"ich", b:"mich", key:"1sg_nom_acc" }</span>
+      </div>
+    </div>
+
+    <div class="panel boardPanel">
+      <div class="boardTop">
+        <div class="status">
+          <span class="toast" id="deckName">Deck: —</span>
+          <span class="toast" id="roundMsg">Click Start</span>
+        </div>
+        <div class="controls">
+          <button id="revealAllBtn" class="btn ghost" title="Quick peek (debug)">👀 Peek</button>
+          <button id="clearPeekBtn" class="btn ghost" title="Hide cards again">🙈 Hide</button>
+        </div>
+      </div>
+
+      <div id="grid" class="grid" aria-label="Matching board"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Tutorial Modal -->
+<div id="modalOverlay" class="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <h3 id="modalTitle">Tutorial</h3>
+    <p class="muted">
+      Flip two cards. If they belong together, they stay matched. If not, they flip back.
+      This is pattern recognition: the “pair” can be <b>verb ↔ preposition</b>, <b>wo/da form ↔ preposition</b>,
+      or <b>pronoun case</b> (Nom ↔ Akk, etc.).
+    </p>
+    <p class="muted">
+      Keyboard: <span class="kbd">Tab</span> to focus cards, <span class="kbd">Enter</span> to flip.
+    </p>
+    <div class="row">
+      <button id="closeHelpBtn" class="btn primary">Got it</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/*
+  Optional: load decks from an external file BEFORE this script.
+  Expected global:
+    window.MATCHING_DECKS = { DECK_KEY: { name: "...", pairs: [...] }, ... }
+
+  If not present, we use fallback sample decks below.
+*/
+
+(function(){
+  // ---------- Fallback sample decks ----------
+  const FALLBACK_DECKS = {
+    WO_DA_PREP: {
+      name: "wo/da + Prepositions (sample)",
+      pairs: [
+        { a: "womit", b: "mit", key: "mit" },
+        { a: "wodurch", b: "durch", key: "durch" },
+        { a: "worüber", b: "über", key: "ueber" },
+        { a: "woran", b: "an", key: "an" },
+        { a: "worin", b: "in", key: "in" },
+        { a: "wofür", b: "für", key: "fuer" },
+        { a: "damit", b: "mit", key: "mit2" },
+        { a: "daran", b: "an", key: "an2" },
+        { a: "darüber", b: "über", key: "ueber2" },
+        { a: "dafür", b: "für", key: "fuer2" },
+        { a: "darin", b: "in", key: "in2" },
+        { a: "dadurch", b: "durch", key: "durch2" }
+      ]
+    },
+    VERB_PREP: {
+      name: "Verbs ↔ Prepositions (sample)",
+      pairs: [
+        { a: "warten", b: "auf + Akk", key: "warten_auf" },
+        { a: "denken", b: "an + Akk", key: "denken_an" },
+        { a: "sprechen", b: "mit + Dat", key: "sprechen_mit" },
+        { a: "sich interessieren", b: "für + Akk", key: "interessieren_fuer" },
+        { a: "Angst haben", b: "vor + Dat", key: "angst_vor" },
+        { a: "teilnehmen", b: "an + Dat", key: "teilnehmen_an" },
+        { a: "abhängen", b: "von + Dat", key: "abhaengen_von" },
+        { a: "sich freuen", b: "auf + Akk", key: "freuen_auf" },
+        { a: "sich erinnern", b: "an + Akk", key: "erinnern_an" },
+        { a: "träumen", b: "von + Dat", key: "traeumen_von" }
+      ]
+    },
+    PRONOUN_CASES: {
+      name: "Pronoun Cases (Nom ↔ Akk) (sample)",
+      pairs: [
+        { a: "ich (Nom)", b: "mich (Akk)", key: "1sg" },
+        { a: "du (Nom)", b: "dich (Akk)", key: "2sg" },
+        { a: "er (Nom)", b: "ihn (Akk)", key: "3m" },
+        { a: "sie (Nom)", b: "sie (Akk)", key: "3f" },
+        { a: "es (Nom)", b: "es (Akk)", key: "3n" },
+        { a: "wir (Nom)", b: "uns (Akk)", key: "1pl" },
+        { a: "ihr (Nom)", b: "euch (Akk)", key: "2pl" },
+        { a: "Sie (Nom)", b: "Sie (Akk)", key: "formal" }
+      ]
+    }
+  };
+
+  const DECKS = window.MATCHING_DECKS || FALLBACK_DECKS;
+
+  // ---------- DOM ----------
+  const deckSelect = document.getElementById("deckSelect");
+  const pairCountSelect = document.getElementById("pairCount");
+  const startBtn = document.getElementById("startBtn");
+  const reshuffleBtn = document.getElementById("reshuffleBtn");
+  const gridEl = document.getElementById("grid");
+
+  const matchesEl = document.getElementById("matches");
+  const totalPairsEl = document.getElementById("totalPairs");
+  const movesEl = document.getElementById("moves");
+  const deckNameEl = document.getElementById("deckName");
+  const roundMsgEl = document.getElementById("roundMsg");
+
+  const helpBtn = document.getElementById("helpBtn");
+  const modalOverlay = document.getElementById("modalOverlay");
+  const closeHelpBtn = document.getElementById("closeHelpBtn");
+
+  const revealAllBtn = document.getElementById("revealAllBtn");
+  const clearPeekBtn = document.getElementById("clearPeekBtn");
+
+  // ---------- State ----------
+  let cards = []; // flattened cards
+  let firstPick = null;
+  let lock = false;
+  let matches = 0;
+  let moves = 0;
+  let currentDeckKey = null;
+
+  // ---------- Helpers ----------
+  function shuffle(arr){
+    for(let i=arr.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function setMsg(text, kind){
+    roundMsgEl.textContent = text;
+    roundMsgEl.classList.remove("ok","bad");
+    if(kind) roundMsgEl.classList.add(kind);
+  }
+
+  function resetStats(total){
+    matches = 0; moves = 0;
+    matchesEl.textContent = "0";
+    movesEl.textContent = "0";
+    totalPairsEl.textContent = String(total);
+  }
+
+  function buildCardEl(card){
+    const btn = document.createElement("button");
+    btn.className = "card";
+    btn.type = "button";
+    btn.dataset.id = card.id;
+    btn.dataset.pair = card.pairId;
+    btn.setAttribute("aria-label", "Card");
+    btn.innerHTML = `
+      <div class="back">?</div>
+      <div class="face"><span>${escapeHtml(card.text)}</span></div>
+    `;
+    btn.addEventListener("click", ()=> onFlip(card.id));
+    btn.addEventListener("keydown", (e)=>{
+      if(e.key === "Enter" || e.key === " "){
+        e.preventDefault();
+        onFlip(card.id);
+      }
+    });
+    return btn;
+  }
+
+  function escapeHtml(s){
+    return String(s)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function render(){
+    gridEl.innerHTML = "";
+    for(const c of cards){
+      gridEl.appendChild(buildCardEl(c));
+    }
+  }
+
+  function getCardEl(id){
+    return gridEl.querySelector(`.card[data-id="${id}"]`);
+  }
+
+  function reveal(id){
+    const el = getCardEl(id);
+    if(!el) return;
+    el.classList.add("revealed");
+  }
+
+  function hide(id){
+    const el = getCardEl(id);
+    if(!el) return;
+    el.classList.remove("revealed");
+    el.classList.remove("wrong");
+  }
+
+  function markMatched(id){
+    const el = getCardEl(id);
+    if(!el) return;
+    el.classList.add("matched");
+    el.setAttribute("aria-disabled","true");
+    el.disabled = true;
+  }
+
+  function markWrong(id){
+    const el = getCardEl(id);
+    if(!el) return;
+    el.classList.add("wrong");
+  }
+
+  function isMatched(id){
+    const el = getCardEl(id);
+    return el?.classList.contains("matched");
+  }
+
+  function isRevealed(id){
+    const el = getCardEl(id);
+    return el?.classList.contains("revealed");
+  }
+
+  // ---------- Game logic ----------
+  function onFlip(id){
+    if(lock) return;
+    if(isMatched(id)) return;
+    if(isRevealed(id)) return;
+
+    reveal(id);
+
+    if(!firstPick){
+      firstPick = id;
+      setMsg("Pick a second card…");
+      return;
+    }
+
+    // second pick
+    moves++;
+    movesEl.textContent = String(moves);
+
+    const a = cards.find(c=>c.id===firstPick);
+    const b = cards.find(c=>c.id===id);
+
+    if(!a || !b){
+      firstPick = null;
+      return;
+    }
+
+    if(a.pairId === b.pairId){
+      // match
+      markMatched(a.id);
+      markMatched(b.id);
+      matches++;
+      matchesEl.textContent = String(matches);
+      setMsg("Match ✅", "ok");
+      firstPick = null;
+
+      if(matches === Number(totalPairsEl.textContent)){
+        setMsg("All matched — nice! 🎉", "ok");
+      }
+    } else {
+      // miss
+      lock = true;
+      markWrong(a.id);
+      markWrong(b.id);
+      setMsg("Not a match ❌", "bad");
+      setTimeout(()=>{
+        hide(a.id);
+        hide(b.id);
+        firstPick = null;
+        lock = false;
+        setMsg("Try again.");
+      }, 700);
+    }
+  }
+
+  function buildRound(){
+    const deckKey = deckSelect.value;
+    const deck = DECKS[deckKey];
+    currentDeckKey = deckKey;
+
+    deckNameEl.textContent = `Deck: ${deck?.name ?? deckKey}`;
+
+    const desiredPairs = Number(pairCountSelect.value);
+    const availablePairs = (deck?.pairs || []).slice();
+
+    shuffle(availablePairs);
+    const chosen = availablePairs.slice(0, Math.min(desiredPairs, availablePairs.length));
+
+    // Flatten into cards (two per pair)
+    let idCounter = 1;
+    const flat = [];
+    chosen.forEach((p, idx)=>{
+      const pairId = `pair_${idx}_${p.key ?? idx}`;
+      flat.push({ id: `c${idCounter++}`, pairId, text: p.a });
+      flat.push({ id: `c${idCounter++}`, pairId, text: p.b });
+    });
+
+    shuffle(flat);
+    cards = flat;
+    firstPick = null;
+    lock = false;
+
+    resetStats(chosen.length);
+    render();
+    setMsg("Go!");
+  }
+
+  function reshuffleBoard(){
+    // Preserve which cards are matched? Simple approach: just rebuild the round.
+    buildRound();
+    setMsg("Reshuffled 🔀");
+  }
+
+  // ---------- UI wiring ----------
+  function populateDeckSelect(){
+    deckSelect.innerHTML = "";
+    Object.keys(DECKS).forEach(key=>{
+      const opt = document.createElement("option");
+      opt.value = key;
+      opt.textContent = DECKS[key].name || key;
+      deckSelect.appendChild(opt);
+    });
+  }
+
+  function openHelp(){ modalOverlay.classList.add("show"); }
+  function closeHelp(){ modalOverlay.classList.remove("show"); }
+
+  helpBtn.addEventListener("click", openHelp);
+  closeHelpBtn.addEventListener("click", closeHelp);
+  modalOverlay.addEventListener("click", (e)=>{
+    if(e.target === modalOverlay) closeHelp();
+  });
+  document.addEventListener("keydown", (e)=>{
+    if(e.key === "Escape" && modalOverlay.classList.contains("show")) closeHelp();
+  });
+
+  startBtn.addEventListener("click", buildRound);
+  reshuffleBtn.addEventListener("click", reshuffleBoard);
+  deckSelect.addEventListener("change", ()=> setMsg("Deck changed — click Start."));
+  pairCountSelect.addEventListener("change", ()=> setMsg("Pairs changed — click Start."));
+
+  revealAllBtn.addEventListener("click", ()=>{
+    for(const c of cards){
+      if(!isMatched(c.id)) reveal(c.id);
+    }
+    setMsg("Peek 👀 (debug)");
+  });
+
+  clearPeekBtn.addEventListener("click", ()=>{
+    for(const c of cards){
+      if(!isMatched(c.id)) hide(c.id);
+    }
+    firstPick = null;
+    lock = false;
+    setMsg("Hidden 🙈");
+  });
+
+  // ---------- Init ----------
+  populateDeckSelect();
+  // Default deck selection
+  deckSelect.value = Object.keys(DECKS)[0] || "";
+  setMsg("Click Start");
+})();
+</script>
+
+</body>
+</html>
 
