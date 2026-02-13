@@ -100,6 +100,10 @@
       font-size: 30px;
       font-weight: 800;
       letter-spacing: .2px;
+      display: inline-block;
+      border-bottom: 1px dashed rgba(255,255,255,.18);
+      padding-bottom: 2px;
+      cursor: help; /* NEW: indicates hover help */
     }
 
     .sub{
@@ -232,6 +236,7 @@
       <h1>Grammar Matching</h1>
       <div class="tinyHelp">
         Multiple-choice. Cards can include kinds (prep / wo / da). Mark “known” to see them less often.
+        <br/>Tip: hover the big prompt to see a hint (when available).
       </div>
 
       <div class="topBar">
@@ -271,7 +276,8 @@
 
       <div class="divider"></div>
 
-      <div id="prompt" class="prompt">—</div>
+      <!-- NEW: title attribute becomes your hover tooltip -->
+      <div id="prompt" class="prompt" title="">—</div>
       <div id="sub" class="sub">Pick the correct answer.</div>
       <div id="choices" class="choices"></div>
 
@@ -356,6 +362,9 @@
       }[c]));
     }
 
+    // NEW: normalize whitespace + case (useful for hint text too)
+    function clean(s){ return String(s ?? "").trim(); }
+
     function shuffle(a) {
       for (let i = a.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -381,10 +390,12 @@
     // - de/en always
     // - kind: "prep" | "wo" | "da" (optional)
     // - tag OR tags (optional)
+    // - hint (optional) <-- NEW: carried through and used for hover tooltip
     function normalizeCard(c) {
       const tag = c.tag ?? (Array.isArray(c.tags) ? c.tags[0] : undefined);
       const kind = c.kind ?? (tag === "verb-prep" ? "prep" : (tag === "wo-form" ? "wo" : (tag === "da-form" ? "da" : undefined)));
-      return { ...c, tag, kind };
+      const hint = c.hint ?? c.definition ?? c.gloss ?? ""; // NEW: allows multiple fields
+      return { ...c, tag, kind, hint };
     }
 
     function kindLabel(kind){
@@ -394,14 +405,30 @@
       return null;
     }
 
+    // NEW: tooltip text builder (shows hint + case if you have it)
+    function makeHoverHint(item){
+      if (!item) return "";
+      const bits = [];
+      if (clean(item.hint)) bits.push(clean(item.hint));
+      // If your verb-prep deck uses fields like prep/kase/en, you can include them:
+      if (clean(item.prep) || clean(item.kase)) bits.push([clean(item.prep), clean(item.kase)].filter(Boolean).join(" · "));
+      return bits.join(" — ");
+    }
+
     // ===========================
     // Persistent mastery
     // ===========================
-    let progress = JSON.parse(localStorage.getItem("progress") || "{}");
+    const STORAGE_KEYS = { // NEW: namespaced keys (future-proofing)
+      progress: "grammar_matching_progress_v1"
+    };
+
+    let progress = JSON.parse(localStorage.getItem(STORAGE_KEYS.progress) || "{}");
 
     function itemKey(item) {
       const level = $("level")?.value || "NOLEVEL";
-      return `${level}|||${item.de}|||${item.en}|||${item.kind || ""}`;
+      // NEW: prefer stable unique id if present; fallback to de/en/kind
+      const base = item.id ? `id:${item.id}` : `${item.de}|||${item.en}|||${item.kind || ""}`;
+      return `${level}|||${base}`;
     }
 
     function getItemState(item) {
@@ -410,7 +437,7 @@
 
     function setItemState(item, patch) {
       progress[itemKey(item)] = { ...getItemState(item), ...patch };
-      localStorage.setItem("progress", JSON.stringify(progress));
+      localStorage.setItem(STORAGE_KEYS.progress, JSON.stringify(progress));
     }
 
     // ===========================
@@ -511,7 +538,6 @@
     function buildNewHand() {
       let pool = getLevelList();
 
-      // Weak-study mode filters by tag (or derived tag)
       if (weakStudyOn && weakStudyTags.length) {
         pool = pool.filter(c => weakStudyTags.includes(String(c.tag || "Untagged")));
         if (pool.length < 4) {
@@ -529,7 +555,6 @@
       }
 
       safeSetText("count", hand.length);
-      console.log("POOL size:", pool.length, "HAND size:", hand.length, "weakStudyOn:", weakStudyOn, "tags:", weakStudyTags);
     }
 
     // ===========================
@@ -538,14 +563,10 @@
     function buildOptions(item, dir, hand) {
       const answerVal = (dir === "de-en") ? item.en : item.de;
 
-      // Candidate answers from hand, but:
-      // - No duplicates
-      // - Don't include other cards that share same de + kind (sibling "correct answers")
-      //   This prevents "teilnehmen" + kind=wo from also including a different "teilnehmen" wo-form (if duplicates exist)
       const candidates = hand
         .filter(c => c !== item)
         .filter(c => {
-          if (dir !== "de-en") return true;      // kind is mainly meaningful for verb→answer
+          if (dir !== "de-en") return true;
           if (!item.kind) return true;
           return !(c.de === item.de && (c.kind || "") === (item.kind || ""));
         })
@@ -594,7 +615,15 @@
 
       current = { item, dir, prompt, answer };
 
-      safeSetText("prompt", prompt);
+      // NEW: hover tooltip on prompt
+      const promptEl = $("prompt");
+      if (promptEl) {
+        promptEl.textContent = prompt;
+        const tip = makeHoverHint(item);
+        promptEl.title = tip || "No hint for this card.";
+        // accessibility: also expose to screen readers
+        promptEl.setAttribute("aria-label", tip ? `Hint: ${tip}` : "No hint for this card.");
+      }
 
       const k = kindLabel(item.kind);
       safeSetText("sub", k ? `Pick the correct answer (${k}).` : "Pick the correct answer.");
@@ -604,11 +633,7 @@
       choicesEl.innerHTML = "";
 
       const options = buildOptions(item, dir, hand);
-
-      // If options are <4 (tiny decks), warn but still run
-      if (options.length < 4) {
-        console.warn("Fewer than 4 unique options available:", options);
-      }
+      if (options.length < 4) console.warn("Fewer than 4 unique options available:", options);
 
       options.forEach(opt => {
         const b = document.createElement("button");
@@ -744,7 +769,7 @@
 
       $("resetBtn")?.addEventListener("click", () => {
         progress = {};
-        localStorage.removeItem("progress");
+        localStorage.removeItem(STORAGE_KEYS.progress);
 
         score = 0; correctCount = 0; wrongCount = 0; streak = 0;
         updateStatus();
