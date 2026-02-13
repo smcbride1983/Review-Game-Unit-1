@@ -40,7 +40,6 @@
       overflow: hidden;
     }
 
-    /* Top bar */
     .topbar{
       display:flex; gap:12px; align-items:center; justify-content:space-between;
       padding: 14px 14px;
@@ -89,11 +88,8 @@
       background: rgba(56,214,122,.14);
       border-color: rgba(56,214,122,.45);
     }
-    .btn.ghost{
-      background: transparent;
-    }
+    .btn.ghost{ background: transparent; }
 
-    /* Content */
     .content{ padding: 16px; }
     .grid{
       display:grid;
@@ -174,7 +170,6 @@
     .feedback.good{ border-color: rgba(56,214,122,.5); background: rgba(56,214,122,.10); color: #bff3d3; }
     .feedback.bad{ border-color: rgba(255,92,120,.5); background: rgba(255,92,120,.10); color: #ffd0d8; }
 
-    /* Tutorial modal */
     .modalBackdrop{
       position: fixed; inset:0;
       background: rgba(0,0,0,.55);
@@ -226,16 +221,13 @@
         <div class="left">
           <div class="brand">
             <div class="title">Fill-in-the-Blank</div>
-            <div class="sub">Dark mode • Levels • Tutorial Help</div>
+            <div class="sub">Dark mode • Decks • Tutorial Help</div>
           </div>
 
-          <div class="row tight" aria-label="Level controls">
-            <label class="small" for="levelSelect">Level</label>
-            <select id="levelSelect" title="Choose level">
-              <!-- Add as many as you want -->
-              <option value="A1">A1</option>
-              <option value="A2">A2</option>
-              <option value="B1">B1</option>
+          <div class="row tight" aria-label="Deck controls">
+            <label class="small" for="levelSelect">Deck</label>
+            <select id="levelSelect" title="Choose deck">
+              <option value="">Loading…</option>
             </select>
           </div>
         </div>
@@ -245,8 +237,7 @@
             ❔ Tutorial
           </button>
 
-          <!-- Change href to your hub location -->
-          <a id="hubLink" class="btn ghost" href="../grammar-hub/index.html" title="Back to Grammar Hub">
+          <a id="hubLink" class="btn ghost" href="../index.html" title="Back to Grammar Hub">
             ⬅ Grammar Hub
           </a>
         </div>
@@ -258,7 +249,7 @@
             <h2>Prompt</h2>
 
             <p class="sentence" id="sentence">
-              Ich interessiere mich <span class="blank">_____</span> Mikroben.
+              Loading…
             </p>
 
             <div class="row">
@@ -278,7 +269,7 @@
             <h2>Progress</h2>
 
             <div class="row">
-              <div class="pill">Question: <strong id="qNum">1</strong>/<strong id="qTotal">1</strong></div>
+              <div class="pill">Question: <strong id="qNum">0</strong>/<strong id="qTotal">0</strong></div>
               <div class="pill">Score: <strong id="score">0</strong></div>
               <div class="pill">Streak: <strong id="streak">0</strong></div>
             </div>
@@ -293,374 +284,4 @@
 
             <div style="height:10px;"></div>
             <p class="hint">
-              Tip: Press <span class="kbd">Enter</span> to check, <span class="kbd">H</span> for hint,
-              <span class="kbd">N</span> for next, <span class="kbd">?</span> for tutorial.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="statusbar" aria-label="Status bar">
-        <div class="pill">Level: <strong id="levelLabel">A1</strong></div>
-        <div class="pill">Mode: <strong>Fill-in-the-Blank</strong></div>
-        <div class="pill">Saved: <strong id="savedState">off</strong></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Tutorial Modal -->
-  <div id="modalBackdrop" class="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle">
-    <div class="modal">
-      <div class="modalHeader">
-        <h3 id="tutorialTitle">Tutorial</h3>
-        <button id="closeModalBtn" class="btn">✕ Close</button>
-      </div>
-      <div class="modalBody">
-        <p>
-          Goal: type the missing word(s) that correctly complete the sentence.
-        </p>
-        <ul>
-          <li>Type your answer and press <span class="kbd">Enter</span> or click <span class="kbd">Check</span>.</li>
-          <li>Use <span class="kbd">Hint</span> to get a clue (case/ending, preposition, etc.).</li>
-          <li><span class="kbd">Reveal</span> shows the answer (no points for that item).</li>
-          <li>Change <span class="kbd">Level</span> anytime to load a different set.</li>
-          <li>Keyboard: <span class="kbd">H</span> hint • <span class="kbd">N</span> next • <span class="kbd">?</span> tutorial.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    /***********************
-     * 1) CONFIG: HUB LINK *
-     ***********************/
-    // If you want the hub link to be set dynamically:
-    // document.getElementById("hubLink").href = "../grammar-hub/index.html";
-
-    /**************************
-     * 2) DATA: LEVEL CONTENT *
-     **************************/
-    // Each item can have: text, answer, hint, normalize(optional)
-    const BANK = {
-      A1: [
-        {
-          text: "Ich interessiere mich _____ Mikroben.",
-          answer: "für",
-          hint: "Preposition used with 'sich interessieren' → 'für' (+ Akk.)"
-        },
-        {
-          text: "Er wartet _____ den Bus.",
-          answer: "auf",
-          hint: "Verb + preposition: 'warten auf' (+ Akk.)"
-        }
-      ],
-      A2: [
-        {
-          text: "Worüber _____ ihr heute?",
-          answer: "redet",
-          hint: "Verb form: 'ihr' → 2nd person plural"
-        },
-        {
-          text: "Sie ist stolz _____ ihre Arbeit.",
-          answer: "auf",
-          hint: "Adjective + preposition: 'stolz auf' (+ Akk.)"
-        }
-      ],
-      B1: [
-        {
-          text: "Er hat sich daran gewöhnt, _____ früh aufzustehen.",
-          answer: "so",
-          hint: "Fixed expression: 'sich daran gewöhnen, so ...' (context-dependent)"
-        },
-        {
-          text: "Das hängt davon ab, _____ du morgen Zeit hast.",
-          answer: "ob",
-          hint: "'davon ab, ob ...' introduces an indirect yes/no clause"
-        }
-      ]
-    };
-
-    /****************************
-     * 3) STATE + UI REFERENCES *
-     ****************************/
-    const el = (id) => document.getElementById(id);
-
-    const levelSelect = el("levelSelect");
-    const levelLabel  = el("levelLabel");
-
-    const sentenceEl  = el("sentence");
-    const inputEl     = el("answerInput");
-    const hintTextEl  = el("hintText");
-    const feedbackEl  = el("feedback");
-
-    const qNumEl   = el("qNum");
-    const qTotalEl = el("qTotal");
-    const scoreEl  = el("score");
-    const streakEl = el("streak");
-
-    const savedStateEl = el("savedState");
-
-    const tutorialBtn = el("tutorialBtn");
-    const modalBackdrop = el("modalBackdrop");
-    const closeModalBtn = el("closeModalBtn");
-
-    const checkBtn  = el("checkBtn");
-    const hintBtn   = el("hintBtn");
-    const revealBtn = el("revealBtn");
-    const nextBtn   = el("nextBtn");
-    const shuffleBtn = el("shuffleBtn");
-    const resetBtn  = el("resetBtn");
-
-    const STORAGE_KEY = "fill_blank_game_state_v1";
-
-    const state = {
-      level: levelSelect.value,
-      deck: [],
-      idx: 0,
-      score: 0,
-      streak: 0,
-      usedHint: false,
-      revealed: false,
-      attempted: false,
-      saved: false
-    };
-
-    /**********************
-     * 4) HELPERS         *
-     **********************/
-    function shuffle(arr){
-      const a = arr.slice();
-      for(let i=a.length-1;i>0;i--){
-        const j = Math.floor(Math.random()*(i+1));
-        [a[i],a[j]] = [a[j],a[i]];
-      }
-      return a;
-    }
-
-    function normalize(s){
-      // default normalization: trim + collapse spaces + lowercase
-      return (s ?? "")
-        .trim()
-        .replace(/\s+/g, " ")
-        .toLowerCase();
-    }
-
-    function render(){
-      const item = state.deck[state.idx];
-      qTotalEl.textContent = state.deck.length;
-      qNumEl.textContent   = state.deck.length ? (state.idx + 1) : 0;
-      scoreEl.textContent  = state.score;
-      streakEl.textContent = state.streak;
-      levelLabel.textContent = state.level;
-
-      // Display with a visible blank marker (purely visual)
-      const display = item ? item.text.replace("_____", "<span class='blank'>_____</span>") : "No items in this level.";
-      sentenceEl.innerHTML = display;
-
-      inputEl.value = "";
-      inputEl.focus();
-
-      hintTextEl.textContent = "";
-      feedbackEl.style.display = "none";
-      feedbackEl.className = "feedback";
-      state.usedHint = false;
-      state.revealed = false;
-      state.attempted = false;
-    }
-
-    function loadLevel(level){
-      state.level = level;
-      const raw = BANK[level] || [];
-      state.deck = shuffle(raw);
-      state.idx = 0;
-      state.score = 0;
-      state.streak = 0;
-      state.saved = false;
-      savedStateEl.textContent = "off";
-      render();
-    }
-
-    function showFeedback(ok, message){
-      feedbackEl.style.display = "block";
-      feedbackEl.textContent = message;
-      feedbackEl.className = "feedback " + (ok ? "good" : "bad");
-    }
-
-    function currentAnswer(){
-      const item = state.deck[state.idx];
-      return item ? String(item.answer) : "";
-    }
-
-    function openTutorial(){
-      modalBackdrop.style.display = "flex";
-      // basic focus management
-      closeModalBtn.focus();
-    }
-    function closeTutorial(){
-      modalBackdrop.style.display = "none";
-      tutorialBtn.focus();
-    }
-
-    function saveState(){
-      const payload = {
-        level: state.level,
-        idx: state.idx,
-        score: state.score,
-        streak: state.streak,
-        deck: state.deck
-      };
-      try{
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-        state.saved = true;
-        savedStateEl.textContent = "on";
-      }catch(e){
-        // ignore
-      }
-    }
-
-    function tryRestoreState(){
-      try{
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if(!raw) return false;
-        const payload = JSON.parse(raw);
-        if(!payload || !payload.level || !Array.isArray(payload.deck)) return false;
-
-        state.level = payload.level;
-        levelSelect.value = payload.level;
-
-        state.deck = payload.deck;
-        state.idx = Math.min(payload.idx ?? 0, Math.max(0, state.deck.length - 1));
-        state.score = payload.score ?? 0;
-        state.streak = payload.streak ?? 0;
-
-        state.saved = true;
-        savedStateEl.textContent = "on";
-        render();
-        return true;
-      }catch(e){
-        return false;
-      }
-    }
-
-    /**********************
-     * 5) GAME ACTIONS    *
-     **********************/
-    function doHint(){
-      const item = state.deck[state.idx];
-      if(!item) return;
-      if(state.usedHint){
-        hintTextEl.textContent = "Hint already shown.";
-        return;
-      }
-      state.usedHint = true;
-      hintTextEl.textContent = "Hint: " + (item.hint || "No hint for this one.");
-    }
-
-    function doReveal(){
-      const ans = currentAnswer();
-      if(!ans) return;
-      state.revealed = true;
-      state.attempted = true;
-      state.streak = 0;
-      showFeedback(false, `Answer: "${ans}"`);
-      saveState();
-    }
-
-    function doCheck(){
-      const item = state.deck[state.idx];
-      if(!item) return;
-
-      const ans = currentAnswer();
-      const user = inputEl.value;
-
-      const normUser = (item.normalize ? item.normalize(user) : normalize(user));
-      const normAns  = (item.normalize ? item.normalize(ans)  : normalize(ans));
-
-      state.attempted = true;
-
-      if(normUser === normAns){
-        // scoring: 2 points if no hint, 1 point if hint, 0 if revealed
-        const points = state.revealed ? 0 : (state.usedHint ? 1 : 2);
-        state.score += points;
-        state.streak += 1;
-        showFeedback(true, points ? `Correct (+${points})` : "Correct");
-        saveState();
-      }else{
-        state.streak = 0;
-        showFeedback(false, `Not quite. Try again (or use Hint).`);
-        saveState();
-      }
-    }
-
-    function doNext(){
-      if(!state.deck.length) return;
-      if(state.idx < state.deck.length - 1){
-        state.idx += 1;
-      }else{
-        // end of deck
-        showFeedback(true, `Done! Final score: ${state.score}`);
-        return;
-      }
-      saveState();
-      render();
-    }
-
-    function doShuffle(){
-      state.deck = shuffle(state.deck);
-      state.idx = 0;
-      saveState();
-      render();
-    }
-
-    function doReset(){
-      localStorage.removeItem(STORAGE_KEY);
-      loadLevel(state.level);
-    }
-
-    /**********************
-     * 6) EVENTS          *
-     **********************/
-    levelSelect.addEventListener("change", () => {
-      loadLevel(levelSelect.value);
-    });
-
-    tutorialBtn.addEventListener("click", openTutorial);
-    closeModalBtn.addEventListener("click", closeTutorial);
-    modalBackdrop.addEventListener("click", (e) => {
-      if(e.target === modalBackdrop) closeTutorial();
-    });
-
-    checkBtn.addEventListener("click", doCheck);
-    hintBtn.addEventListener("click", doHint);
-    revealBtn.addEventListener("click", doReveal);
-    nextBtn.addEventListener("click", doNext);
-    shuffleBtn.addEventListener("click", doShuffle);
-    resetBtn.addEventListener("click", doReset);
-
-    // Keyboard shortcuts
-    document.addEventListener("keydown", (e) => {
-      if(modalBackdrop.style.display === "flex"){
-        if(e.key === "Escape") closeTutorial();
-        return;
-      }
-      if(e.key === "Enter") doCheck();
-      if(e.key.toLowerCase() === "h") doHint();
-      if(e.key.toLowerCase() === "n") doNext();
-      if(e.key === "?") openTutorial();
-      if(e.key === "Escape"){
-        // quick clear focus / message
-        inputEl.blur();
-      }
-    });
-
-    /**********************
-     * 7) INIT            *
-     **********************/
-    (function init(){
-      const restored = tryRestoreState();
-      if(!restored) loadLevel(levelSelect.value);
-    })();
-  </script>
-</body>
-</html>
-
+              Tip: Press <span class
