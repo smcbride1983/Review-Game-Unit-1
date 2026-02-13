@@ -456,7 +456,7 @@
       // Prefer shared utils if present
       const base = (typeof dedupePairs === "function" && typeof getDeck === "function")
         ? dedupePairs(getDeck(level))
-        : (window.DECKS && Array.isArray(window.DECKS[level]) ? window.DECKS[level] : []);
+        : (window.DRILL_DECKS && Array.isArray(window.DRILL_DECKS[level]) ? window.DRILL_DECKS[level] : []);
 
       const filtered = base.filter(i => getItemState(i).status !== "known");
       return filtered.length >= 4 ? filtered : base;
@@ -466,7 +466,7 @@
       const level = $("level")?.value;
       const base = (typeof dedupePairs === "function" && typeof getDeck === "function")
         ? dedupePairs(getDeck(level))
-        : (window.DECKS && Array.isArray(window.DECKS[level]) ? window.DECKS[level] : []);
+        : (window.DRILL_DECKS && Array.isArray(window.DRILL_DECKS[level]) ? window.DRILL_DECKS[level] : []);
       return base;
     }
 
@@ -777,9 +777,9 @@
     // ===========================
     document.addEventListener("DOMContentLoaded", () => {
       // Quick sanity: decks loaded?
-      if (!window.DECKS) {
+      if (!window.DRILL_DECKS) {
         safeSetText("sub", "Error: decks.js did not load. Check the script path ../data/decks.js");
-        console.error("window.DECKS missing. Check ../data/decks.js path.");
+        console.error("window.DRILL_DECKS missing. Check ../data/decks.js path.");
         return;
       }
 
