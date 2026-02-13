@@ -3,18 +3,20 @@
 */
 
 (function () {
-  window.VOCAB_DECKS = window.VOCAB_DECKS || {};
-  window.VOCAB_DECKS_META = window.VOCAB_DECKS_META || {};
+  window.DRILL_DECKS = window.DRILL_DECKS || {};
+  window.DRILL_DECKS_META = window.DRILL_DECKS_META || {};
 
-  const DECK_KEY = "WO_DA_SUPER_EASY_FULL";
+  const DECK_KEY = "GRAMMAR_DRILL_AKK_PREPS";
 
-  window.VOCAB_DECKS_META[DECK_KEY] = {
-    title: "Wo- & Da- Compounds",
+  window.DRILL_DECKS_META[DECK_KEY] = {
+    title: "Grammar Drill: Accusative Prepositions",
+    category: "grammar-drill",
     level: "easy",
-    category: "Grammar"
+    mechanic: "match",
+    description: "Match prepositions that take the accusative."
   };
 
-  window.VOCAB_DECKS[DECK_KEY] = [
+  window.DRILL_DECKS[DECK_KEY] = [
 
     // warten auf
     { id: "WO-DA-001", de: "warten", en: "auf", level: "easy" },
