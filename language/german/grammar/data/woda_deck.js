@@ -6,7 +6,7 @@
   window.DRILL_DECKS = window.DRILL_DECKS || {};
   window.DRILL_DECKS_META = window.DRILL_DECKS_META || {};
 
-  const DECK_KEY = "GRAMMAR_DRILL_AKK_PREPS";
+  const DECK_KEY = "GRAMMAR_DRILL_WO_DA";
 
   window.DRILL_DECKS_META[DECK_KEY] = {
     title: "Grammar Drill: Accusative Prepositions",
