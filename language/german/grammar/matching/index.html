@@ -231,15 +231,14 @@
     <div class="card">
       <h1>Grammar Matching</h1>
       <div class="tinyHelp">
-        Practice with multiple-choice. Mark cards as “known” to see them less often. Use Insights to find weak topics.
+        Multiple-choice. Cards can include kinds (prep / wo / da). Mark “known” to see them less often.
       </div>
 
       <div class="topBar">
         <div class="topLeft">
           <label class="small">Level</label>
           <select id="level">
-            <!-- If you add more decks in grammar_drill_decks.js, add more <option> values here -->
-            <option value="GRAMMAR_DRILL_WO_DA_1">Wo- Da- (Level 1)</option>
+            <option value="GRAMMAR_DRILL_WO_DA">Wo- Da- (Level 1)</option>
           </select>
 
           <label class="small">Direction</label>
@@ -265,7 +264,7 @@
           <button id="resetStatsBtn" class="ghost" title="Clears accuracy stats used for weak tags/cards">Clear accuracy stats</button>
         </div>
         <div class="panelHelp">
-          <b>Reset session + mastery</b> clears your known/practice states and session score. <br />
+          <b>Reset session + mastery</b> clears known/practice states and session score. <br />
           <b>Clear accuracy stats</b> clears analytics used by Insights (weak topics + accuracy %).
         </div>
       </div>
@@ -279,7 +278,7 @@
       <div id="afterAnswerRow" class="afterAnswerRow" hidden>
         <button id="knowBtn" class="ghost">I know this</button>
         <button id="practiceBtn" class="ghost">Need practice</button>
-        <span class="hint">Optional: this affects how often you’ll see the card.</span>
+        <span class="hint">Optional: affects how often you see the card.</span>
       </div>
 
       <div class="belowRow">
@@ -336,7 +335,7 @@
     </div>
   </div>
 
-  <!-- DATA (must load BEFORE app script) -->
+  <!-- DATA -->
   <script src="data/grammar_drill_decks.js"></script>
   <script src="data/decks.utils.js"></script>
 
@@ -365,10 +364,34 @@
       return a;
     }
 
-    // Works with either `tag: "x"` or `tags: ["x","y"]`
+    function uniq(arr){
+      const seen = new Set();
+      const out = [];
+      for (const x of arr) {
+        const k = String(x).trim();
+        if (!k) continue;
+        if (seen.has(k)) continue;
+        seen.add(k);
+        out.push(x);
+      }
+      return out;
+    }
+
+    // Normalize cards to support:
+    // - de/en always
+    // - kind: "prep" | "wo" | "da" (optional)
+    // - tag OR tags (optional)
     function normalizeCard(c) {
       const tag = c.tag ?? (Array.isArray(c.tags) ? c.tags[0] : undefined);
-      return { ...c, tag };
+      const kind = c.kind ?? (tag === "verb-prep" ? "prep" : (tag === "wo-form" ? "wo" : (tag === "da-form" ? "da" : undefined)));
+      return { ...c, tag, kind };
+    }
+
+    function kindLabel(kind){
+      if (kind === "prep") return "preposition";
+      if (kind === "wo") return "wo-form";
+      if (kind === "da") return "da-form";
+      return null;
     }
 
     // ===========================
@@ -377,9 +400,8 @@
     let progress = JSON.parse(localStorage.getItem("progress") || "{}");
 
     function itemKey(item) {
-      // per-deck key prevents collisions across decks
       const level = $("level")?.value || "NOLEVEL";
-      return `${level}|||${item.de}|||${item.en}`;
+      return `${level}|||${item.de}|||${item.en}|||${item.kind || ""}`;
     }
 
     function getItemState(item) {
@@ -489,6 +511,7 @@
     function buildNewHand() {
       let pool = getLevelList();
 
+      // Weak-study mode filters by tag (or derived tag)
       if (weakStudyOn && weakStudyTags.length) {
         pool = pool.filter(c => weakStudyTags.includes(String(c.tag || "Untagged")));
         if (pool.length < 4) {
@@ -499,7 +522,6 @@
         }
       }
 
-      // Use utils if available, else fallback
       if (window.DECK_UTILS && typeof DECK_UTILS.getRandomCards === "function") {
         hand = DECK_UTILS.getRandomCards(pool, { count: HAND_SIZE });
       } else {
@@ -508,6 +530,32 @@
 
       safeSetText("count", hand.length);
       console.log("POOL size:", pool.length, "HAND size:", hand.length, "weakStudyOn:", weakStudyOn, "tags:", weakStudyTags);
+    }
+
+    // ===========================
+    // Build options with KIND support
+    // ===========================
+    function buildOptions(item, dir, hand) {
+      const answerVal = (dir === "de-en") ? item.en : item.de;
+
+      // Candidate answers from hand, but:
+      // - No duplicates
+      // - Don't include other cards that share same de + kind (sibling "correct answers")
+      //   This prevents "teilnehmen" + kind=wo from also including a different "teilnehmen" wo-form (if duplicates exist)
+      const candidates = hand
+        .filter(c => c !== item)
+        .filter(c => {
+          if (dir !== "de-en") return true;      // kind is mainly meaningful for verb→answer
+          if (!item.kind) return true;
+          return !(c.de === item.de && (c.kind || "") === (item.kind || ""));
+        })
+        .map(c => (dir === "de-en") ? c.en : c.de);
+
+      const distractors = shuffle(uniq(candidates))
+        .filter(x => x !== answerVal)
+        .slice(0, 3);
+
+      return shuffle(uniq([answerVal, ...distractors]));
     }
 
     // ===========================
@@ -533,7 +581,6 @@
       }
 
       answered = false;
-      safeSetText("sub", "Pick the correct answer.");
       $("afterAnswerRow")?.setAttribute("hidden", "");
 
       const directionSelect = $("direction")?.value || "mixed";
@@ -546,17 +593,22 @@
       const answer = (dir === "de-en") ? item.en : item.de;
 
       current = { item, dir, prompt, answer };
+
       safeSetText("prompt", prompt);
+
+      const k = kindLabel(item.kind);
+      safeSetText("sub", k ? `Pick the correct answer (${k}).` : "Pick the correct answer.");
 
       const choicesEl = $("choices");
       if (!choicesEl) return;
       choicesEl.innerHTML = "";
 
-      const distractors = shuffle(hand.filter(x => x !== item))
-        .slice(0, 3)
-        .map(x => (dir === "de-en") ? x.en : x.de);
+      const options = buildOptions(item, dir, hand);
 
-      const options = shuffle([answer, ...distractors]);
+      // If options are <4 (tiny decks), warn but still run
+      if (options.length < 4) {
+        console.warn("Fewer than 4 unique options available:", options);
+      }
 
       options.forEach(opt => {
         const b = document.createElement("button");
@@ -650,7 +702,8 @@
         cardsEl.innerHTML = weakCards.map(row => {
           const pct = (row.pct == null) ? "—" : `${Math.round(row.pct * 100)}%`;
           const label = (row.card && row.card.de) ? row.card.de : "(missing prompt)";
-          return `• <b>${escapeHtml(label)}</b>: ${pct} (${row.correct}/${row.attempts})`;
+          const kind = row.card && row.card.kind ? ` <span class="smallmuted">(${escapeHtml(kindLabel(row.card.kind) || row.card.kind)})</span>` : "";
+          return `• <b>${escapeHtml(label)}</b>${kind}: ${pct} (${row.correct}/${row.attempts})`;
         }).join("<br>");
       }
     }
@@ -755,11 +808,10 @@
         return;
       }
 
-      // sanity: does selected deck exist?
       const dk = $("level")?.value;
       const exists = window.DRILL_DECKS && Array.isArray(window.DRILL_DECKS[dk]) && window.DRILL_DECKS[dk].length >= 4;
       if (!exists) {
-        safeSetText("sub", `Deck not found or too small: "${dk}". Check the deck key in grammar_drill_decks.js`);
+        safeSetText("sub", `Deck not found or too small: "${dk}". Check deck key in grammar_drill_decks.js`);
         console.error("Deck missing/too small:", dk, window.DRILL_DECKS && window.DRILL_DECKS[dk]);
         return;
       }
