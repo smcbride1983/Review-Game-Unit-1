@@ -6,7 +6,7 @@
   window.DRILL_DECKS = window.DRILL_DECKS || {};
   window.DRILL_DECKS_META = window.DRILL_DECKS_META || {};
 
-  const DECK_KEY = "GRAMMAR_DRILL_WO_DA_1";
+  const DECK_KEY = "GRAMMAR_DRILL_PREPOSITION";
 
   window.DRILL_DECKS_META[DECK_KEY] = {
     title: "Grammar Drill: Verb + Preposition (Wo/Da)",
