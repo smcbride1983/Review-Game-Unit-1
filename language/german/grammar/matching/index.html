@@ -6,9 +6,6 @@
   <title>Grammar Matching</title>
 
   <style>
-    /* =========================
-       THEME (DEFAULT: DARK)
-       ========================= */
     :root{
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 
@@ -32,18 +29,6 @@
       --good: #1f9d55;
       --bad: #d64545;
     }
-
-    /* Optional: if you want auto-light for users w/ light preference, uncomment
-    @media (prefers-color-scheme: light){
-      :root{
-        --bg:#f6f7fb; --card:#fff; --panel:#fbfcff;
-        --text:#111; --muted:#555;
-        --border:#d7dbe6; --borderSoft:#eceff6;
-        --btnBg:#fff; --btnText:#111; --btnBorder:#d7dbe6;
-        --primaryBg:#111; --primaryText:#fff;
-      }
-    }
-    */
 
     body{ margin:0; background:var(--bg); color:var(--text); }
     .wrap{ max-width: 860px; margin: 0 auto; padding: 18px; }
@@ -150,7 +135,6 @@
     .choice.correct{ border-color: var(--good); }
     .choice.wrong{ border-color: var(--bad); }
 
-    /* After-answer mastery row (hidden until answered) */
     .afterAnswerRow{
       margin-top: 10px;
       display:flex;
@@ -164,7 +148,6 @@
       margin-left: 4px;
     }
 
-    /* Below-question toggles */
     .belowRow{
       margin-top: 12px;
       display:flex;
@@ -188,7 +171,6 @@
       background: var(--panel);
     }
 
-    /* Collapsible panels */
     .panel{
       margin-top: 10px;
       border: 1px solid var(--border);
@@ -209,7 +191,6 @@
       line-height: 1.35;
     }
 
-    /* Weak panel (nested inside Insights) */
     .weakPanel{
       margin-top: 12px;
       border: 1px solid var(--border);
@@ -236,7 +217,6 @@
     .weakBox b{ display:block; margin-bottom: 6px; }
     .smallmuted{ color: var(--muted); font-size: 12px; line-height: 1.35; }
 
-    /* Tiny helper text under title */
     .tinyHelp{
       color: var(--muted);
       font-size: 12px;
@@ -254,11 +234,11 @@
         Practice with multiple-choice. Mark cards as “known” to see them less often. Use Insights to find weak topics.
       </div>
 
-      <!-- TOP BAR (minimal) -->
       <div class="topBar">
         <div class="topLeft">
           <label class="small">Level</label>
           <select id="level">
+            <!-- If you add more decks in grammar_drill_decks.js, add more <option> values here -->
             <option value="GRAMMAR_DRILL_WO_DA">Wo- Da- (Level 1)</option>
           </select>
 
@@ -275,11 +255,10 @@
 
         <div class="topRight">
           <button id="toolsToggle" class="ghost" aria-expanded="false">Tools ▾</button>
-          <a href="../" class="btnLink" title="Back to Vocab Hub">⬅ Vocab Games</a>
+          <a href="../" class="btnLink" title="Back">⬅ Back</a>
         </div>
       </div>
 
-      <!-- TOOLS PANEL -->
       <div id="toolsPanel" class="panel" hidden>
         <div class="panelRow">
           <button id="resetBtn" class="ghost">Reset session + mastery</button>
@@ -293,19 +272,16 @@
 
       <div class="divider"></div>
 
-      <!-- QUIZ -->
       <div id="prompt" class="prompt">—</div>
       <div id="sub" class="sub">Pick the correct answer.</div>
       <div id="choices" class="choices"></div>
 
-      <!-- AFTER-ANSWER ACTIONS (hidden until answered) -->
       <div id="afterAnswerRow" class="afterAnswerRow" hidden>
         <button id="knowBtn" class="ghost">I know this</button>
         <button id="practiceBtn" class="ghost">Need practice</button>
         <span class="hint">Optional: this affects how often you’ll see the card.</span>
       </div>
 
-      <!-- BELOW QUESTION: INSIGHTS + STATS -->
       <div class="belowRow">
         <button id="insightsToggle" class="ghost" aria-expanded="false">Insights ▾</button>
         <button id="statsToggle" class="ghost" aria-expanded="false">Stats ▾</button>
@@ -325,7 +301,6 @@
         <span><b>This card</b> <span id="acc">—</span></span>
       </div>
 
-      <!-- INSIGHTS PANEL -->
       <div id="insightsPanel" class="panel" hidden>
         <div class="panelRow">
           <button id="weakBtn" class="ghost" title="Show weakest tags + cards">Show what I miss most</button>
@@ -336,7 +311,6 @@
           Insights are based on <b>accuracy stats</b> saved in this browser (not mastery). Answer a few cards first to populate.
         </div>
 
-        <!-- WEAK CONCEPTS PANEL -->
         <div id="weakPanel" class="weakPanel">
           <div class="weakTitle">Weak Concepts</div>
           <div class="weakSub">Based on your saved accuracy stats in this browser.</div>
@@ -363,13 +337,12 @@
   </div>
 
   <!-- DATA (must load BEFORE app script) -->
-  <script src="./data/grammar_drill_decks.js"></script>
-  <script src="./data/decks.utils.js"></script>
+  <script src="data/grammar_drill_decks.js"></script>
+  <script src="data/decks.utils.js"></script>
 
-  <!-- APP SCRIPT -->
   <script>
     // ===========================
-    // Safety helpers (avoid crashes)
+    // Helpers
     // ===========================
     const $ = (id) => document.getElementById(id);
 
@@ -378,12 +351,36 @@
       if (el) el.textContent = text;
     }
 
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[c]));
+    }
+
+    function shuffle(a) {
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    // Works with either `tag: "x"` or `tags: ["x","y"]`
+    function normalizeCard(c) {
+      const tag = c.tag ?? (Array.isArray(c.tags) ? c.tags[0] : undefined);
+      return { ...c, tag };
+    }
+
     // ===========================
-    // Persistent per-card progress (mastery)
+    // Persistent mastery
     // ===========================
     let progress = JSON.parse(localStorage.getItem("progress") || "{}");
 
-    function itemKey(item) { return `${item.de}|||${item.en}`; }
+    function itemKey(item) {
+      // per-deck key prevents collisions across decks
+      const level = $("level")?.value || "NOLEVEL";
+      return `${level}|||${item.de}|||${item.en}`;
+    }
 
     function getItemState(item) {
       return progress[itemKey(item)] || { status: "new", seen: 0, correct: 0, wrong: 0 };
@@ -395,7 +392,7 @@
     }
 
     // ===========================
-    // Tracker helpers (from decks.utils.js)
+    // Tracker helpers (decks.utils.js)
     // ===========================
     function hasTracker() {
       return !!(window.DECK_UTILS && typeof DECK_UTILS.recordAttempt === "function");
@@ -412,7 +409,7 @@
     }
 
     // ===========================
-    // Session scoreboard (not persisted)
+    // Session scoreboard
     // ===========================
     let score = 0;
     let correctCount = 0;
@@ -423,12 +420,11 @@
     let answered = false;
 
     // ===========================
-    // Hand model (20-card hand)
+    // Hand model
     // ===========================
     const HAND_SIZE = 20;
     let hand = [];
 
-    // Weak-tags study mode
     let weakStudyOn = false;
     let weakStudyTags = [];
 
@@ -439,35 +435,52 @@
       safeSetText("streak", streak);
     }
 
-    function shuffle(a) {
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-      }
-      return a;
+    // ===========================
+    // Panels
+    // ===========================
+    function setToggleLabel(btn, isOpen, baseText) {
+      if (!btn) return;
+      btn.setAttribute("aria-expanded", String(isOpen));
+      btn.textContent = `${baseText} ${isOpen ? "▴" : "▾"}`;
+    }
+
+    function openPanel(btn, panel) {
+      if (!btn || !panel) return;
+      panel.removeAttribute("hidden");
+      const base = btn.textContent.replace(/[▴▾]/g, "").trim();
+      setToggleLabel(btn, true, base);
+    }
+
+    function togglePanel(btn, panel) {
+      if (!btn || !panel) return;
+      const isHidden = panel.hasAttribute("hidden");
+      if (isHidden) panel.removeAttribute("hidden");
+      else panel.setAttribute("hidden", "");
+
+      const base = btn.textContent.replace(/[▴▾]/g, "").trim();
+      setToggleLabel(btn, isHidden, base);
     }
 
     // ===========================
-    // Deck source
+    // Deck access
     // ===========================
+    function getDeckByKey(deckKey) {
+      const raw = (window.DRILL_DECKS && Array.isArray(window.DRILL_DECKS[deckKey]))
+        ? window.DRILL_DECKS[deckKey]
+        : [];
+      return raw.map(normalizeCard);
+    }
+
     function getLevelList() {
-      const level = $("level")?.value;
-
-      // Prefer shared utils if present
-      const base = (typeof dedupePairs === "function" && typeof getDeck === "function")
-        ? dedupePairs(getDeck(level))
-        : (window.DRILL_DECKS && Array.isArray(window.DRILL_DECKS[level]) ? window.DRILL_DECKS[level] : []);
-
+      const deckKey = $("level")?.value;
+      const base = getDeckByKey(deckKey);
       const filtered = base.filter(i => getItemState(i).status !== "known");
       return filtered.length >= 4 ? filtered : base;
     }
 
     function getLevelBaseDeckUnfiltered() {
-      const level = $("level")?.value;
-      const base = (typeof dedupePairs === "function" && typeof getDeck === "function")
-        ? dedupePairs(getDeck(level))
-        : (window.DRILL_DECKS && Array.isArray(window.DRILL_DECKS[level]) ? window.DRILL_DECKS[level] : []);
-      return base;
+      const deckKey = $("level")?.value;
+      return getDeckByKey(deckKey);
     }
 
     // ===========================
@@ -486,9 +499,8 @@
         }
       }
 
-      if (typeof getRandomCards === "function") {
-        hand = getRandomCards(pool, HAND_SIZE);
-      } else if (window.DECK_UTILS && typeof DECK_UTILS.getRandomCards === "function") {
+      // Use utils if available, else fallback
+      if (window.DECK_UTILS && typeof DECK_UTILS.getRandomCards === "function") {
         hand = DECK_UTILS.getRandomCards(pool, { count: HAND_SIZE });
       } else {
         hand = shuffle([...pool]).slice(0, Math.min(HAND_SIZE, pool.length));
@@ -499,7 +511,7 @@
     }
 
     // ===========================
-    // Accuracy line for current card
+    // Accuracy line
     // ===========================
     function renderAccuracyForCurrent() {
       if (!current || !current.item) { safeSetText("acc", "—"); return; }
@@ -525,16 +537,15 @@
       $("afterAnswerRow")?.setAttribute("hidden", "");
 
       const directionSelect = $("direction")?.value || "mixed";
-      const dir = directionSelect === "mixed"
+      const dir = (directionSelect === "mixed")
         ? (Math.random() < 0.5 ? "de-en" : "en-de")
         : directionSelect;
 
       const item = hand[Math.floor(Math.random() * hand.length)];
-      const prompt = dir === "de-en" ? item.de : item.en;
-      const answer = dir === "de-en" ? item.en : item.de;
+      const prompt = (dir === "de-en") ? item.de : item.en;
+      const answer = (dir === "de-en") ? item.en : item.de;
 
       current = { item, dir, prompt, answer };
-
       safeSetText("prompt", prompt);
 
       const choicesEl = $("choices");
@@ -543,7 +554,7 @@
 
       const distractors = shuffle(hand.filter(x => x !== item))
         .slice(0, 3)
-        .map(x => dir === "de-en" ? x.en : x.de);
+        .map(x => (dir === "de-en") ? x.en : x.de);
 
       const options = shuffle([answer, ...distractors]);
 
@@ -576,10 +587,8 @@
 
       const item = current.item;
 
-      // tracker
       trackerRecord(item, isCorrect);
 
-      // mastery stats
       const st = getItemState(item);
       setItemState(item, { seen: st.seen + 1 });
 
@@ -606,22 +615,14 @@
     // ===========================
     // Weak concepts UI
     // ===========================
-    function escapeHtml(s) {
-      return String(s).replace(/[&<>"']/g, c => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-      }[c]));
-    }
-
     function showWeakPanel() {
       const weakPanel = $("weakPanel");
       const tagsEl = $("weakTagsList");
       const cardsEl = $("weakCardsList");
 
-      // Ensure insights open
       openPanel($("insightsToggle"), $("insightsPanel"));
 
       if (!weakPanel || !tagsEl || !cardsEl) return;
-
       weakPanel.style.display = "block";
 
       if (!hasTracker()) {
@@ -648,7 +649,7 @@
       } else {
         cardsEl.innerHTML = weakCards.map(row => {
           const pct = (row.pct == null) ? "—" : `${Math.round(row.pct * 100)}%`;
-          const label = row.card && row.card.de ? row.card.de : "(missing term)";
+          const label = (row.card && row.card.de) ? row.card.de : "(missing prompt)";
           return `• <b>${escapeHtml(label)}</b>: ${pct} (${row.correct}/${row.attempts})`;
         }).join("<br>");
       }
@@ -674,32 +675,6 @@
       buildNewHand();
       makeQuestion();
       safeSetText("sub", `🎯 Weak-topic mode: ${weakStudyTags.join(", ")} (hand rebuilt).`);
-    }
-
-    // ===========================
-    // Panel toggles
-    // ===========================
-    function setToggleLabel(btn, isOpen, baseText) {
-      if (!btn) return;
-      btn.setAttribute("aria-expanded", String(isOpen));
-      btn.textContent = `${baseText} ${isOpen ? "▴" : "▾"}`;
-    }
-
-    function openPanel(btn, panel) {
-      if (!btn || !panel) return;
-      panel.removeAttribute("hidden");
-      const base = btn.textContent.replace(/[▴▾]/g, "").trim();
-      setToggleLabel(btn, true, base);
-    }
-
-    function togglePanel(btn, panel) {
-      if (!btn || !panel) return;
-      const isHidden = panel.hasAttribute("hidden");
-      if (isHidden) panel.removeAttribute("hidden");
-      else panel.setAttribute("hidden", "");
-
-      const base = btn.textContent.replace(/[▴▾]/g, "").trim();
-      setToggleLabel(btn, isHidden, base);
     }
 
     // ===========================
@@ -732,7 +707,6 @@
         DECK_UTILS.resetTracker();
         renderAccuracyForCurrent();
         safeSetText("sub", "Accuracy stats cleared.");
-        // refresh weak panel if visible
         const wp = $("weakPanel");
         if (wp && wp.style.display === "block") showWeakPanel();
       });
@@ -757,7 +731,6 @@
       $("level")?.addEventListener("change", () => {
         weakStudyOn = false;
         weakStudyTags = [];
-        // hide weak panel content when switching levels
         const wp = $("weakPanel");
         if (wp) wp.style.display = "none";
         buildNewHand();
@@ -773,13 +746,21 @@
     }
 
     // ===========================
-    // Init (after DOM + scripts)
+    // Init
     // ===========================
     document.addEventListener("DOMContentLoaded", () => {
-      // Quick sanity: decks loaded?
       if (!window.DRILL_DECKS) {
-        safeSetText("sub", "Error: decks.js did not load. Check the script path ../data/decks.js");
-        console.error("window.DRILL_DECKS missing. Check ../data/decks.js path.");
+        safeSetText("sub", "Error: grammar_drill_decks.js did not load. Check: data/grammar_drill_decks.js");
+        console.error("window.DRILL_DECKS missing. Check: data/grammar_drill_decks.js");
+        return;
+      }
+
+      // sanity: does selected deck exist?
+      const dk = $("level")?.value;
+      const exists = window.DRILL_DECKS && Array.isArray(window.DRILL_DECKS[dk]) && window.DRILL_DECKS[dk].length >= 4;
+      if (!exists) {
+        safeSetText("sub", `Deck not found or too small: "${dk}". Check the deck key in grammar_drill_decks.js`);
+        console.error("Deck missing/too small:", dk, window.DRILL_DECKS && window.DRILL_DECKS[dk]);
         return;
       }
 
