@@ -126,7 +126,7 @@
     }
 
     // Accept several common field names:
-    const rawText = item.text || item.prompt || item.sentence || "";
+    const rawText = item.prompt_de || item.text || item.prompt || item.sentence || "";
     // Show a visible blank even if deck uses "_____" or "{blank}"
     const display = escapeHTML(rawText)
       .replace("_____", "<span class='blank'>_____</span>")
@@ -185,7 +185,7 @@
   function currentHint() {
     const item = state.items[state.idx];
     if (!item) return "";
-    return String(item.hint ?? item.clue ?? item.help ?? "");
+  return String(item.hint_en ?? item.hint ?? item.clue ?? item.help ?? "");
   }
 
   function doHint() {
