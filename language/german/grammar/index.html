@@ -3,61 +3,689 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>German Vocabulary Hub</title>
+  <title>German Grammar Games Hub</title>
+
   <style>
-    :root{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-    body{margin:0;background:#f6f7fb;color:#111}
-    .wrap{max-width:900px;margin:0 auto;padding:18px}
-    .card{background:#fff;border-radius:14px;padding:18px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
-    h1{margin:0 0 10px;font-size:22px}
-    p{margin:0 0 14px;color:#555}
-    .top{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
-    a.back{border:1px solid #d7dbe6;border-radius:10px;padding:8px 10px;text-decoration:none;color:#111;background:#fff}
-    .grid{display:grid;gap:12px}
-    @media(min-width:640px){.grid{grid-template-columns:1fr 1fr}}
-    a.btn{
-      display:block;text-decoration:none;color:#111;background:#fff;
-      border:1px solid #d7dbe6;border-radius:14px;padding:14px 14px;
+    /* ====== Dark mode by default ====== */
+    :root{
+      --bg: #0b1020;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.08);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --line: rgba(255,255,255,.12);
+      --shadow: 0 18px 50px rgba(0,0,0,.45);
+      --accent: #7c8cff; /* keep subtle; no neon */
+      --accent2: #4de4ff;
+      --good: #35d07f;
+      --warn: #ffce5c;
+      --bad: #ff6b6b;
+      --radius: 16px;
+      --radius2: 22px;
+      --font: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
-    a.btn:hover{box-shadow:0 8px 20px rgba(0,0,0,.06)}
-    .title{font-weight:700;margin-bottom:4px}
-    .sub{font-size:13px;color:#666;line-height:1.35}
-    .tag{display:inline-block;font-size:12px;border:1px solid #e1e5f0;background:#f0f2f8;padding:3px 8px;border-radius:999px;margin-left:6px;color:#444}
+
+    /* Optional light theme if you ever want it later */
+    [data-theme="light"]{
+      --bg: #f6f7fb;
+      --panel: #ffffff;
+      --panel2: #f0f2f8;
+      --text: #0d1220;
+      --muted: rgba(13,18,32,.65);
+      --line: rgba(13,18,32,.12);
+      --shadow: 0 12px 30px rgba(0,0,0,.10);
+      --accent: #3f56ff;
+      --accent2: #1cb3d8;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: var(--font);
+      background:
+        radial-gradient(900px 450px at 10% 10%, rgba(124,140,255,.20), transparent 55%),
+        radial-gradient(800px 400px at 85% 25%, rgba(77,228,255,.14), transparent 55%),
+        radial-gradient(900px 600px at 40% 95%, rgba(255,206,92,.10), transparent 55%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    a{ color: inherit; text-decoration:none; }
+    .wrap{ max-width: 1060px; margin: 0 auto; padding: 18px; }
+
+    .topbar{
+      display:flex; gap:12px; align-items:center; justify-content:space-between;
+      padding: 14px 14px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
+      border-radius: var(--radius2);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      position: sticky; top: 10px; z-index: 20;
+    }
+
+    .brand{
+      display:flex; flex-direction:column; gap:2px;
+      min-width: 210px;
+    }
+    .brand .title{ font-size: 16px; font-weight: 800; letter-spacing:.2px; }
+    .brand .sub{ font-size: 12px; color: var(--muted); }
+
+    .controls{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end;
+    }
+
+    .pill{
+      display:flex; align-items:center; gap:8px;
+      padding: 9px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 10px 24px rgba(0,0,0,.18);
+    }
+    label.small{ font-size: 12px; color: var(--muted); }
+
+    input[type="search"], select{
+      background: transparent;
+      color: var(--text);
+      border: none;
+      outline: none;
+      font-size: 13px;
+    }
+    select{ cursor:pointer; }
+    option{ background: #111735; color: #fff; }
+
+    .btn{
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .08s ease, background .15s ease, border-color .15s ease;
+      user-select:none;
+    }
+    .btn:hover{ background: rgba(255,255,255,.09); }
+    .btn:active{ transform: translateY(1px); }
+
+    .btn.primary{
+      border-color: rgba(124,140,255,.35);
+      background: rgba(124,140,255,.18);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .section{
+      border: 1px solid var(--line);
+      border-radius: var(--radius2);
+      background: rgba(255,255,255,.05);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .sectionHeader{
+      display:flex; align-items:flex-start; justify-content:space-between; gap: 10px;
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+    }
+    .sectionHeader h2{
+      margin:0;
+      font-size: 15px;
+      letter-spacing:.2px;
+    }
+    .sectionHeader p{
+      margin: 4px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+      max-width: 720px;
+    }
+    .sectionMeta{
+      display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:flex-end;
+      min-width: 160px;
+    }
+
+    .chip{
+      font-size: 11px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+      padding: 14px;
+    }
+
+    .card{
+      grid-column: span 12;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      border-radius: var(--radius);
+      padding: 12px;
+      display:flex;
+      flex-direction:column;
+      gap: 8px;
+      transition: transform .08s ease, background .15s ease, border-color .15s ease;
+    }
+    .card:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.085);
+      border-color: rgba(124,140,255,.25);
+    }
+
+    @media (min-width: 720px){
+      .card{ grid-column: span 6; }
+    }
+    @media (min-width: 980px){
+      .card{ grid-column: span 4; }
+    }
+
+    .cardTop{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+    }
+    .cardTitle{
+      font-weight: 900;
+      letter-spacing:.2px;
+      line-height: 1.2;
+    }
+    .cardDesc{
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+      margin-top: 2px;
+      min-height: 34px;
+    }
+
+    .tags{
+      display:flex; flex-wrap:wrap; gap:6px;
+      margin-top: 2px;
+    }
+    .tag{
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+    }
+    .tag.skill{ border-color: rgba(77,228,255,.25); color: rgba(77,228,255,.9); background: rgba(77,228,255,.08); }
+    .tag.mode{ border-color: rgba(124,140,255,.25); color: rgba(124,140,255,.95); background: rgba(124,140,255,.09); }
+    .tag.level-easy{ border-color: rgba(53,208,127,.25); color: rgba(53,208,127,.95); background: rgba(53,208,127,.10); }
+    .tag.level-med{ border-color: rgba(255,206,92,.30); color: rgba(255,206,92,.95); background: rgba(255,206,92,.10); }
+    .tag.level-hard{ border-color: rgba(255,107,107,.28); color: rgba(255,107,107,.95); background: rgba(255,107,107,.10); }
+
+    .cardActions{
+      margin-top: 6px;
+      display:flex; gap:10px; align-items:center; justify-content:space-between;
+    }
+
+    .play{
+      display:flex; gap:8px; align-items:center;
+    }
+
+    .play .btn{
+      padding: 8px 10px;
+      font-size: 13px;
+    }
+
+    .tiny{
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .empty{
+      padding: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .footer{
+      margin: 14px 0 6px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align:center;
+    }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      border: 1px solid var(--line);
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: rgba(255,255,255,.06);
+    }
   </style>
 </head>
-<body>
+
+<body data-theme="dark">
   <div class="wrap">
-    <div class="card">
-      <div class="top">
-        <a class="back" href="../index.html">← German Hub</a>
-        <a class="back" href="../../index.html">← Language Hub</a>
+
+    <header class="topbar">
+      <div class="brand">
+        <div class="title">German Grammar Games Hub</div>
+        <div class="sub">Practice by skill type (recognition → controlled → production). Dark mode default.</div>
       </div>
 
-      <h1>German Grammar Games Hub</h1>
-      <p>Choose a Grammar practice mode.</p>
+      <div class="controls">
+        <div class="pill" title="Search titles, descriptions, and tags">
+          <label class="small" for="q">Search</label>
+          <input id="q" type="search" placeholder="da-/wo-, cases, word order…" autocomplete="off" />
+        </div>
 
-      <div class="grid">
-        <a class="btn" href="../quiz-cards.html">
-          <div class="title">WO and Da Prepositions <span class="tag">multiple choice</span></div>
-          <div class="sub">Pick the correct translation. Uses your deck dropdown (A1–C2 + themes).</div>
-        </a>
+        <div class="pill" title="Filter by skill category">
+          <label class="small" for="skill">Skill</label>
+          <select id="skill">
+            <option value="all">All</option>
+            <option value="recognition">Matching & Recognition</option>
+            <option value="controlled">Controlled Production</option>
+            <option value="production">Free Production</option>
+          </select>
+        </div>
 
-        <a class="btn" href="./fill-blank.html">
-          <div class="title">Coming Soon <span class="tag">sentences</span></div>
-          <div class="sub">Short sentences with one missing word. Great for A1–A2.</div>
-        </a>
+        <div class="pill" title="Filter by topic area">
+          <label class="small" for="topic">Topic</label>
+          <select id="topic">
+            <option value="all">All</option>
+            <option value="da-wo">Da-/Wo- Compounds</option>
+            <option value="verb-prep">Verb + Preposition</option>
+            <option value="cases">Cases (Nom/Akk/Dat)</option>
+            <option value="word-order">Word Order</option>
+          </select>
+        </div>
 
-        <a class="btn" href="./matching.html">
-          <div class="title">Coming Soon <span class="tag">pairs</span></div>
-          <div class="sub">Match German ↔ English pairs quickly (timed or chill).</div>
-        </a>
+        <div class="pill" title="Optional: tag difficulty for students who want it">
+          <label class="small" for="level">Level</label>
+          <select id="level">
+            <option value="all">All</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
 
-        <a class="btn" href="./decks.html">
-          <div class="title">Coming soon<span class="tag">browse</span></div>
-          <div class="sub">See what decks exist (A1/A2/B1… animals, travel, food, etc.).</div>
-        </a>
+        <button id="reset" class="btn" title="Clear all filters">Reset</button>
+        <button id="theme" class="btn primary" title="Toggle dark/light">Theme</button>
       </div>
+    </header>
+
+    <main id="app" class="grid"></main>
+
+    <div class="footer">
+      Tip: use <span class="kbd">/</span> to jump to search • <span class="kbd">Esc</span> to clear • Built for fast student navigation.
     </div>
   </div>
+
+  <script>
+    /*
+      ✅ How to use this hub:
+      1) Put this file at:  .../german/grammar/index.html (or wherever you host)
+      2) Update the GAMES array links to your actual game pages.
+      3) Add more games by copying an object.
+
+      Fields:
+        - title, desc
+        - url (relative link)
+        - topic: 'da-wo' | 'verb-prep' | 'cases' | 'word-order'
+        - skill: 'recognition' | 'controlled' | 'production'
+        - level: 'easy' | 'medium' | 'hard'
+        - tags: string[]
+        - estMin: number (optional)
+        - mode: 'Practice' | 'Test' (optional)
+    */
+
+    const GAMES = [
+      // ===== Da-/Wo- + Verb/Prep =====
+      {
+        title: "Grammar Match-Up",
+        desc: "Build pattern recognition by pairing related grammatical forms.",
+        url: "./matching/",
+        topic: "multiple",
+        skill: "recognition",
+        level: "easy",
+        mode: "Practice",
+        estMin: 6,
+        tags: ["match", "recognition", "pattern building"]
+      },
+      {
+        title: "Grammar Fill-In",
+        desc: "Develop grammatical accuracy by completing structured sentences for the selected topic.",
+        url: "./fill-in/.html",
+        topic: "multiple",
+        skill: "controlled",
+        level: "medium",
+        mode: "Practice",
+        estMin: 8,
+        tags: ["fill-in", "controlled production", "accuracy"]
+      },
+      {
+        title: "Grammar Transformation",
+          desc: "Rewrite sentences by transforming grammatical structures for the selected topic.",
+        url: "./transform/",
+        topic: "multiple",
+        skill: "controlled",
+        level: "hard",
+        mode: "Test",
+        estMin: 10,
+        tags: ["transformation", "controlled production", "structure change", "accuracy"]
+      },
+
+      // ===== Verb + Preposition =====
+      {
+        title: "Verb + Preposition Sorting",
+        desc: "Drag verbs into the correct preposition bucket (an, auf, über, für, von...).",
+        url: "./verb-prep/sort.html",
+        topic: "verb-prep",
+        skill: "recognition",
+        level: "easy",
+        mode: "Practice",
+        estMin: 7,
+        tags: ["denken an", "warten auf", "sprechen über", "teilnehmen an"]
+      },
+      {
+        title: "Verb + Prep Cloze (Case Awareness)",
+        desc: "Fill in the correct preposition and case (Dat/Akk) based on the verb.",
+        url: "./verb-prep/cloze.html",
+        topic: "verb-prep",
+        skill: "controlled",
+        level: "medium",
+        mode: "Practice",
+        estMin: 9,
+        tags: ["Dat", "Akk", "an+Dat", "auf+Akk"]
+      },
+      {
+        title: "Mini-Dialogue Builder (Verb+Prep)",
+        desc: "Build short dialogues: ask with wo- and answer with da- using target verbs.",
+        url: "./verb-prep/dialogue.html",
+        topic: "verb-prep",
+        skill: "production",
+        level: "hard",
+        mode: "Practice",
+        estMin: 12,
+        tags: ["speaking", "question→answer"]
+      },
+
+      // ===== Cases =====
+      {
+        title: "Articles Speed Drill (Nom/Akk/Dat)",
+        desc: "Quick drill: choose the correct article based on case cues in the sentence.",
+        url: "./cases/articles.html",
+        topic: "cases",
+        skill: "recognition",
+        level: "easy",
+        mode: "Practice",
+        estMin: 6,
+        tags: ["der/die/das", "den/dem", "case cues"]
+      },
+      {
+        title: "Case Selector (Mixed Sentences)",
+        desc: "Select the correct case for the noun phrase, then choose the correct form.",
+        url: "./cases/selector.html",
+        topic: "cases",
+        skill: "controlled",
+        level: "medium",
+        mode: "Test",
+        estMin: 10,
+        tags: ["Nom", "Akk", "Dat", "prepositions"]
+      },
+
+      // ===== Word order =====
+      {
+        title: "Word Order: Main Clause Scramble",
+        desc: "Reorder sentence tiles into correct German word order (V2, time-manner-place).",
+        url: "./word-order/main-scramble.html",
+        topic: "word-order",
+        skill: "controlled",
+        level: "medium",
+        mode: "Practice",
+        estMin: 9,
+        tags: ["V2", "TMP"]
+      },
+      {
+        title: "Word Order: Subordinate Clauses",
+        desc: "Practice dass/weil/ob: put verbs at the end and fix sentence structure.",
+        url: "./word-order/subordinate.html",
+        topic: "word-order",
+        skill: "controlled",
+        level: "hard",
+        mode: "Practice",
+        estMin: 12,
+        tags: ["dass", "weil", "verb-final"]
+      }
+    ];
+
+    const SECTION_INFO = [
+      {
+        key: "recognition",
+        title: "Matching & Recognition",
+        desc: "Low cognitive load: build patterns first (match, sort, multiple choice).",
+      },
+      {
+        key: "controlled",
+        title: "Controlled Production",
+        desc: "Produce the form with support (fill in the blank, transformations, structured prompts).",
+      },
+      {
+        key: "production",
+        title: "Free Production",
+        desc: "Use the grammar to communicate (mini-dialogues, open responses, speaking/writing tasks).",
+      }
+    ];
+
+    const TOPIC_LABELS = {
+      "da-wo": "Da-/Wo- Compounds",
+      "verb-prep": "Verb + Preposition",
+      "cases": "Cases (Nom/Akk/Dat)",
+      "word-order": "Word Order",
+    };
+
+    // ===== DOM =====
+    const app = document.getElementById("app");
+    const q = document.getElementById("q");
+    const skillSel = document.getElementById("skill");
+    const topicSel = document.getElementById("topic");
+    const levelSel = document.getElementById("level");
+    const resetBtn = document.getElementById("reset");
+    const themeBtn = document.getElementById("theme");
+
+    function norm(s){ return (s || "").toLowerCase().trim(); }
+
+    function passesFilters(game){
+      const query = norm(q.value);
+      const skill = skillSel.value;
+      const topic = topicSel.value;
+      const level = levelSel.value;
+
+      if (skill !== "all" && game.skill !== skill) return false;
+      if (topic !== "all" && game.topic !== topic) return false;
+      if (level !== "all" && game.level !== level) return false;
+
+      if (!query) return true;
+
+      const hay = [
+        game.title, game.desc, game.topic, game.skill, game.level, game.mode,
+        ...(game.tags || [])
+      ].map(norm).join(" ");
+
+      return hay.includes(query);
+    }
+
+    function tagEl(text, cls=""){
+      const span = document.createElement("span");
+      span.className = "tag " + cls;
+      span.textContent = text;
+      return span;
+    }
+
+    function render(){
+      app.innerHTML = "";
+
+      SECTION_INFO.forEach(sec => {
+        const items = GAMES.filter(g => g.skill === sec.key).filter(passesFilters);
+
+        // If user filtered to a specific skill, skip other sections.
+        if (skillSel.value !== "all" && skillSel.value !== sec.key) return;
+
+        const section = document.createElement("section");
+        section.className = "section";
+
+        const header = document.createElement("div");
+        header.className = "sectionHeader";
+
+        const left = document.createElement("div");
+        const h2 = document.createElement("h2");
+        h2.textContent = sec.title;
+        const p = document.createElement("p");
+        p.textContent = sec.desc;
+        left.appendChild(h2);
+        left.appendChild(p);
+
+        const meta = document.createElement("div");
+        meta.className = "sectionMeta";
+
+        const count = document.createElement("span");
+        count.className = "chip";
+        count.textContent = `${items.length} game${items.length === 1 ? "" : "s"}`;
+
+        meta.appendChild(count);
+
+        header.appendChild(left);
+        header.appendChild(meta);
+
+        const cards = document.createElement("div");
+        cards.className = "cards";
+
+        if (!items.length){
+          const empty = document.createElement("div");
+          empty.className = "empty";
+          empty.textContent = "No games match your filters in this section.";
+          section.appendChild(header);
+          section.appendChild(empty);
+          app.appendChild(section);
+          return;
+        }
+
+        items.forEach(game => {
+          const card = document.createElement("a");
+          card.className = "card";
+          card.href = game.url;
+
+          const top = document.createElement("div");
+          top.className = "cardTop";
+
+          const titleWrap = document.createElement("div");
+          const t = document.createElement("div");
+          t.className = "cardTitle";
+          t.textContent = game.title;
+          const d = document.createElement("div");
+          d.className = "cardDesc";
+          d.textContent = game.desc;
+          titleWrap.appendChild(t);
+          titleWrap.appendChild(d);
+
+          top.appendChild(titleWrap);
+
+          const tags = document.createElement("div");
+          tags.className = "tags";
+
+          // Topic + Mode + Level
+          tags.appendChild(tagEl(TOPIC_LABELS[game.topic] || game.topic, "skill"));
+          if (game.mode) tags.appendChild(tagEl(game.mode, "mode"));
+          tags.appendChild(tagEl(game.level[0].toUpperCase()+game.level.slice(1),
+            game.level === "easy" ? "level-easy" : (game.level === "medium" ? "level-med" : "level-hard")
+          ));
+
+          // Small extra tags (first 3)
+          (game.tags || []).slice(0,3).forEach(x => tags.appendChild(tagEl(x)));
+
+          const actions = document.createElement("div");
+          actions.className = "cardActions";
+
+          const play = document.createElement("div");
+          play.className = "play";
+          const btn = document.createElement("span");
+          btn.className = "btn primary";
+          btn.textContent = "Open";
+          play.appendChild(btn);
+
+          const tiny = document.createElement("div");
+          tiny.className = "tiny";
+          const mins = (typeof game.estMin === "number") ? `~${game.estMin} min` : "";
+          tiny.textContent = [mins].filter(Boolean).join(" • ");
+
+          actions.appendChild(play);
+          actions.appendChild(tiny);
+
+          card.appendChild(top);
+          card.appendChild(tags);
+          card.appendChild(actions);
+
+          cards.appendChild(card);
+        });
+
+        section.appendChild(header);
+        section.appendChild(cards);
+        app.appendChild(section);
+      });
+    }
+
+    // ===== Theme toggle =====
+    function toggleTheme(){
+      const body = document.body;
+      const current = body.getAttribute("data-theme") || "dark";
+      const next = (current === "dark") ? "light" : "dark";
+      body.setAttribute("data-theme", next);
+      try { localStorage.setItem("grammarHubTheme", next); } catch(e){}
+    }
+
+    function loadTheme(){
+      try{
+        const saved = localStorage.getItem("grammarHubTheme");
+        if (saved === "light" || saved === "dark") document.body.setAttribute("data-theme", saved);
+      } catch(e){}
+    }
+
+    // ===== Events =====
+    [q, skillSel, topicSel, levelSel].forEach(el => el.addEventListener("input", render));
+    resetBtn.addEventListener("click", () => {
+      q.value = "";
+      skillSel.value = "all";
+      topicSel.value = "all";
+      levelSel.value = "all";
+      render();
+    });
+    themeBtn.addEventListener("click", toggleTheme);
+
+    // Keyboard shortcuts
+    window.addEventListener("keydown", (e) => {
+      // "/" focuses search (unless already typing in an input/select)
+      if (e.key === "/" && !["INPUT","TEXTAREA","SELECT"].includes(document.activeElement.tagName)){
+        e.preventDefault();
+        q.focus();
+        q.select();
+      }
+      // ESC clears search
+      if (e.key === "Escape"){
+        if (document.activeElement === q) q.blur();
+        if (q.value){
+          q.value = "";
+          render();
+        }
+      }
+    });
+
+    // Init
+    loadTheme();
+    render();
+  </script>
 </body>
 </html>
