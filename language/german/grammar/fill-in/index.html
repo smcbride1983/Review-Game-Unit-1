@@ -214,9 +214,9 @@
   </style>
 </head>
 
-<script src="./data/fill-in_decks.js"></script>
 
 <body>
+
   <div class="wrap">
     <div class="card">
       <div class="topbar">
@@ -225,7 +225,10 @@
             <div class="title">Fill-in-the-Blank</div>
             <div class="sub">Dark mode • Decks • Tutorial Help</div>
           </div>
-
+          
+    <!-- Load deck data FIRST -->
+  <script src="./data/fill-in_decks.js"></script>
+          
           <div class="row tight" aria-label="Deck controls">
             <label class="small" for="levelSelect">Deck</label>
             <select id="levelSelect" title="Choose deck">
