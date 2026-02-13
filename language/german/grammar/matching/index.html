@@ -1,1 +1,793 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Grammar Matching</title>
 
+  <style>
+    /* =========================
+       THEME (DEFAULT: DARK)
+       ========================= */
+    :root{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+      --bg: #0b0f19;
+      --card: #0f1629;
+      --panel: #111a2e;
+
+      --text: #e8eefc;
+      --muted: #aeb9d6;
+
+      --border: #223255;
+      --borderSoft: rgba(255,255,255,.10);
+
+      --btnBg: #111a2e;
+      --btnText: #e8eefc;
+      --btnBorder: #223255;
+
+      --primaryBg: #e8eefc;
+      --primaryText: #0b0f19;
+
+      --good: #1f9d55;
+      --bad: #d64545;
+    }
+
+    /* Optional: if you want auto-light for users w/ light preference, uncomment
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f6f7fb; --card:#fff; --panel:#fbfcff;
+        --text:#111; --muted:#555;
+        --border:#d7dbe6; --borderSoft:#eceff6;
+        --btnBg:#fff; --btnText:#111; --btnBorder:#d7dbe6;
+        --primaryBg:#111; --primaryText:#fff;
+      }
+    }
+    */
+
+    body{ margin:0; background:var(--bg); color:var(--text); }
+    .wrap{ max-width: 860px; margin: 0 auto; padding: 18px; }
+
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+
+    h1{ margin:0 0 12px; font-size: 18px; letter-spacing:.2px; }
+
+    .topBar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom: 10px;
+    }
+
+    .topLeft, .topRight{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    }
+
+    label.small{
+      font-size: 12px;
+      color: var(--muted);
+      margin-right: -6px;
+    }
+
+    select, button, .btnLink{
+      border: 1px solid var(--btnBorder);
+      background: var(--btnBg);
+      color: var(--btnText);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      line-height: 1;
+    }
+
+    button.primary{
+      background: var(--primaryBg);
+      color: var(--primaryText);
+      border-color: var(--primaryBg);
+      font-weight: 700;
+    }
+
+    button.ghost{
+      background: transparent;
+      border: 1px solid var(--btnBorder);
+      color: var(--btnText);
+    }
+
+    button:disabled{ opacity:.55; cursor:not-allowed; }
+
+    .divider{
+      height: 1px;
+      background: var(--borderSoft);
+      margin: 12px 0;
+    }
+
+    .prompt{
+      margin: 14px 0 6px;
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: .2px;
+    }
+
+    .sub{
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 10px;
+      line-height: 1.35;
+    }
+
+    .choices{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    @media (min-width: 600px){
+      .choices{ grid-template-columns: 1fr 1fr; }
+    }
+
+    .choice{
+      text-align:left;
+      width:100%;
+      padding: 14px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--btnBorder);
+      background: var(--btnBg);
+      color: var(--btnText);
+      transition: transform .04s ease;
+    }
+    .choice:active{ transform: translateY(1px); }
+
+    .choice.correct{ border-color: var(--good); }
+    .choice.wrong{ border-color: var(--bad); }
+
+    /* After-answer mastery row (hidden until answered) */
+    .afterAnswerRow{
+      margin-top: 10px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .afterAnswerRow .hint{
+      color: var(--muted);
+      font-size: 12px;
+      margin-left: 4px;
+    }
+
+    /* Below-question toggles */
+    .belowRow{
+      margin-top: 12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .statsLine{
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--muted);
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+    }
+
+    /* Collapsible panels */
+    .panel{
+      margin-top: 10px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .panelRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .panelHelp{
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    /* Weak panel (nested inside Insights) */
+    .weakPanel{
+      margin-top: 12px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,.12);
+      border-radius: 14px;
+      padding: 12px;
+      display: none;
+    }
+    .weakTitle{ font-weight: 900; margin-bottom: 6px; }
+    .weakSub{ color: var(--muted); font-size: 12px; margin-bottom: 10px; }
+
+    .weakGrid{ display:grid; gap:10px; }
+    @media (min-width: 600px){
+      .weakGrid{ grid-template-columns: 1fr 1fr; }
+    }
+
+    .weakBox{
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px;
+      background: rgba(255,255,255,.03);
+      font-size: 13px;
+    }
+    .weakBox b{ display:block; margin-bottom: 6px; }
+    .smallmuted{ color: var(--muted); font-size: 12px; line-height: 1.35; }
+
+    /* Tiny helper text under title */
+    .tinyHelp{
+      color: var(--muted);
+      font-size: 12px;
+      margin: -6px 0 10px;
+      line-height: 1.35;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Grammar Matching</h1>
+      <div class="tinyHelp">
+        Practice with multiple-choice. Mark cards as “known” to see them less often. Use Insights to find weak topics.
+      </div>
+
+      <!-- TOP BAR (minimal) -->
+      <div class="topBar">
+        <div class="topLeft">
+          <label class="small">Level</label>
+          <select id="level">
+            <option value="">Wo- Da- (Level 1)</option>
+          </select>
+
+          <label class="small">Direction</label>
+          <select id="direction">
+            <option value="mixed">Mixed</option>
+            <option value="de-en">Prompt → Answer</option>
+            <option value="en-de">Answer → Prompt</option>
+          </select>
+
+          <button id="nextBtn" class="primary">Next</button>
+          <button id="reshuffleBtn" class="ghost">Reshuffle 20</button>
+        </div>
+
+        <div class="topRight">
+          <button id="toolsToggle" class="ghost" aria-expanded="false">Tools ▾</button>
+          <a href="../" class="btnLink" title="Back to Vocab Hub">⬅ Vocab Games</a>
+        </div>
+      </div>
+
+      <!-- TOOLS PANEL -->
+      <div id="toolsPanel" class="panel" hidden>
+        <div class="panelRow">
+          <button id="resetBtn" class="ghost">Reset session + mastery</button>
+          <button id="resetStatsBtn" class="ghost" title="Clears accuracy stats used for weak tags/cards">Clear accuracy stats</button>
+        </div>
+        <div class="panelHelp">
+          <b>Reset session + mastery</b> clears your known/practice states and session score. <br />
+          <b>Clear accuracy stats</b> clears analytics used by Insights (weak topics + accuracy %).
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- QUIZ -->
+      <div id="prompt" class="prompt">—</div>
+      <div id="sub" class="sub">Pick the correct answer.</div>
+      <div id="choices" class="choices"></div>
+
+      <!-- AFTER-ANSWER ACTIONS (hidden until answered) -->
+      <div id="afterAnswerRow" class="afterAnswerRow" hidden>
+        <button id="knowBtn" class="ghost">I know this</button>
+        <button id="practiceBtn" class="ghost">Need practice</button>
+        <span class="hint">Optional: this affects how often you’ll see the card.</span>
+      </div>
+
+      <!-- BELOW QUESTION: INSIGHTS + STATS -->
+      <div class="belowRow">
+        <button id="insightsToggle" class="ghost" aria-expanded="false">Insights ▾</button>
+        <button id="statsToggle" class="ghost" aria-expanded="false">Stats ▾</button>
+      </div>
+
+      <div id="statsLine" class="statsLine" hidden>
+        <span><b>Score</b> <span id="score">0</span></span>
+        <span>•</span>
+        <span><b>Correct</b> <span id="correct">0</span></span>
+        <span>•</span>
+        <span><b>Wrong</b> <span id="wrong">0</span></span>
+        <span>•</span>
+        <span><b>Streak</b> <span id="streak">0</span></span>
+        <span>•</span>
+        <span><b>Loaded</b> <span id="count">0</span></span>
+        <span>•</span>
+        <span><b>This card</b> <span id="acc">—</span></span>
+      </div>
+
+      <!-- INSIGHTS PANEL -->
+      <div id="insightsPanel" class="panel" hidden>
+        <div class="panelRow">
+          <button id="weakBtn" class="ghost" title="Show weakest tags + cards">Show what I miss most</button>
+          <button id="studyWeakBtn" class="ghost" title="Build your 20-card hand from weakest tags">Practice my weakest topics</button>
+        </div>
+
+        <div class="panelHelp">
+          Insights are based on <b>accuracy stats</b> saved in this browser (not mastery). Answer a few cards first to populate.
+        </div>
+
+        <!-- WEAK CONCEPTS PANEL -->
+        <div id="weakPanel" class="weakPanel">
+          <div class="weakTitle">Weak Concepts</div>
+          <div class="weakSub">Based on your saved accuracy stats in this browser.</div>
+
+          <div class="weakGrid">
+            <div class="weakBox">
+              <b>Weakest tags</b>
+              <div id="weakTagsList" class="smallmuted">—</div>
+            </div>
+
+            <div class="weakBox">
+              <b>Most missed cards</b>
+              <div id="weakCardsList" class="smallmuted">—</div>
+            </div>
+          </div>
+
+          <div style="margin-top:10px;" class="smallmuted">
+            Tip: “Practice my weakest topics” rebuilds your 20-card hand from your 3 weakest tags (when enough data exists).
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DATA (must load BEFORE app script) -->
+  <script src="../data/decks.js"></script>
+  <script src="../data/decks.utils.js"></script>
+
+  <!-- APP SCRIPT -->
+  <script>
+    // ===========================
+    // Safety helpers (avoid crashes)
+    // ===========================
+    const $ = (id) => document.getElementById(id);
+
+    function safeSetText(id, text) {
+      const el = $(id);
+      if (el) el.textContent = text;
+    }
+
+    // ===========================
+    // Persistent per-card progress (mastery)
+    // ===========================
+    let progress = JSON.parse(localStorage.getItem("progress") || "{}");
+
+    function itemKey(item) { return `${item.de}|||${item.en}`; }
+
+    function getItemState(item) {
+      return progress[itemKey(item)] || { status: "new", seen: 0, correct: 0, wrong: 0 };
+    }
+
+    function setItemState(item, patch) {
+      progress[itemKey(item)] = { ...getItemState(item), ...patch };
+      localStorage.setItem("progress", JSON.stringify(progress));
+    }
+
+    // ===========================
+    // Tracker helpers (from decks.utils.js)
+    // ===========================
+    function hasTracker() {
+      return !!(window.DECK_UTILS && typeof DECK_UTILS.recordAttempt === "function");
+    }
+
+    function trackerRecord(item, isCorrect) {
+      if (!hasTracker()) return;
+      DECK_UTILS.recordAttempt(item, isCorrect);
+    }
+
+    function trackerStats(item) {
+      if (!hasTracker()) return null;
+      return DECK_UTILS.getStats(item);
+    }
+
+    // ===========================
+    // Session scoreboard (not persisted)
+    // ===========================
+    let score = 0;
+    let correctCount = 0;
+    let wrongCount = 0;
+    let streak = 0;
+
+    let current = null;   // { item, dir, prompt, answer }
+    let answered = false;
+
+    // ===========================
+    // Hand model (20-card hand)
+    // ===========================
+    const HAND_SIZE = 20;
+    let hand = [];
+
+    // Weak-tags study mode
+    let weakStudyOn = false;
+    let weakStudyTags = [];
+
+    function updateStatus() {
+      safeSetText("score", score);
+      safeSetText("correct", correctCount);
+      safeSetText("wrong", wrongCount);
+      safeSetText("streak", streak);
+    }
+
+    function shuffle(a) {
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    // ===========================
+    // Deck source
+    // ===========================
+    function getLevelList() {
+      const level = $("level")?.value;
+
+      // Prefer shared utils if present
+      const base = (typeof dedupePairs === "function" && typeof getDeck === "function")
+        ? dedupePairs(getDeck(level))
+        : (window.DECKS && Array.isArray(window.DECKS[level]) ? window.DECKS[level] : []);
+
+      const filtered = base.filter(i => getItemState(i).status !== "known");
+      return filtered.length >= 4 ? filtered : base;
+    }
+
+    function getLevelBaseDeckUnfiltered() {
+      const level = $("level")?.value;
+      const base = (typeof dedupePairs === "function" && typeof getDeck === "function")
+        ? dedupePairs(getDeck(level))
+        : (window.DECKS && Array.isArray(window.DECKS[level]) ? window.DECKS[level] : []);
+      return base;
+    }
+
+    // ===========================
+    // Hand creation
+    // ===========================
+    function buildNewHand() {
+      let pool = getLevelList();
+
+      if (weakStudyOn && weakStudyTags.length) {
+        pool = pool.filter(c => weakStudyTags.includes(String(c.tag || "Untagged")));
+        if (pool.length < 4) {
+          weakStudyOn = false;
+          weakStudyTags = [];
+          pool = getLevelList();
+          safeSetText("sub", "Weak-topic filter had too few cards; switched back to normal.");
+        }
+      }
+
+      if (typeof getRandomCards === "function") {
+        hand = getRandomCards(pool, HAND_SIZE);
+      } else if (window.DECK_UTILS && typeof DECK_UTILS.getRandomCards === "function") {
+        hand = DECK_UTILS.getRandomCards(pool, { count: HAND_SIZE });
+      } else {
+        hand = shuffle([...pool]).slice(0, Math.min(HAND_SIZE, pool.length));
+      }
+
+      safeSetText("count", hand.length);
+      console.log("POOL size:", pool.length, "HAND size:", hand.length, "weakStudyOn:", weakStudyOn, "tags:", weakStudyTags);
+    }
+
+    // ===========================
+    // Accuracy line for current card
+    // ===========================
+    function renderAccuracyForCurrent() {
+      if (!current || !current.item) { safeSetText("acc", "—"); return; }
+
+      const s = trackerStats(current.item);
+      if (!s) { safeSetText("acc", "Tracker not loaded"); return; }
+      if (s.pct === null) safeSetText("acc", "— (no attempts)");
+      else safeSetText("acc", `${Math.round(s.pct * 100)}% (${s.correct}/${s.attempts})`);
+    }
+
+    // ===========================
+    // Question creation
+    // ===========================
+    function makeQuestion() {
+      if (!hand || hand.length < 4) buildNewHand();
+      if (!hand || hand.length < 4) {
+        safeSetText("sub", "Not enough cards to quiz (need at least 4).");
+        return;
+      }
+
+      answered = false;
+      safeSetText("sub", "Pick the correct answer.");
+      $("afterAnswerRow")?.setAttribute("hidden", "");
+
+      const directionSelect = $("direction")?.value || "mixed";
+      const dir = directionSelect === "mixed"
+        ? (Math.random() < 0.5 ? "de-en" : "en-de")
+        : directionSelect;
+
+      const item = hand[Math.floor(Math.random() * hand.length)];
+      const prompt = dir === "de-en" ? item.de : item.en;
+      const answer = dir === "de-en" ? item.en : item.de;
+
+      current = { item, dir, prompt, answer };
+
+      safeSetText("prompt", prompt);
+
+      const choicesEl = $("choices");
+      if (!choicesEl) return;
+      choicesEl.innerHTML = "";
+
+      const distractors = shuffle(hand.filter(x => x !== item))
+        .slice(0, 3)
+        .map(x => dir === "de-en" ? x.en : x.de);
+
+      const options = shuffle([answer, ...distractors]);
+
+      options.forEach(opt => {
+        const b = document.createElement("button");
+        b.className = "choice";
+        b.textContent = opt;
+        b.onclick = () => handleAnswer(opt, b);
+        choicesEl.appendChild(b);
+      });
+
+      renderAccuracyForCurrent();
+    }
+
+    // ===========================
+    // Answer handling
+    // ===========================
+    function handleAnswer(clickedText, buttonEl) {
+      if (!current) return;
+
+      const buttons = [...document.querySelectorAll(".choice")];
+      buttons.forEach(b => b.disabled = true);
+
+      const isCorrect = clickedText === current.answer;
+
+      buttons.forEach(b => {
+        if (b.textContent === current.answer) b.classList.add("correct");
+      });
+      if (!isCorrect) buttonEl.classList.add("wrong");
+
+      const item = current.item;
+
+      // tracker
+      trackerRecord(item, isCorrect);
+
+      // mastery stats
+      const st = getItemState(item);
+      setItemState(item, { seen: st.seen + 1 });
+
+      if (isCorrect) {
+        score += 1;
+        correctCount += 1;
+        streak += 1;
+        setItemState(item, { correct: st.correct + 1 });
+        safeSetText("sub", "✅ Correct! Mark mastery (optional) or click Next.");
+      } else {
+        score = Math.max(0, score - 1);
+        wrongCount += 1;
+        streak = 0;
+        setItemState(item, { wrong: st.wrong + 1, status: "practice" });
+        safeSetText("sub", `❌ Wrong. Correct answer: ${current.answer}. Mark mastery (optional) or click Next.`);
+      }
+
+      answered = true;
+      updateStatus();
+      renderAccuracyForCurrent();
+      $("afterAnswerRow")?.removeAttribute("hidden");
+    }
+
+    // ===========================
+    // Weak concepts UI
+    // ===========================
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[c]));
+    }
+
+    function showWeakPanel() {
+      const weakPanel = $("weakPanel");
+      const tagsEl = $("weakTagsList");
+      const cardsEl = $("weakCardsList");
+
+      // Ensure insights open
+      openPanel($("insightsToggle"), $("insightsPanel"));
+
+      if (!weakPanel || !tagsEl || !cardsEl) return;
+
+      weakPanel.style.display = "block";
+
+      if (!hasTracker()) {
+        tagsEl.innerHTML = "Tracker not loaded. Make sure decks.utils.js is the tracker version.";
+        cardsEl.innerHTML = "—";
+        return;
+      }
+
+      const baseDeck = getLevelBaseDeckUnfiltered();
+      const weakTags = DECK_UTILS.getWeakTags(baseDeck, { minAttemptsPerTag: 5 });
+      const weakCards = DECK_UTILS.getWeakCards(baseDeck, { limit: 10, minAttempts: 2, includeUnseen: true });
+
+      if (!weakTags.length) {
+        tagsEl.innerHTML = "Not enough data yet. Answer a few cards first.";
+      } else {
+        tagsEl.innerHTML = weakTags.slice(0, 6).map(t => {
+          const pct = (t.pct == null) ? "—" : `${Math.round(t.pct * 100)}%`;
+          return `• <b>${escapeHtml(t.tag)}</b>: ${pct} (${t.correct}/${t.attempts})`;
+        }).join("<br>");
+      }
+
+      if (!weakCards.length) {
+        cardsEl.innerHTML = "Not enough data yet.";
+      } else {
+        cardsEl.innerHTML = weakCards.map(row => {
+          const pct = (row.pct == null) ? "—" : `${Math.round(row.pct * 100)}%`;
+          const label = row.card && row.card.de ? row.card.de : "(missing term)";
+          return `• <b>${escapeHtml(label)}</b>: ${pct} (${row.correct}/${row.attempts})`;
+        }).join("<br>");
+      }
+    }
+
+    function activateWeakStudyMode() {
+      if (!hasTracker()) {
+        safeSetText("sub", "Tracker not loaded. Replace decks.utils.js with the tracker version first.");
+        return;
+      }
+
+      const baseDeck = getLevelBaseDeckUnfiltered();
+      const weakTags = DECK_UTILS.getWeakTags(baseDeck, { minAttemptsPerTag: 5 });
+
+      if (!weakTags.length) {
+        safeSetText("sub", "Not enough data yet for weak topics—answer a few cards first.");
+        return;
+      }
+
+      weakStudyTags = weakTags.slice(0, 3).map(t => t.tag);
+      weakStudyOn = true;
+
+      buildNewHand();
+      makeQuestion();
+      safeSetText("sub", `🎯 Weak-topic mode: ${weakStudyTags.join(", ")} (hand rebuilt).`);
+    }
+
+    // ===========================
+    // Panel toggles
+    // ===========================
+    function setToggleLabel(btn, isOpen, baseText) {
+      if (!btn) return;
+      btn.setAttribute("aria-expanded", String(isOpen));
+      btn.textContent = `${baseText} ${isOpen ? "▴" : "▾"}`;
+    }
+
+    function openPanel(btn, panel) {
+      if (!btn || !panel) return;
+      panel.removeAttribute("hidden");
+      const base = btn.textContent.replace(/[▴▾]/g, "").trim();
+      setToggleLabel(btn, true, base);
+    }
+
+    function togglePanel(btn, panel) {
+      if (!btn || !panel) return;
+      const isHidden = panel.hasAttribute("hidden");
+      if (isHidden) panel.removeAttribute("hidden");
+      else panel.setAttribute("hidden", "");
+
+      const base = btn.textContent.replace(/[▴▾]/g, "").trim();
+      setToggleLabel(btn, isHidden, base);
+    }
+
+    // ===========================
+    // Wire up controls
+    // ===========================
+    function bindEvents() {
+      $("nextBtn")?.addEventListener("click", () => makeQuestion());
+
+      $("reshuffleBtn")?.addEventListener("click", () => {
+        buildNewHand();
+        makeQuestion();
+        safeSetText("sub", "🔁 New set loaded. Pick the correct answer.");
+      });
+
+      $("resetBtn")?.addEventListener("click", () => {
+        progress = {};
+        localStorage.removeItem("progress");
+
+        score = 0; correctCount = 0; wrongCount = 0; streak = 0;
+        updateStatus();
+
+        buildNewHand();
+        makeQuestion();
+        safeSetText("sub", "Reset mastery + session score. (Accuracy stats kept.)");
+      });
+
+      $("resetStatsBtn")?.addEventListener("click", () => {
+        if (!hasTracker()) { safeSetText("sub", "Tracker not loaded."); return; }
+        if (!confirm("Clear accuracy stats for this browser?")) return;
+        DECK_UTILS.resetTracker();
+        renderAccuracyForCurrent();
+        safeSetText("sub", "Accuracy stats cleared.");
+        // refresh weak panel if visible
+        const wp = $("weakPanel");
+        if (wp && wp.style.display === "block") showWeakPanel();
+      });
+
+      $("knowBtn")?.addEventListener("click", () => {
+        if (!current) return;
+        if (!answered) { safeSetText("sub", "Answer first, then mark mastery."); return; }
+        setItemState(current.item, { status: "known" });
+        makeQuestion();
+      });
+
+      $("practiceBtn")?.addEventListener("click", () => {
+        if (!current) return;
+        if (!answered) { safeSetText("sub", "Answer first, then mark mastery."); return; }
+        setItemState(current.item, { status: "practice" });
+        makeQuestion();
+      });
+
+      $("weakBtn")?.addEventListener("click", () => showWeakPanel());
+      $("studyWeakBtn")?.addEventListener("click", () => { activateWeakStudyMode(); showWeakPanel(); });
+
+      $("level")?.addEventListener("change", () => {
+        weakStudyOn = false;
+        weakStudyTags = [];
+        // hide weak panel content when switching levels
+        const wp = $("weakPanel");
+        if (wp) wp.style.display = "none";
+        buildNewHand();
+        makeQuestion();
+        safeSetText("sub", "Level changed. Weak-topic mode off.");
+      });
+
+      $("direction")?.addEventListener("change", () => makeQuestion());
+
+      $("toolsToggle")?.addEventListener("click", () => togglePanel($("toolsToggle"), $("toolsPanel")));
+      $("insightsToggle")?.addEventListener("click", () => togglePanel($("insightsToggle"), $("insightsPanel")));
+      $("statsToggle")?.addEventListener("click", () => togglePanel($("statsToggle"), $("statsLine")));
+    }
+
+    // ===========================
+    // Init (after DOM + scripts)
+    // ===========================
+    document.addEventListener("DOMContentLoaded", () => {
+      // Quick sanity: decks loaded?
+      if (!window.DECKS) {
+        safeSetText("sub", "Error: decks.js did not load. Check the script path ../data/decks.js");
+        console.error("window.DECKS missing. Check ../data/decks.js path.");
+        return;
+      }
+
+      bindEvents();
+      updateStatus();
+      buildNewHand();
+      makeQuestion();
+    });
+  </script>
+</body>
+</html>
