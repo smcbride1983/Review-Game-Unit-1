@@ -288,6 +288,10 @@
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return false;
       const s = JSON.parse(raw);
+      
+      const store = getDeckStore();
+      if (!store || !store[s.deckKey]) return false;
+
       if (!s || !s.deckKey) return false;
 
       state.deckKey = s.deckKey;
