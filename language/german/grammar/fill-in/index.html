@@ -30,7 +30,6 @@
       color:var(--text);
     }
     a{ color:inherit; }
-
     .wrap{ max-width: 980px; margin: 0 auto; padding: 16px; }
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
@@ -39,7 +38,6 @@
       box-shadow: var(--shadow);
       overflow: hidden;
     }
-
     .topbar{
       display:flex; gap:12px; align-items:center; justify-content:space-between;
       padding: 14px 14px;
@@ -140,24 +138,6 @@
     .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
     .row.tight{ gap:8px; }
 
-    .statusbar{
-      display:flex; justify-content:space-between; align-items:center;
-      gap:10px; flex-wrap:wrap;
-      padding: 12px 14px;
-      border-top: 1px solid var(--border);
-      background: rgba(15,26,45,.55);
-    }
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.03);
-      font-size: 13px;
-      color: var(--muted);
-    }
-    .pill strong{ color: var(--text); }
-
     .feedback{
       margin-top: 10px;
       font-size: 14px;
@@ -170,6 +150,7 @@
     .feedback.good{ border-color: rgba(56,214,122,.5); background: rgba(56,214,122,.10); color: #bff3d3; }
     .feedback.bad{ border-color: rgba(255,92,120,.5); background: rgba(255,92,120,.10); color: #ffd0d8; }
 
+    /* Optional: if you have a modal */
     .modalBackdrop{
       position: fixed; inset:0;
       background: rgba(0,0,0,.55);
@@ -178,45 +159,10 @@
       padding: 18px;
       z-index: 999;
     }
-    .modal{
-      width: min(720px, 100%);
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .modalHeader{
-      display:flex; justify-content:space-between; align-items:center;
-      padding: 14px 14px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(15,26,45,.85);
-    }
-    .modalHeader h3{
-      margin:0;
-      font-size: 15px;
-      letter-spacing:.2px;
-    }
-    .modalBody{ padding: 14px; color: var(--text); }
-    .modalBody p{ margin: 0 0 10px; color: var(--muted); }
-    .modalBody ul{ margin: 0; padding-left: 18px; color: var(--muted); }
-    .kbd{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 12px;
-      padding: 2px 8px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.03);
-      color: var(--text);
-      display:inline-block;
-      margin: 0 2px;
-    }
   </style>
 </head>
 
-
 <body>
-
   <div class="wrap">
     <div class="card">
       <div class="topbar">
@@ -225,29 +171,19 @@
             <div class="title">Fill-in-the-Blank</div>
             <div class="sub">Dark mode • Decks • Tutorial Help</div>
           </div>
-          
-    <!-- Load deck data FIRST -->
-  <script src="./data/fill-in_decks.js"></script>
-  <script src="./data/fill-in.js"></script>    
-          
+
           <div class="row tight" aria-label="Deck controls">
             <label class="small" for="levelSelect">Deck</label>
             <select id="levelSelect" title="Choose deck">
               <option value="GRAMMAR_DRILL_PREPOSITION_AKK_FILLIN">Akkusativ verb-prep</option>
               <option value="GRAMMAR_DRILL_PREPOSITION_DAT_FILLIN">Dativ verb-prep</option>
-
             </select>
           </div>
         </div>
 
         <div class="right">
-          <button id="tutorialBtn" class="btn" title="Open tutorial (Help)">
-            ❔ Tutorial
-          </button>
-
-          <a id="hubLink" class="btn ghost" href="../index.html" title="Back to Grammar Hub">
-            ⬅ Grammar Hub
-          </a>
+          <button id="tutorialBtn" class="btn" title="Open tutorial (Help)">❔ Tutorial</button>
+          <a id="hubLink" class="btn ghost" href="../index.html" title="Back to Grammar Hub">⬅ Grammar Hub</a>
         </div>
       </div>
 
@@ -256,9 +192,7 @@
           <div class="panel" aria-label="Question panel">
             <h2>Prompt</h2>
 
-            <p class="sentence" id="sentence">
-              Loading…
-            </p>
+            <p class="sentence" id="sentence">Loading…</p>
 
             <div class="row">
               <input id="answerInput" type="text" autocomplete="off" spellcheck="false"
@@ -269,7 +203,6 @@
             </div>
 
             <p class="hint" id="hintText" aria-live="polite"></p>
-
             <div id="feedback" class="feedback" style="display:none;" aria-live="polite"></div>
           </div>
 
@@ -291,5 +224,15 @@
             </div>
 
             <div style="height:10px;"></div>
-            <p class="hint">
-              Tip: Press <span class
+            <p class="hint">Tip: Press Enter to check. H = hint. N = next. ? = tutorial.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Scripts go HERE, at the very bottom, in this order -->
+  <script src="./data/fill-in_decks.js"></script>
+  <script src="./data/fill-in.js"></script>
+</body>
+</html>
