@@ -1,4 +1,4 @@
-/* wo_da_super_easy_full.js
+/* grammar-drill_deck.js
    Super Easy Verb + Preposition + Wo/Da Forms (Verb-linked)
 */
 
