@@ -10,10 +10,10 @@
      hint_en: optional English hint
      tags: ["Grammar","verb-prep","Akk","fill-in"]
 */
-
 (function () {
   window.FILLIN_DECKS = window.FILLIN_DECKS || {};
   window.FILLIN_DECKS_META = window.FILLIN_DECKS_META || {};
+
 
   const DECK_KEY_AKK = "GRAMMAR_FILLIN_PREPOSITION_AKK_FILLIN";
 
@@ -178,9 +178,7 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
    - tags: ["Grammar","pronouns","Nom","fill-in"]
 */
 
-(function () {
-  window.FILLIN_DECKS = window.FILLIN_DECKS || {};
-  window.FILLIN_DECKS_META = window.FILLIN_DECKS_META || {};
+
 
   const DECK_KEY_NOM = "GRAMMAR_FILLIN_NOM_PRONOUNS_FILLIN";
 
@@ -255,9 +253,7 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
    - tags: ["Grammar","pronouns","Akk","fill-in"]
 */
 
-(function () {
-  window.FILLIN_DECKS = window.FILLIN_DECKS || {};
-  window.FILLIN_DECKS_META = window.FILLIN_DECKS_META || {};
+
 
   const DECK_KEY_AKK_PRON = "GRAMMAR_FILLIN_AKK_PRONOUNS_FILLIN";
 
@@ -333,9 +329,7 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
    - tags: ["Grammar","pronouns","Dat","fill-in"]
 */
 
-(function () {
-  window.FILLIN_DECKS = window.FILLIN_DECKS || {};
-  window.FILLIN_DECKS_META = window.FILLIN_DECKS_META || {};
+
 
   const DECK_KEY_DAT_PRON = "GRAMMAR_FILLIN_DAT_PRONOUNS_FILLIN";
 
@@ -410,9 +404,7 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
    - tags: ["Grammar","pronouns","case-detection","mixed","fill-in"]
 */
 
-(function () {
-  window.FILLIN_DECKS = window.FILLIN_DECKS || {};
-  window.FILLIN_DECKS_META = window.FILLIN_DECKS_META || {};
+
 
   const DECK_KEY_CASE = "GRAMMAR_FILLIN_CASE_TRIGGER_PRONOUNS";
 
@@ -478,9 +470,7 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
    Tags: ["Grammar","articles","Akk","Dat","conversation","fill-in"]
 */
 
-(function () {
-  window.FILLIN_DECKS = window.FILLIN_DECKS || {};
-  window.FILLIN_DECKS_META = window.FILLIN_DECKS_META || {};
+
 
   const DECK_KEY_CONV = "GRAMMAR_FILLIN_CONVERSATION_ARTICLES_CASE";
 
@@ -630,9 +620,7 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
    Tags: ["Grammar","pronouns","Dat","core","fill-in"]
 */
 
-(function () {
-  window.FILLIN_DECKS = window.FILLIN_DECKS || {};
-  window.FILLIN_DECKS_META = window.FILLIN_DECKS_META || {};
+
 
   const DECK_KEY = "GRAMMAR_FILLIN_DAT_PRONOUNS_CORE_40";
 
@@ -726,9 +714,7 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
    Tags: ["Grammar","articles","Akk","Dat","mixed","fill-in"]
 */
 
-(function () {
-  window.FILLIN_DECKS = window.FILLIN_DECKS || {};
-  window.FILLIN_DECKS_META = window.FILLIN_DECKS_META || {};
+
 
   const DECK_KEY = "GRAMMAR_FILLIN_MIXED_ARTICLES_DEF_INDEF_40";
 
@@ -824,9 +810,7 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
    Tags: ["Grammar","Perfekt","conversation","fill-in"]
 */
 
-(function () {
-  window.FILLIN_DECKS = window.FILLIN_DECKS || {};
-  window.FILLIN_DECKS_META = window.FILLIN_DECKS_META || {};
+
 
   const DECK_KEY = "GRAMMAR_FILLIN_CONVERSATION_PERFEKT_SPLIT_80";
 
