@@ -167,4 +167,239 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
     { id: "DAT_PREP-040", prompt_de: "Sie erkennt ihn ____ seiner Stimme.", answer: "an", hint_en: "erkennen an", tags: ["Grammar","verb-prep","Dat","fill-in"] }
 
   ];
+   /* grammar_FILLIN_decks_nom_pronouns_fillin.js
+   Deck: Nominativpronomen (ich/du/er/sie/es/wir/ihr/Sie) — Fill-in-the-blank
+   Deck key: GRAMMAR_FILLIN_NOM_PRONOUNS_FILLIN
+
+   Notes:
+   - IDs: NOM_PRON-001, ...
+   - mechanic: fill-in
+   - answer: required nominative pronoun (case-insensitive in your checker, but stored lowercase except "Sie")
+   - tags: ["Grammar","pronouns","Nom","fill-in"]
+*/
+
+(function () {
+  window.FILLIN_DECKS = window.FILLIN_DECKS || {};
+  window.FILLIN_DECKS_META = window.FILLIN_DECKS_META || {};
+
+  const DECK_KEY_NOM = "GRAMMAR_FILLIN_NOM_PRONOUNS_FILLIN";
+
+  window.FILLIN_DECKS_META[DECK_KEY_NOM] = {
+    title: "Nominativpronomen — Fill-in",
+    category: "Grammar",
+    level: "easy",
+    mechanic: "fill-in",
+    description: "Fill in the missing subject pronoun (Nominativ): ich, du, er, sie, es, wir, ihr, Sie."
+  };
+
+  window.FILLIN_DECKS[DECK_KEY_NOM] = [
+    // ich
+    { id: "NOM_PRON-001", prompt_de: "____ bin müde.", answer: "ich", hint_en: "I (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+    { id: "NOM_PRON-002", prompt_de: "____ komme aus Virginia.", answer: "ich", hint_en: "I (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+    { id: "NOM_PRON-003", prompt_de: "____ habe heute keine Zeit.", answer: "ich", hint_en: "I (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+
+    // du
+    { id: "NOM_PRON-004", prompt_de: "____ bist sehr freundlich.", answer: "du", hint_en: "you (informal, singular)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+    { id: "NOM_PRON-005", prompt_de: "____ lernst gerade Deutsch.", answer: "du", hint_en: "you (informal, singular)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+    { id: "NOM_PRON-006", prompt_de: "____ hast recht.", answer: "du", hint_en: "you (informal, singular)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+
+    // er
+    { id: "NOM_PRON-007", prompt_de: "____ ist mein Bruder.", answer: "er", hint_en: "he (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+    { id: "NOM_PRON-008", prompt_de: "____ wohnt in Berlin.", answer: "er", hint_en: "he (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+    { id: "NOM_PRON-009", prompt_de: "____ arbeitet heute spät.", answer: "er", hint_en: "he (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+
+    // sie (she)
+    { id: "NOM_PRON-010", prompt_de: "____ ist meine Schwester.", answer: "sie", hint_en: "she (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+    { id: "NOM_PRON-011", prompt_de: "____ spricht sehr gut Deutsch.", answer: "sie", hint_en: "she (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+    { id: "NOM_PRON-012", prompt_de: "____ hat morgen Geburtstag.", answer: "sie", hint_en: "she (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+
+    // es
+    { id: "NOM_PRON-013", prompt_de: "____ regnet heute.", answer: "es", hint_en: "it (weather)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+    { id: "NOM_PRON-014", prompt_de: "____ ist kalt draußen.", answer: "es", hint_en: "it (impersonal)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+    { id: "NOM_PRON-015", prompt_de: "____ ist wichtig, pünktlich zu sein.", answer: "es", hint_en: "it (dummy subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+
+    // wir
+    { id: "NOM_PRON-016", prompt_de: "____ gehen heute ins Kino.", answer: "wir", hint_en: "we (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+    { id: "NOM_PRON-017", prompt_de: "____ haben Hunger.", answer: "wir", hint_en: "we (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+    { id: "NOM_PRON-018", prompt_de: "____ lernen zusammen.", answer: "wir", hint_en: "we (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+
+    // ihr
+    { id: "NOM_PRON-019", prompt_de: "____ seid schon fertig.", answer: "ihr", hint_en: "you (plural, informal)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+    { id: "NOM_PRON-020", prompt_de: "____ kommt aus der Stadt, oder?", answer: "ihr", hint_en: "you (plural, informal)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+    { id: "NOM_PRON-021", prompt_de: "____ habt das wirklich gut gemacht.", answer: "ihr", hint_en: "you (plural, informal)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+
+    // Sie (formal you)
+    { id: "NOM_PRON-022", prompt_de: "____ sind heute sehr pünktlich.", answer: "Sie", hint_en: "you (formal)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+    { id: "NOM_PRON-023", prompt_de: "____ haben eine Frage?", answer: "Sie", hint_en: "you (formal)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+    { id: "NOM_PRON-024", prompt_de: "____ kommen aus den USA, stimmt’s?", answer: "Sie", hint_en: "you (formal)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+
+    // sie (they) — ambiguous with "sie (she)" but context helps (plural verb)
+    { id: "NOM_PRON-025", prompt_de: "____ kommen später.", answer: "sie", hint_en: "they (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+    { id: "NOM_PRON-026", prompt_de: "____ sind im Park.", answer: "sie", hint_en: "they (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+    { id: "NOM_PRON-027", prompt_de: "____ haben das schon gesehen.", answer: "sie", hint_en: "they (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+
+    // mixed quick checks
+    { id: "NOM_PRON-028", prompt_de: "____ bin Student.", answer: "ich", hint_en: "I (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+    { id: "NOM_PRON-029", prompt_de: "____ ist neu hier.", answer: "er", hint_en: "he (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
+    { id: "NOM_PRON-030", prompt_de: "____ sind Freunde.", answer: "wir", hint_en: "we (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] }
+  ];
+/* grammar_FILLIN_decks_akk_pronouns_fillin.js
+   Deck: Akkusativpronomen — Fill-in-the-blank
+   Deck key: GRAMMAR_FILLIN_AKK_PRONOUNS_FILLIN
+
+   Notes:
+   - IDs: AKK_PRON-001, ...
+   - Focus: direct-object pronouns (mich, dich, ihn, sie, es, uns, euch, Sie, sie)
+   - Prompt uses "____" for the pronoun slot
+   - answer is the required accusative pronoun (store lowercase except "Sie")
+   - tags: ["Grammar","pronouns","Akk","fill-in"]
+*/
+
+(function () {
+  window.FILLIN_DECKS = window.FILLIN_DECKS || {};
+  window.FILLIN_DECKS_META = window.FILLIN_DECKS_META || {};
+
+  const DECK_KEY_AKK_PRON = "GRAMMAR_FILLIN_AKK_PRONOUNS_FILLIN";
+
+  window.FILLIN_DECKS_META[DECK_KEY_AKK_PRON] = {
+    title: "Akkusativpronomen — Fill-in",
+    category: "Grammar",
+    level: "easy",
+    mechanic: "fill-in",
+    description: "Fill in the missing direct-object pronoun (Akkusativ): mich, dich, ihn, sie, es, uns, euch, Sie, sie."
+  };
+
+  window.FILLIN_DECKS[DECK_KEY_AKK_PRON] = [
+    // mich
+    { id: "AKK_PRON-001", prompt_de: "Kannst du ____ hören?", answer: "mich", hint_en: "me", tags: ["Grammar","pronouns","Akk","fill-in"] },
+    { id: "AKK_PRON-002", prompt_de: "Er sieht ____ jeden Tag.", answer: "mich", hint_en: "me", tags: ["Grammar","pronouns","Akk","fill-in"] },
+    { id: "AKK_PRON-003", prompt_de: "Sie ruft ____ heute Abend an.", answer: "mich", hint_en: "me", tags: ["Grammar","pronouns","Akk","fill-in"] },
+
+    // dich
+    { id: "AKK_PRON-004", prompt_de: "Ich mag ____ sehr.", answer: "dich", hint_en: "you (informal, singular)", tags: ["Grammar","pronouns","Akk","fill-in"] },
+    { id: "AKK_PRON-005", prompt_de: "Wir brauchen ____ jetzt.", answer: "dich", hint_en: "you (informal, singular)", tags: ["Grammar","pronouns","Akk","fill-in"] },
+    { id: "AKK_PRON-006", prompt_de: "Ich sehe ____ morgen.", answer: "dich", hint_en: "you (informal, singular)", tags: ["Grammar","pronouns","Akk","fill-in"] },
+
+    // ihn
+    { id: "AKK_PRON-007", prompt_de: "Kennst du Max? Ich kenne ____.", answer: "ihn", hint_en: "him", tags: ["Grammar","pronouns","Akk","fill-in"] },
+    { id: "AKK_PRON-008", prompt_de: "Wo ist der Hund? Ich finde ____ nicht.", answer: "ihn", hint_en: "him", tags: ["Grammar","pronouns","Akk","fill-in"] },
+    { id: "AKK_PRON-009", prompt_de: "Ich besuche meinen Bruder. Ich besuche ____ am Wochenende.", answer: "ihn", hint_en: "him", tags: ["Grammar","pronouns","Akk","fill-in"] },
+
+    // sie (her)
+    { id: "AKK_PRON-010", prompt_de: "Kennst du Anna? Ich kenne ____.", answer: "sie", hint_en: "her", tags: ["Grammar","pronouns","Akk","fill-in"] },
+    { id: "AKK_PRON-011", prompt_de: "Ich sehe die Lehrerin. Ich sehe ____ gleich.", answer: "sie", hint_en: "her", tags: ["Grammar","pronouns","Akk","fill-in"] },
+    { id: "AKK_PRON-012", prompt_de: "Magst du deine Schwester? Ja, ich mag ____.", answer: "sie", hint_en: "her", tags: ["Grammar","pronouns","Akk","fill-in"] },
+
+    // es
+    { id: "AKK_PRON-013", prompt_de: "Das Buch ist neu. Ich lese ____ gerade.", answer: "es", hint_en: "it", tags: ["Grammar","pronouns","Akk","fill-in"] },
+    { id: "AKK_PRON-014", prompt_de: "Hast du das verstanden? Ja, ich verstehe ____.", answer: "es", hint_en: "it", tags: ["Grammar","pronouns","Akk","fill-in"] },
+    { id: "AKK_PRON-015", prompt_de: "Ich kaufe das. Ich kaufe ____ jetzt.", answer: "es", hint_en: "it", tags: ["Grammar","pronouns","Akk","fill-in"] },
+
+    // uns
+    { id: "AKK_PRON-016", prompt_de: "Kannst du ____ helfen?", answer: "uns", hint_en: "us (direct object)", tags: ["Grammar","pronouns","Akk","fill-in"] },
+    { id: "AKK_PRON-017", prompt_de: "Er besucht ____ morgen.", answer: "uns", hint_en: "us", tags: ["Grammar","pronouns","Akk","fill-in"] },
+    { id: "AKK_PRON-018", prompt_de: "Sie sieht ____ im Park.", answer: "uns", hint_en: "us", tags: ["Grammar","pronouns","Akk","fill-in"] },
+
+    // euch
+    { id: "AKK_PRON-019", prompt_de: "Ich sehe ____ später.", answer: "euch", hint_en: "you (plural, informal)", tags: ["Grammar","pronouns","Akk","fill-in"] },
+    { id: "AKK_PRON-020", prompt_de: "Wir treffen ____ am Samstag.", answer: "euch", hint_en: "you (plural, informal)", tags: ["Grammar","pronouns","Akk","fill-in"] },
+    { id: "AKK_PRON-021", prompt_de: "Der Lehrer fragt ____ etwas.", answer: "euch", hint_en: "you (plural, informal)", tags: ["Grammar","pronouns","Akk","fill-in"] },
+
+    // Sie (formal you)
+    { id: "AKK_PRON-022", prompt_de: "Entschuldigung, kann ich ____ kurz sprechen?", answer: "Sie", hint_en: "you (formal)", tags: ["Grammar","pronouns","Akk","fill-in"] },
+    { id: "AKK_PRON-023", prompt_de: "Ich sehe ____ gleich im Büro.", answer: "Sie", hint_en: "you (formal)", tags: ["Grammar","pronouns","Akk","fill-in"] },
+    { id: "AKK_PRON-024", prompt_de: "Der Arzt untersucht ____ jetzt.", answer: "Sie", hint_en: "you (formal)", tags: ["Grammar","pronouns","Akk","fill-in"] },
+
+    // sie (they) — same form as "sie (her)" in Akk, but context helps (plural subject)
+    { id: "AKK_PRON-025", prompt_de: "Die Studenten kommen gleich. Ich sehe ____ später.", answer: "sie", hint_en: "them", tags: ["Grammar","pronouns","Akk","fill-in"] },
+    { id: "AKK_PRON-026", prompt_de: "Wo sind die Kinder? Ich höre ____ im Garten.", answer: "sie", hint_en: "them", tags: ["Grammar","pronouns","Akk","fill-in"] },
+    { id: "AKK_PRON-027", prompt_de: "Ich kenne deine Eltern. Ich kenne ____ gut.", answer: "sie", hint_en: "them", tags: ["Grammar","pronouns","Akk","fill-in"] },
+
+    // mixed quick checks
+    { id: "AKK_PRON-028", prompt_de: "Rufst du ____ an?", answer: "mich", hint_en: "me", tags: ["Grammar","pronouns","Akk","fill-in"] },
+    { id: "AKK_PRON-029", prompt_de: "Ich finde ____ super.", answer: "dich", hint_en: "you (informal, singular)", tags: ["Grammar","pronouns","Akk","fill-in"] },
+    { id: "AKK_PRON-030", prompt_de: "Wir kaufen ____ heute.", answer: "es", hint_en: "it", tags: ["Grammar","pronouns","Akk","fill-in"] }
+  ];
+/* grammar_FILLIN_decks_dat_pronouns_fillin.js
+   Deck: Dativpronomen — Fill-in-the-blank
+   Deck key: GRAMMAR_FILLIN_DAT_PRONOUNS_FILLIN
+
+   Notes:
+   - IDs: DAT_PRON-001, ...
+   - Focus: indirect-object pronouns (mir, dir, ihm, ihr, ihm, uns, euch, Ihnen, ihnen)
+     - "ihm" appears for both masculine "er" and neuter "es" in Dativ
+   - Prompt uses "____" for the pronoun slot
+   - answer is the required dative pronoun (store lowercase except "Ihnen")
+   - tags: ["Grammar","pronouns","Dat","fill-in"]
+*/
+
+(function () {
+  window.FILLIN_DECKS = window.FILLIN_DECKS || {};
+  window.FILLIN_DECKS_META = window.FILLIN_DECKS_META || {};
+
+  const DECK_KEY_DAT_PRON = "GRAMMAR_FILLIN_DAT_PRONOUNS_FILLIN";
+
+  window.FILLIN_DECKS_META[DECK_KEY_DAT_PRON] = {
+    title: "Dativpronomen — Fill-in",
+    category: "Grammar",
+    level: "easy",
+    mechanic: "fill-in",
+    description: "Fill in the missing indirect-object pronoun (Dativ): mir, dir, ihm, ihr, uns, euch, Ihnen, ihnen."
+  };
+
+  window.FILLIN_DECKS[DECK_KEY_DAT_PRON] = [
+    // mir
+    { id: "DAT_PRON-001", prompt_de: "Kannst du ____ helfen?", answer: "mir", hint_en: "to me", tags: ["Grammar","pronouns","Dat","fill-in"] },
+    { id: "DAT_PRON-002", prompt_de: "Er gibt ____ das Buch.", answer: "mir", hint_en: "to me", tags: ["Grammar","pronouns","Dat","fill-in"] },
+    { id: "DAT_PRON-003", prompt_de: "Sie erklärt ____ die Aufgabe.", answer: "mir", hint_en: "to me", tags: ["Grammar","pronouns","Dat","fill-in"] },
+
+    // dir
+    { id: "DAT_PRON-004", prompt_de: "Ich zeige ____ den Weg.", answer: "dir", hint_en: "to you (informal, singular)", tags: ["Grammar","pronouns","Dat","fill-in"] },
+    { id: "DAT_PRON-005", prompt_de: "Wir schicken ____ eine Nachricht.", answer: "dir", hint_en: "to you (informal, singular)", tags: ["Grammar","pronouns","Dat","fill-in"] },
+    { id: "DAT_PRON-006", prompt_de: "Er antwortet ____ sofort.", answer: "dir", hint_en: "to you (informal, singular)", tags: ["Grammar","pronouns","Dat","fill-in"] },
+
+    // ihm (masc)
+    { id: "DAT_PRON-007", prompt_de: "Ich gebe ____ das Geld.", answer: "ihm", hint_en: "to him", tags: ["Grammar","pronouns","Dat","fill-in"] },
+    { id: "DAT_PRON-008", prompt_de: "Sie hilft ____ bei den Hausaufgaben.", answer: "ihm", hint_en: "to him", tags: ["Grammar","pronouns","Dat","fill-in"] },
+    { id: "DAT_PRON-009", prompt_de: "Wir erzählen ____ die Geschichte.", answer: "ihm", hint_en: "to him", tags: ["Grammar","pronouns","Dat","fill-in"] },
+
+    // ihr (fem)
+    { id: "DAT_PRON-010", prompt_de: "Ich gebe ____ den Schlüssel.", answer: "ihr", hint_en: "to her", tags: ["Grammar","pronouns","Dat","fill-in"] },
+    { id: "DAT_PRON-011", prompt_de: "Er erklärt ____ die Regeln.", answer: "ihr", hint_en: "to her", tags: ["Grammar","pronouns","Dat","fill-in"] },
+    { id: "DAT_PRON-012", prompt_de: "Wir gratulieren ____ zum Geburtstag.", answer: "ihr", hint_en: "to her", tags: ["Grammar","pronouns","Dat","fill-in"] },
+
+    // ihm (neuter: es -> ihm)
+    { id: "DAT_PRON-013", prompt_de: "Das Kind gibt ____ einen Namen.", answer: "ihm", hint_en: "to it (neuter: es → ihm)", tags: ["Grammar","pronouns","Dat","fill-in"] },
+    { id: "DAT_PRON-014", prompt_de: "Ich helfe ____ beim Lernen.", answer: "ihm", hint_en: "to it (neuter: es → ihm)", tags: ["Grammar","pronouns","Dat","fill-in"] },
+    { id: "DAT_PRON-015", prompt_de: "Wir geben ____ eine Chance.", answer: "ihm", hint_en: "to it (neuter: es → ihm)", tags: ["Grammar","pronouns","Dat","fill-in"] },
+
+    // uns
+    { id: "DAT_PRON-016", prompt_de: "Kannst du ____ das erklären?", answer: "uns", hint_en: "to us", tags: ["Grammar","pronouns","Dat","fill-in"] },
+    { id: "DAT_PRON-017", prompt_de: "Er bringt ____ Kaffee.", answer: "uns", hint_en: "to us", tags: ["Grammar","pronouns","Dat","fill-in"] },
+    { id: "DAT_PRON-018", prompt_de: "Sie erzählt ____ etwas Wichtiges.", answer: "uns", hint_en: "to us", tags: ["Grammar","pronouns","Dat","fill-in"] },
+
+    // euch
+    { id: "DAT_PRON-019", prompt_de: "Ich zeige ____ die Fotos.", answer: "euch", hint_en: "to you (plural, informal)", tags: ["Grammar","pronouns","Dat","fill-in"] },
+    { id: "DAT_PRON-020", prompt_de: "Wir schicken ____ die Unterlagen.", answer: "euch", hint_en: "to you (plural, informal)", tags: ["Grammar","pronouns","Dat","fill-in"] },
+    { id: "DAT_PRON-021", prompt_de: "Der Lehrer erklärt ____ die Aufgabe.", answer: "euch", hint_en: "to you (plural, informal)", tags: ["Grammar","pronouns","Dat","fill-in"] },
+
+    // Ihnen (formal you)
+    { id: "DAT_PRON-022", prompt_de: "Kann ich ____ helfen?", answer: "Ihnen", hint_en: "to you (formal)", tags: ["Grammar","pronouns","Dat","fill-in"] },
+    { id: "DAT_PRON-023", prompt_de: "Ich schicke ____ eine E-Mail.", answer: "Ihnen", hint_en: "to you (formal)", tags: ["Grammar","pronouns","Dat","fill-in"] },
+    { id: "DAT_PRON-024", prompt_de: "Der Arzt erklärt ____ alles.", answer: "Ihnen", hint_en: "to you (formal)", tags: ["Grammar","pronouns","Dat","fill-in"] },
+
+    // ihnen (they)
+    { id: "DAT_PRON-025", prompt_de: "Ich gebe ____ das Geld.", answer: "ihnen", hint_en: "to them", tags: ["Grammar","pronouns","Dat","fill-in"] },
+    { id: "DAT_PRON-026", prompt_de: "Wir helfen ____ bei der Aufgabe.", answer: "ihnen", hint_en: "to them", tags: ["Grammar","pronouns","Dat","fill-in"] },
+    { id: "DAT_PRON-027", prompt_de: "Der Lehrer erklärt ____ die Regeln.", answer: "ihnen", hint_en: "to them", tags: ["Grammar","pronouns","Dat","fill-in"] },
+
+    // mixed quick checks
+    { id: "DAT_PRON-028", prompt_de: "Er sagt ____ die Wahrheit.", answer: "mir", hint_en: "to me", tags: ["Grammar","pronouns","Dat","fill-in"] },
+    { id: "DAT_PRON-029", prompt_de: "Ich schreibe ____ morgen.", answer: "dir", hint_en: "to you (informal, singular)", tags: ["Grammar","pronouns","Dat","fill-in"] },
+    { id: "DAT_PRON-030", prompt_de: "Wir geben ____ Bescheid.", answer: "Ihnen", hint_en: "to you (formal)", tags: ["Grammar","pronouns","Dat","fill-in"] }
+  ];
+
+
+
+
 })();
