@@ -1,31 +1,37 @@
-/* grammar_FILLIN_decks_akk_prep_fillin.js
-   Deck: Verb + Preposition (Akkusativ) — Fill-in-the-blank
-   Deck key: GRAMMAR_FILLIN_PREPOSITION_AKK_FILLIN
+/* ===================================================================
+   grammar_FILLIN_decks_bundle.js
+   Bundle: Multiple Grammar Fill-in Decks (Akk/Dat Preps, Pronouns,
+           Case triggers, Articles, Core drills, Perfekt split)
 
-   Notes:
-   - IDs are informative: AKK_PREP-001, ...
-   - Each card has:
-     prompt_de: German sentence with a blank "____"
-     answer: the required preposition (lowercase)
-     hint_en: optional English hint
-     tags: ["Grammar","verb-prep","Akk","fill-in"]
-*/
+   FIXES APPLIED:
+   - Removed ALL const collisions (unique const names everywhere)
+   - Ensured all deck keys are unique and used consistently
+   - Ensured all decks attach to window.FILLIN_DECKS / META
+   - Fixed obvious typo: "Besuchst du der Arzt?" -> "Besuchst du den Arzt?"
+   - Cleaned formatting + added missing semicolons / consistent style
+=================================================================== */
+
 (function () {
   window.FILLIN_DECKS = window.FILLIN_DECKS || {};
   window.FILLIN_DECKS_META = window.FILLIN_DECKS_META || {};
 
+  /* =========================================================
+     Deck 1: Verb + Preposition (Akkusativ) — Fill-in
+     Deck key: GRAMMAR_FILLIN_PREPOSITION_AKK_FILLIN
+  ========================================================= */
 
-  const DECK_KEY_AKK = "GRAMMAR_FILLIN_PREPOSITION_AKK_FILLIN";
+  const DECK_KEY_PREP_AKK = "GRAMMAR_FILLIN_PREPOSITION_AKK_FILLIN";
 
-  window.FILLIN_DECKS_META[DECK_KEY_AKK] = {
+  window.FILLIN_DECKS_META[DECK_KEY_PREP_AKK] = {
     title: "Verb + Präposition (Akkusativ) — Fill-in",
     category: "Grammar",
     level: "easy",
     mechanic: "fill-in",
-    description: "Fill in the missing preposition for common verb–preposition combinations that take Akkusativ."
+    description:
+      "Fill in the missing preposition for common verb–preposition combinations that take Akkusativ."
   };
 
-  window.FILLIN_DECKS[DECK_KEY_AKK] = [
+  window.FILLIN_DECKS[DECK_KEY_PREP_AKK] = [
     // AUF + Akk
     { id: "AKK_PREP-001", prompt_de: "Ich warte ____ den Bus.", answer: "auf", hint_en: "warten auf", tags: ["Grammar","verb-prep","Akk","fill-in"] },
     { id: "AKK_PREP-002", prompt_de: "Wir hoffen ____ gutes Wetter.", answer: "auf", hint_en: "hoffen auf", tags: ["Grammar","verb-prep","Akk","fill-in"] },
@@ -94,18 +100,24 @@
     // BONUS high-frequency Akk-prep phrases (still good practice)
     { id: "AKK_PREP-050", prompt_de: "Wir freuen uns ____ die guten Nachrichten.", answer: "über", hint_en: "sich freuen über (happy about)", tags: ["Grammar","verb-prep","Akk","fill-in"] }
   ];
-const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
 
-  window.FILLIN_DECKS_META[DECK_KEY_DAT] = {
+  /* =========================================================
+     Deck 2: Verb + Preposition (Dativ) — Fill-in
+     Deck key: GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN
+  ========================================================= */
+
+  const DECK_KEY_PREP_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
+
+  window.FILLIN_DECKS_META[DECK_KEY_PREP_DAT] = {
     title: "Verb + Präposition (Dativ) — Fill-in",
     category: "Grammar",
     level: "easy",
     mechanic: "fill-in",
-    description: "Fill in the missing preposition for common verb–preposition combinations that take Dativ."
+    description:
+      "Fill in the missing preposition for common verb–preposition combinations that take Dativ."
   };
 
-  window.FILLIN_DECKS[DECK_KEY_DAT] = [
-
+  window.FILLIN_DECKS[DECK_KEY_PREP_DAT] = [
     // MIT + Dat
     { id: "DAT_PREP-001", prompt_de: "Ich spreche ____ meinem Professor.", answer: "mit", hint_en: "sprechen mit", tags: ["Grammar","verb-prep","Dat","fill-in"] },
     { id: "DAT_PREP-002", prompt_de: "Wir treffen uns ____ unseren Freunden.", answer: "mit", hint_en: "sich treffen mit", tags: ["Grammar","verb-prep","Dat","fill-in"] },
@@ -165,32 +177,25 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
     { id: "DAT_PREP-038", prompt_de: "Er nimmt ____ dem Projekt teil.", answer: "an", hint_en: "teilnehmen an", tags: ["Grammar","verb-prep","Dat","fill-in"] },
     { id: "DAT_PREP-039", prompt_de: "Ich arbeite ____ einem Buch.", answer: "an", hint_en: "arbeiten an", tags: ["Grammar","verb-prep","Dat","fill-in"] },
     { id: "DAT_PREP-040", prompt_de: "Sie erkennt ihn ____ seiner Stimme.", answer: "an", hint_en: "erkennen an", tags: ["Grammar","verb-prep","Dat","fill-in"] }
-
   ];
-   /* grammar_FILLIN_decks_nom_pronouns_fillin.js
-   Deck: Nominativpronomen (ich/du/er/sie/es/wir/ihr/Sie) — Fill-in-the-blank
-   Deck key: GRAMMAR_FILLIN_NOM_PRONOUNS_FILLIN
 
-   Notes:
-   - IDs: NOM_PRON-001, ...
-   - mechanic: fill-in
-   - answer: required nominative pronoun (case-insensitive in your checker, but stored lowercase except "Sie")
-   - tags: ["Grammar","pronouns","Nom","fill-in"]
-*/
+  /* =========================================================
+     Deck 3: Nominativ Pronouns — Fill-in
+     Deck key: GRAMMAR_FILLIN_NOM_PRONOUNS_FILLIN
+  ========================================================= */
 
+  const DECK_KEY_PRON_NOM = "GRAMMAR_FILLIN_NOM_PRONOUNS_FILLIN";
 
-
-  const DECK_KEY_NOM = "GRAMMAR_FILLIN_NOM_PRONOUNS_FILLIN";
-
-  window.FILLIN_DECKS_META[DECK_KEY_NOM] = {
+  window.FILLIN_DECKS_META[DECK_KEY_PRON_NOM] = {
     title: "Nominativpronomen — Fill-in",
     category: "Grammar",
     level: "easy",
     mechanic: "fill-in",
-    description: "Fill in the missing subject pronoun (Nominativ): ich, du, er, sie, es, wir, ihr, Sie."
+    description:
+      "Fill in the missing subject pronoun (Nominativ): ich, du, er, sie, es, wir, ihr, Sie."
   };
 
-  window.FILLIN_DECKS[DECK_KEY_NOM] = [
+  window.FILLIN_DECKS[DECK_KEY_PRON_NOM] = [
     // ich
     { id: "NOM_PRON-001", prompt_de: "____ bin müde.", answer: "ich", hint_en: "I (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
     { id: "NOM_PRON-002", prompt_de: "____ komme aus Virginia.", answer: "ich", hint_en: "I (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
@@ -231,7 +236,7 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
     { id: "NOM_PRON-023", prompt_de: "____ haben eine Frage?", answer: "Sie", hint_en: "you (formal)", tags: ["Grammar","pronouns","Nom","fill-in"] },
     { id: "NOM_PRON-024", prompt_de: "____ kommen aus den USA, stimmt’s?", answer: "Sie", hint_en: "you (formal)", tags: ["Grammar","pronouns","Nom","fill-in"] },
 
-    // sie (they) — ambiguous with "sie (she)" but context helps (plural verb)
+    // sie (they)
     { id: "NOM_PRON-025", prompt_de: "____ kommen später.", answer: "sie", hint_en: "they (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
     { id: "NOM_PRON-026", prompt_de: "____ sind im Park.", answer: "sie", hint_en: "they (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
     { id: "NOM_PRON-027", prompt_de: "____ haben das schon gesehen.", answer: "sie", hint_en: "they (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
@@ -241,31 +246,24 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
     { id: "NOM_PRON-029", prompt_de: "____ ist neu hier.", answer: "er", hint_en: "he (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] },
     { id: "NOM_PRON-030", prompt_de: "____ sind Freunde.", answer: "wir", hint_en: "we (subject)", tags: ["Grammar","pronouns","Nom","fill-in"] }
   ];
-/* grammar_FILLIN_decks_akk_pronouns_fillin.js
-   Deck: Akkusativpronomen — Fill-in-the-blank
-   Deck key: GRAMMAR_FILLIN_AKK_PRONOUNS_FILLIN
 
-   Notes:
-   - IDs: AKK_PRON-001, ...
-   - Focus: direct-object pronouns (mich, dich, ihn, sie, es, uns, euch, Sie, sie)
-   - Prompt uses "____" for the pronoun slot
-   - answer is the required accusative pronoun (store lowercase except "Sie")
-   - tags: ["Grammar","pronouns","Akk","fill-in"]
-*/
+  /* =========================================================
+     Deck 4: Akkusativ Pronouns — Fill-in
+     Deck key: GRAMMAR_FILLIN_AKK_PRONOUNS_FILLIN
+  ========================================================= */
 
+  const DECK_KEY_PRON_AKK = "GRAMMAR_FILLIN_AKK_PRONOUNS_FILLIN";
 
-
-  const DECK_KEY_AKK_PRON = "GRAMMAR_FILLIN_AKK_PRONOUNS_FILLIN";
-
-  window.FILLIN_DECKS_META[DECK_KEY_AKK_PRON] = {
+  window.FILLIN_DECKS_META[DECK_KEY_PRON_AKK] = {
     title: "Akkusativpronomen — Fill-in",
     category: "Grammar",
     level: "easy",
     mechanic: "fill-in",
-    description: "Fill in the missing direct-object pronoun (Akkusativ): mich, dich, ihn, sie, es, uns, euch, Sie, sie."
+    description:
+      "Fill in the missing direct-object pronoun (Akkusativ): mich, dich, ihn, sie, es, uns, euch, Sie, sie."
   };
 
-  window.FILLIN_DECKS[DECK_KEY_AKK_PRON] = [
+  window.FILLIN_DECKS[DECK_KEY_PRON_AKK] = [
     // mich
     { id: "AKK_PRON-001", prompt_de: "Kannst du ____ hören?", answer: "mich", hint_en: "me", tags: ["Grammar","pronouns","Akk","fill-in"] },
     { id: "AKK_PRON-002", prompt_de: "Er sieht ____ jeden Tag.", answer: "mich", hint_en: "me", tags: ["Grammar","pronouns","Akk","fill-in"] },
@@ -306,7 +304,7 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
     { id: "AKK_PRON-023", prompt_de: "Ich sehe ____ gleich im Büro.", answer: "Sie", hint_en: "you (formal)", tags: ["Grammar","pronouns","Akk","fill-in"] },
     { id: "AKK_PRON-024", prompt_de: "Der Arzt untersucht ____ jetzt.", answer: "Sie", hint_en: "you (formal)", tags: ["Grammar","pronouns","Akk","fill-in"] },
 
-    // sie (they) — same form as "sie (her)" in Akk, but context helps (plural subject)
+    // sie (they)
     { id: "AKK_PRON-025", prompt_de: "Die Studenten kommen gleich. Ich sehe ____ später.", answer: "sie", hint_en: "them", tags: ["Grammar","pronouns","Akk","fill-in"] },
     { id: "AKK_PRON-026", prompt_de: "Wo sind die Kinder? Ich höre ____ im Garten.", answer: "sie", hint_en: "them", tags: ["Grammar","pronouns","Akk","fill-in"] },
     { id: "AKK_PRON-027", prompt_de: "Ich kenne deine Eltern. Ich kenne ____ gut.", answer: "sie", hint_en: "them", tags: ["Grammar","pronouns","Akk","fill-in"] },
@@ -316,32 +314,24 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
     { id: "AKK_PRON-029", prompt_de: "Ich finde ____ super.", answer: "dich", hint_en: "you (informal, singular)", tags: ["Grammar","pronouns","Akk","fill-in"] },
     { id: "AKK_PRON-030", prompt_de: "Wir kaufen ____ heute.", answer: "es", hint_en: "it", tags: ["Grammar","pronouns","Akk","fill-in"] }
   ];
-/* grammar_FILLIN_decks_dat_pronouns_fillin.js
-   Deck: Dativpronomen — Fill-in-the-blank
-   Deck key: GRAMMAR_FILLIN_DAT_PRONOUNS_FILLIN
 
-   Notes:
-   - IDs: DAT_PRON-001, ...
-   - Focus: indirect-object pronouns (mir, dir, ihm, ihr, ihm, uns, euch, Ihnen, ihnen)
-     - "ihm" appears for both masculine "er" and neuter "es" in Dativ
-   - Prompt uses "____" for the pronoun slot
-   - answer is the required dative pronoun (store lowercase except "Ihnen")
-   - tags: ["Grammar","pronouns","Dat","fill-in"]
-*/
+  /* =========================================================
+     Deck 5: Dativ Pronouns — Fill-in
+     Deck key: GRAMMAR_FILLIN_DAT_PRONOUNS_FILLIN
+  ========================================================= */
 
+  const DECK_KEY_PRON_DAT = "GRAMMAR_FILLIN_DAT_PRONOUNS_FILLIN";
 
-
-  const DECK_KEY_DAT_PRON = "GRAMMAR_FILLIN_DAT_PRONOUNS_FILLIN";
-
-  window.FILLIN_DECKS_META[DECK_KEY_DAT_PRON] = {
+  window.FILLIN_DECKS_META[DECK_KEY_PRON_DAT] = {
     title: "Dativpronomen — Fill-in",
     category: "Grammar",
     level: "easy",
     mechanic: "fill-in",
-    description: "Fill in the missing indirect-object pronoun (Dativ): mir, dir, ihm, ihr, uns, euch, Ihnen, ihnen."
+    description:
+      "Fill in the missing indirect-object pronoun (Dativ): mir, dir, ihm, ihr, uns, euch, Ihnen, ihnen."
   };
 
-  window.FILLIN_DECKS[DECK_KEY_DAT_PRON] = [
+  window.FILLIN_DECKS[DECK_KEY_PRON_DAT] = [
     // mir
     { id: "DAT_PRON-001", prompt_de: "Kannst du ____ helfen?", answer: "mir", hint_en: "to me", tags: ["Grammar","pronouns","Dat","fill-in"] },
     { id: "DAT_PRON-002", prompt_de: "Er gibt ____ das Buch.", answer: "mir", hint_en: "to me", tags: ["Grammar","pronouns","Dat","fill-in"] },
@@ -393,22 +383,14 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
     { id: "DAT_PRON-030", prompt_de: "Wir geben ____ Bescheid.", answer: "Ihnen", hint_en: "to you (formal)", tags: ["Grammar","pronouns","Dat","fill-in"] }
   ];
 
-/* grammar_FILLIN_decks_case_trigger_pronouns.js
-   Deck: Case Trigger — Object Pronouns (Mixed Akk/Dat)
-   Deck key: GRAMMAR_FILLIN_CASE_TRIGGER_PRONOUNS
+  /* =========================================================
+     Deck 6: Case Trigger — Object Pronouns (Mixed Akk/Dat)
+     Deck key: GRAMMAR_FILLIN_CASE_TRIGGER_PRONOUNS
+  ========================================================= */
 
-   Notes:
-   - Learner must determine case from verb structure
-   - Then choose correct pronoun form
-   - IDs: CASE_TRIG-001, ...
-   - tags: ["Grammar","pronouns","case-detection","mixed","fill-in"]
-*/
+  const DECK_KEY_CASE_TRIGGER = "GRAMMAR_FILLIN_CASE_TRIGGER_PRONOUNS";
 
-
-
-  const DECK_KEY_CASE = "GRAMMAR_FILLIN_CASE_TRIGGER_PRONOUNS";
-
-  window.FILLIN_DECKS_META[DECK_KEY_CASE] = {
+  window.FILLIN_DECKS_META[DECK_KEY_CASE_TRIGGER] = {
     title: "Case Trigger — Mixed Object Pronouns",
     category: "Grammar",
     level: "medium",
@@ -416,8 +398,7 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
     description: "Choose the correct pronoun form (Akk or Dat) based on the verb and structure."
   };
 
-  window.FILLIN_DECKS[DECK_KEY_CASE] = [
-
+  window.FILLIN_DECKS[DECK_KEY_CASE_TRIGGER] = [
     // Akkusativ triggers (direct object)
     { id: "CASE_TRIG-001", prompt_de: "Er sieht ____ (ich).", answer: "mich", hint_en: "sehen → direct object", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
     { id: "CASE_TRIG-002", prompt_de: "Wir besuchen ____ (du).", answer: "dich", hint_en: "besuchen → direct object", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
@@ -432,19 +413,17 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
     { id: "CASE_TRIG-009", prompt_de: "Sie antwortet ____ (wir).", answer: "uns", hint_en: "antworten → Dativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
     { id: "CASE_TRIG-010", prompt_de: "Ich gratuliere ____ (sie – singular).", answer: "ihr", hint_en: "gratulieren → Dativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
 
-    // Double-object structures (must choose correct case)
+    // Double-object structures
     { id: "CASE_TRIG-011", prompt_de: "Ich gebe ____ (er) das Buch.", answer: "ihm", hint_en: "geben → indirect object = Dativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
     { id: "CASE_TRIG-012", prompt_de: "Sie zeigt ____ (ich) den Weg.", answer: "mir", hint_en: "zeigen → indirect object = Dativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
     { id: "CASE_TRIG-013", prompt_de: "Wir schicken ____ (du) eine Nachricht.", answer: "dir", hint_en: "schicken → indirect object = Dativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
     { id: "CASE_TRIG-014", prompt_de: "Er bringt ____ (wir) Kaffee.", answer: "uns", hint_en: "bringen → indirect object = Dativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
 
-    // Contrast pairs (Akk vs Dat confusion)
+    // Contrast pairs
     { id: "CASE_TRIG-015", prompt_de: "Er fragt ____ (ich).", answer: "mich", hint_en: "fragen → Akkusativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
     { id: "CASE_TRIG-016", prompt_de: "Er antwortet ____ (ich).", answer: "mir", hint_en: "antworten → Dativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
-
     { id: "CASE_TRIG-017", prompt_de: "Ich höre ____ (du).", answer: "dich", hint_en: "hören → Akkusativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
     { id: "CASE_TRIG-018", prompt_de: "Ich helfe ____ (du).", answer: "dir", hint_en: "helfen → Dativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
-
     { id: "CASE_TRIG-019", prompt_de: "Wir sehen ____ (sie – singular).", answer: "sie", hint_en: "sehen → Akkusativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
     { id: "CASE_TRIG-020", prompt_de: "Wir geben ____ (sie – singular) das Geld.", answer: "ihr", hint_en: "geben → indirect object = Dativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
 
@@ -455,37 +434,25 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
     // Plural forms
     { id: "CASE_TRIG-023", prompt_de: "Ich sehe ____ (sie – plural).", answer: "sie", hint_en: "Akkusativ plural", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
     { id: "CASE_TRIG-024", prompt_de: "Ich helfe ____ (sie – plural).", answer: "ihnen", hint_en: "Dativ plural", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] }
-
   ];
-/* grammar_FILLIN_decks_conversation_articles_case.js
-   Deck: Conversation — Articles (Akk vs Dat)
-   Deck key: GRAMMAR_FILLIN_CONVERSATION_ARTICLES_CASE
 
-   Learner must:
-   - Read a short question
-   - Complete the response
-   - Insert the correct article form (der/die/das/den/dem/…)
+  /* =========================================================
+     Deck 7: Conversation — Articles (Akk vs Dat)
+     Deck key: GRAMMAR_FILLIN_CONVERSATION_ARTICLES_CASE
+  ========================================================= */
 
-   IDs: CONV_ART-001, ...
-   Tags: ["Grammar","articles","Akk","Dat","conversation","fill-in"]
-*/
+  const DECK_KEY_CONV_ART = "GRAMMAR_FILLIN_CONVERSATION_ARTICLES_CASE";
 
-
-
-  const DECK_KEY_CONV = "GRAMMAR_FILLIN_CONVERSATION_ARTICLES_CASE";
-
-  window.FILLIN_DECKS_META[DECK_KEY_CONV] = {
+  window.FILLIN_DECKS_META[DECK_KEY_CONV_ART] = {
     title: "Conversation — Articles (Akk vs Dat)",
     category: "Grammar",
     level: "medium",
     mechanic: "fill-in",
-    description: "Complete the response using the correct article form based on Akkusativ or Dativ."
+    description:
+      "Complete the response using the correct article form based on Akkusativ or Dativ."
   };
 
-  window.FILLIN_DECKS[DECK_KEY_CONV] = [
-
-    // Akkusativ triggers (direct object)
-
+  window.FILLIN_DECKS[DECK_KEY_CONV_ART] = [
     {
       id: "CONV_ART-001",
       prompt_de: "A: Hast du den Film gesehen?\nB: Ja, ich habe ____ Film gesehen.",
@@ -493,7 +460,6 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
       hint_en: "sehen → Akkusativ",
       tags: ["Grammar","articles","Akk","conversation","fill-in"]
     },
-
     {
       id: "CONV_ART-002",
       prompt_de: "A: Kennst du die Lehrerin?\nB: Ja, ich kenne ____ Lehrerin.",
@@ -501,7 +467,6 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
       hint_en: "kennen → Akkusativ (fem stays die)",
       tags: ["Grammar","articles","Akk","conversation","fill-in"]
     },
-
     {
       id: "CONV_ART-003",
       prompt_de: "A: Kaufst du das Auto?\nB: Ja, ich kaufe ____ Auto.",
@@ -509,17 +474,16 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
       hint_en: "kaufen → Akkusativ (neuter stays das)",
       tags: ["Grammar","articles","Akk","conversation","fill-in"]
     },
-
     {
       id: "CONV_ART-004",
-      prompt_de: "A: Besuchst du der Arzt?\nB: Nein, ich besuche ____ Arzt morgen.",
+      // FIXED TYPO: "Besuchst du der Arzt?" -> "Besuchst du den Arzt?"
+      prompt_de: "A: Besuchst du den Arzt?\nB: Nein, ich besuche ____ Arzt morgen.",
       answer: "den",
       hint_en: "besuchen → Akkusativ (masc → den)",
       tags: ["Grammar","articles","Akk","conversation","fill-in"]
     },
 
     // Dativ triggers (prepositions)
-
     {
       id: "CONV_ART-005",
       prompt_de: "A: Mit wem sprichst du?\nB: Ich spreche mit ____ Lehrer.",
@@ -527,7 +491,6 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
       hint_en: "mit → Dativ (masc → dem)",
       tags: ["Grammar","articles","Dat","conversation","fill-in"]
     },
-
     {
       id: "CONV_ART-006",
       prompt_de: "A: Hilfst du der Frau?\nB: Ja, ich helfe ____ Frau.",
@@ -535,7 +498,6 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
       hint_en: "helfen → Dativ (fem → der)",
       tags: ["Grammar","articles","Dat","conversation","fill-in"]
     },
-
     {
       id: "CONV_ART-007",
       prompt_de: "A: Arbeitest du bei der Firma?\nB: Ja, ich arbeite bei ____ Firma.",
@@ -543,7 +505,6 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
       hint_en: "bei → Dativ",
       tags: ["Grammar","articles","Dat","conversation","fill-in"]
     },
-
     {
       id: "CONV_ART-008",
       prompt_de: "A: Spielst du mit dem Kind?\nB: Ja, ich spiele mit ____ Kind.",
@@ -553,7 +514,6 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
     },
 
     // Mixed: double object
-
     {
       id: "CONV_ART-009",
       prompt_de: "A: Gibst du dem Mann das Buch?\nB: Ja, ich gebe ____ Mann das Buch.",
@@ -561,7 +521,6 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
       hint_en: "indirect object → Dativ",
       tags: ["Grammar","articles","Dat","conversation","fill-in"]
     },
-
     {
       id: "CONV_ART-010",
       prompt_de: "A: Zeigst du den Schülern den Film?\nB: Ja, ich zeige ____ Film.",
@@ -571,15 +530,13 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
     },
 
     // Preposition + Akk
-
     {
       id: "CONV_ART-011",
       prompt_de: "A: Freust du dich auf das Wochenende?\nB: Ja, ich freue mich auf ____ Wochenende.",
       answer: "das",
-      hint_en: "auf (no movement) → Akkusativ",
+      hint_en: "auf → Akkusativ",
       tags: ["Grammar","articles","Akk","conversation","fill-in"]
     },
-
     {
       id: "CONV_ART-012",
       prompt_de: "A: Denkst du an den Test?\nB: Ja, ich denke an ____ Test.",
@@ -589,7 +546,6 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
     },
 
     // Dativ after certain verbs
-
     {
       id: "CONV_ART-013",
       prompt_de: "A: Folgst du dem Lehrer?\nB: Ja, ich folge ____ Lehrer.",
@@ -597,7 +553,6 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
       hint_en: "folgen → Dativ",
       tags: ["Grammar","articles","Dat","conversation","fill-in"]
     },
-
     {
       id: "CONV_ART-014",
       prompt_de: "A: Dankst du der Frau?\nB: Ja, ich danke ____ Frau.",
@@ -605,26 +560,16 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
       hint_en: "danken → Dativ",
       tags: ["Grammar","articles","Dat","conversation","fill-in"]
     }
-
   ];
-/* grammar_FILLIN_decks_dat_pronouns_core_40.js
-   Deck: Dative Pronouns — Core Drill (40 Questions)
-   Deck key: GRAMMAR_FILLIN_DAT_PRONOUNS_CORE_40
 
-   Focus:
-   - One blank
-   - No hints
-   - Verb determines Dativ
-   - Reinforces mir/dir/ihm/ihr/uns/euch/Ihnen/ihnen
+  /* =========================================================
+     Deck 8: Dative Pronouns — Core Drill (40)
+     Deck key: GRAMMAR_FILLIN_DAT_PRONOUNS_CORE_40
+  ========================================================= */
 
-   Tags: ["Grammar","pronouns","Dat","core","fill-in"]
-*/
+  const DECK_KEY_DAT_CORE_40 = "GRAMMAR_FILLIN_DAT_PRONOUNS_CORE_40";
 
-
-
-  const DECK_KEY = "GRAMMAR_FILLIN_DAT_PRONOUNS_CORE_40";
-
-  window.FILLIN_DECKS_META[DECK_KEY] = {
+  window.FILLIN_DECKS_META[DECK_KEY_DAT_CORE_40] = {
     title: "Dative Pronouns — Core Drill (40)",
     category: "Grammar",
     level: "medium",
@@ -632,8 +577,7 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
     description: "Choose the correct Dativ pronoun based on context."
   };
 
-  window.FILLIN_DECKS[DECK_KEY] = [
-
+  window.FILLIN_DECKS[DECK_KEY_DAT_CORE_40] = [
     // helfen
     { id: "DAT40-001", prompt_de: "Er hilft ____.", answer: "mir", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
     { id: "DAT40-002", prompt_de: "Ich helfe ____.", answer: "dir", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
@@ -699,26 +643,16 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
     { id: "DAT40-038", prompt_de: "Wir helfen ____ morgen.", answer: "ihnen", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
     { id: "DAT40-039", prompt_de: "Sie antwortet ____ sofort.", answer: "dir", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
     { id: "DAT40-040", prompt_de: "Er folgt ____ nach Hause.", answer: "uns", tags: ["Grammar","pronouns","Dat","core","fill-in"] }
-
   ];
-/* grammar_FILLIN_decks_mixed_articles_def_indef_40.js
-   Deck: Mixed Articles — Definite & Indefinite (Akk + Dat)
-   Deck key: GRAMMAR_FILLIN_MIXED_ARTICLES_DEF_INDEF_40
 
-   Focus:
-   - Mixed Akkusativ & Dativ
-   - Definite + Indefinite
-   - Hint provides gender + case only (e.g., "masc Akk")
-   - High emphasis on masculine transformations
+  /* =========================================================
+     Deck 9: Mixed Articles — Definite & Indefinite (Akk + Dat) (40)
+     Deck key: GRAMMAR_FILLIN_MIXED_ARTICLES_DEF_INDEF_40
+  ========================================================= */
 
-   Tags: ["Grammar","articles","Akk","Dat","mixed","fill-in"]
-*/
+  const DECK_KEY_ART_MIXED_40 = "GRAMMAR_FILLIN_MIXED_ARTICLES_DEF_INDEF_40";
 
-
-
-  const DECK_KEY = "GRAMMAR_FILLIN_MIXED_ARTICLES_DEF_INDEF_40";
-
-  window.FILLIN_DECKS_META[DECK_KEY] = {
+  window.FILLIN_DECKS_META[DECK_KEY_ART_MIXED_40] = {
     title: "Mixed Articles — Definite & Indefinite (40)",
     category: "Grammar",
     level: "medium",
@@ -726,10 +660,8 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
     description: "Choose the correct definite or indefinite article based on gender and case."
   };
 
-  window.FILLIN_DECKS[DECK_KEY] = [
-
+  window.FILLIN_DECKS[DECK_KEY_ART_MIXED_40] = [
     // Masculine — Akk vs Dat (highest impact)
-
     { id: "ART40-001", prompt_de: "Ich sehe ____ Mann.", answer: "den", hint_en: "masc Akk (def)", tags: ["Grammar","articles","fill-in"] },
     { id: "ART40-002", prompt_de: "Ich helfe ____ Mann.", answer: "dem", hint_en: "masc Dat (def)", tags: ["Grammar","articles","fill-in"] },
     { id: "ART40-003", prompt_de: "Ich sehe ____ Hund.", answer: "einen", hint_en: "masc Akk (indef)", tags: ["Grammar","articles","fill-in"] },
@@ -741,7 +673,6 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
     { id: "ART40-008", prompt_de: "Ich gebe ____ Apfel.", answer: "einem", hint_en: "masc Dat (indef)", tags: ["Grammar","articles","fill-in"] },
 
     // Feminine
-
     { id: "ART40-009", prompt_de: "Ich sehe ____ Frau.", answer: "die", hint_en: "fem Akk (def)", tags: ["Grammar","articles","fill-in"] },
     { id: "ART40-010", prompt_de: "Ich helfe ____ Frau.", answer: "der", hint_en: "fem Dat (def)", tags: ["Grammar","articles","fill-in"] },
     { id: "ART40-011", prompt_de: "Ich kaufe ____ Tasche.", answer: "eine", hint_en: "fem Akk (indef)", tags: ["Grammar","articles","fill-in"] },
@@ -751,33 +682,28 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
     { id: "ART40-014", prompt_de: "Ich danke ____ Freundin.", answer: "der", hint_en: "fem Dat (def)", tags: ["Grammar","articles","fill-in"] },
 
     // Neuter
-
     { id: "ART40-015", prompt_de: "Ich sehe ____ Kind.", answer: "das", hint_en: "neut Akk (def)", tags: ["Grammar","articles","fill-in"] },
     { id: "ART40-016", prompt_de: "Ich helfe ____ Kind.", answer: "dem", hint_en: "neut Dat (def)", tags: ["Grammar","articles","fill-in"] },
     { id: "ART40-017", prompt_de: "Ich kaufe ____ Auto.", answer: "ein", hint_en: "neut Akk (indef)", tags: ["Grammar","articles","fill-in"] },
     { id: "ART40-018", prompt_de: "Ich gebe ____ Auto.", answer: "einem", hint_en: "neut Dat (indef)", tags: ["Grammar","articles","fill-in"] },
 
     // Plural definite
-
     { id: "ART40-019", prompt_de: "Ich sehe ____ Kinder.", answer: "die", hint_en: "plural Akk (def)", tags: ["Grammar","articles","fill-in"] },
     { id: "ART40-020", prompt_de: "Ich helfe ____ Kindern.", answer: "den", hint_en: "plural Dat (def)", tags: ["Grammar","articles","fill-in"] },
     { id: "ART40-021", prompt_de: "Ich spreche mit ____ Studenten.", answer: "den", hint_en: "plural Dat (def)", tags: ["Grammar","articles","fill-in"] },
 
     // Prepositions — mixed
-
     { id: "ART40-022", prompt_de: "Ich freue mich auf ____ Urlaub.", answer: "den", hint_en: "masc Akk (def)", tags: ["Grammar","articles","fill-in"] },
     { id: "ART40-023", prompt_de: "Ich arbeite bei ____ Firma.", answer: "der", hint_en: "fem Dat (def)", tags: ["Grammar","articles","fill-in"] },
     { id: "ART40-024", prompt_de: "Ich denke an ____ Test.", answer: "den", hint_en: "masc Akk (def)", tags: ["Grammar","articles","fill-in"] },
     { id: "ART40-025", prompt_de: "Ich spreche mit ____ Kollegen.", answer: "dem", hint_en: "masc Dat (def)", tags: ["Grammar","articles","fill-in"] },
 
     // Double object structures
-
     { id: "ART40-026", prompt_de: "Ich gebe ____ Mann das Buch.", answer: "dem", hint_en: "masc Dat (def)", tags: ["Grammar","articles","fill-in"] },
     { id: "ART40-027", prompt_de: "Ich kaufe ____ Mann ein Geschenk.", answer: "einem", hint_en: "masc Dat (indef)", tags: ["Grammar","articles","fill-in"] },
     { id: "ART40-028", prompt_de: "Ich sehe ____ Mann.", answer: "einen", hint_en: "masc Akk (indef)", tags: ["Grammar","articles","fill-in"] },
 
     // More rotation for automaticity
-
     { id: "ART40-029", prompt_de: "Ich kenne ____ Vater.", answer: "den", hint_en: "masc Akk (def)", tags: ["Grammar","articles","fill-in"] },
     { id: "ART40-030", prompt_de: "Ich folge ____ Vater.", answer: "dem", hint_en: "masc Dat (def)", tags: ["Grammar","articles","fill-in"] },
 
@@ -795,26 +721,16 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
 
     { id: "ART40-039", prompt_de: "Ich danke ____ Kind.", answer: "dem", hint_en: "neut Dat (def)", tags: ["Grammar","articles","fill-in"] },
     { id: "ART40-040", prompt_de: "Ich sehe ____ Kind.", answer: "ein", hint_en: "neut Akk (indef)", tags: ["Grammar","articles","fill-in"] }
-
   ];
 
-   /* grammar_FILLIN_decks_conversation_perfekt_conjugate_80_split.js
-   Deck: Conversation — Perfekt (Split: Aux-only + Partizip-only)
-   Deck key: GRAMMAR_FILLIN_CONVERSATION_PERFEKT_SPLIT_80
+  /* =========================================================
+     Deck 10: Conversation — Perfekt (Split Aux-only + Partizip-only) (80)
+     Deck key: GRAMMAR_FILLIN_CONVERSATION_PERFEKT_SPLIT_80
+  ========================================================= */
 
-   Mechanic:
-   - Each original item becomes TWO cards:
-     a) Aux-only (one blank): user types only the conjugated auxiliary (habe/hast/hat/haben/seid/sind/etc.)
-     b) Partizip-only (one blank): user types only the Partizip II
+  const DECK_KEY_PERFEKT_SPLIT_80 = "GRAMMAR_FILLIN_CONVERSATION_PERFEKT_SPLIT_80";
 
-   Tags: ["Grammar","Perfekt","conversation","fill-in"]
-*/
-
-
-
-  const DECK_KEY = "GRAMMAR_FILLIN_CONVERSATION_PERFEKT_SPLIT_80";
-
-  window.FILLIN_DECKS_META[DECK_KEY] = {
+  window.FILLIN_DECKS_META[DECK_KEY_PERFEKT_SPLIT_80] = {
     title: "Conversation — Perfekt (Split: Aux-only + Partizip) (80)",
     category: "Grammar",
     level: "medium",
@@ -822,8 +738,7 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
     description: "Each prompt appears twice: once for the auxiliary, once for the Partizip II."
   };
 
-  window.FILLIN_DECKS[DECK_KEY] = [
-
+  window.FILLIN_DECKS[DECK_KEY_PERFEKT_SPLIT_80] = [
     // 001
     { id: "PERF_CONJ-001a", prompt_de: "A: Was hast du gestern gemacht?\nB: Ich ____ Wasser getrunken (trinken).", answer: "habe", tags: ["Grammar","Perfekt","conversation","fill-in"] },
     { id: "PERF_CONJ-001b", prompt_de: "A: Was hast du gestern gemacht?\nB: Ich habe Wasser ____ (trinken).", answer: "getrunken", tags: ["Grammar","Perfekt","conversation","fill-in"] },
@@ -983,12 +898,6 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
     // 040 (formal Sie = haben)
     { id: "PERF_CONJ-040a", prompt_de: "A: Haben Sie besucht?\nB: Sie ____ Freunde besucht (besuchen).", answer: "haben", tags: ["Grammar","Perfekt","conversation","fill-in"] },
     { id: "PERF_CONJ-040b", prompt_de: "A: Haben Sie besucht?\nB: Sie haben Freunde ____ (besuchen).", answer: "besucht", tags: ["Grammar","Perfekt","conversation","fill-in"] }
-
   ];
-
-
-
-
-
 
 })();
