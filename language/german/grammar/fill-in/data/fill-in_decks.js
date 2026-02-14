@@ -399,6 +399,611 @@ const DECK_KEY_DAT = "GRAMMAR_FILLIN_PREPOSITION_DAT_FILLIN";
     { id: "DAT_PRON-030", prompt_de: "Wir geben ____ Bescheid.", answer: "Ihnen", hint_en: "to you (formal)", tags: ["Grammar","pronouns","Dat","fill-in"] }
   ];
 
+/* grammar_FILLIN_decks_case_trigger_pronouns.js
+   Deck: Case Trigger — Object Pronouns (Mixed Akk/Dat)
+   Deck key: GRAMMAR_FILLIN_CASE_TRIGGER_PRONOUNS
+
+   Notes:
+   - Learner must determine case from verb structure
+   - Then choose correct pronoun form
+   - IDs: CASE_TRIG-001, ...
+   - tags: ["Grammar","pronouns","case-detection","mixed","fill-in"]
+*/
+
+(function () {
+  window.FILLIN_DECKS = window.FILLIN_DECKS || {};
+  window.FILLIN_DECKS_META = window.FILLIN_DECKS_META || {};
+
+  const DECK_KEY_CASE = "GRAMMAR_FILLIN_CASE_TRIGGER_PRONOUNS";
+
+  window.FILLIN_DECKS_META[DECK_KEY_CASE] = {
+    title: "Case Trigger — Mixed Object Pronouns",
+    category: "Grammar",
+    level: "medium",
+    mechanic: "fill-in",
+    description: "Choose the correct pronoun form (Akk or Dat) based on the verb and structure."
+  };
+
+  window.FILLIN_DECKS[DECK_KEY_CASE] = [
+
+    // Akkusativ triggers (direct object)
+    { id: "CASE_TRIG-001", prompt_de: "Er sieht ____ (ich).", answer: "mich", hint_en: "sehen → direct object", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+    { id: "CASE_TRIG-002", prompt_de: "Wir besuchen ____ (du).", answer: "dich", hint_en: "besuchen → direct object", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+    { id: "CASE_TRIG-003", prompt_de: "Ich kenne ____ (er).", answer: "ihn", hint_en: "kennen → direct object", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+    { id: "CASE_TRIG-004", prompt_de: "Sie ruft ____ (wir) an.", answer: "uns", hint_en: "anrufen → direct object", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+    { id: "CASE_TRIG-005", prompt_de: "Ich finde ____ (sie – plural).", answer: "sie", hint_en: "finden → direct object", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+
+    // Dativ triggers (indirect object verbs)
+    { id: "CASE_TRIG-006", prompt_de: "Er hilft ____ (ich).", answer: "mir", hint_en: "helfen → Dativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+    { id: "CASE_TRIG-007", prompt_de: "Ich danke ____ (du).", answer: "dir", hint_en: "danken → Dativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+    { id: "CASE_TRIG-008", prompt_de: "Wir folgen ____ (er).", answer: "ihm", hint_en: "folgen → Dativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+    { id: "CASE_TRIG-009", prompt_de: "Sie antwortet ____ (wir).", answer: "uns", hint_en: "antworten → Dativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+    { id: "CASE_TRIG-010", prompt_de: "Ich gratuliere ____ (sie – singular).", answer: "ihr", hint_en: "gratulieren → Dativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+
+    // Double-object structures (must choose correct case)
+    { id: "CASE_TRIG-011", prompt_de: "Ich gebe ____ (er) das Buch.", answer: "ihm", hint_en: "geben → indirect object = Dativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+    { id: "CASE_TRIG-012", prompt_de: "Sie zeigt ____ (ich) den Weg.", answer: "mir", hint_en: "zeigen → indirect object = Dativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+    { id: "CASE_TRIG-013", prompt_de: "Wir schicken ____ (du) eine Nachricht.", answer: "dir", hint_en: "schicken → indirect object = Dativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+    { id: "CASE_TRIG-014", prompt_de: "Er bringt ____ (wir) Kaffee.", answer: "uns", hint_en: "bringen → indirect object = Dativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+
+    // Contrast pairs (Akk vs Dat confusion)
+    { id: "CASE_TRIG-015", prompt_de: "Er fragt ____ (ich).", answer: "mich", hint_en: "fragen → Akkusativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+    { id: "CASE_TRIG-016", prompt_de: "Er antwortet ____ (ich).", answer: "mir", hint_en: "antworten → Dativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+
+    { id: "CASE_TRIG-017", prompt_de: "Ich höre ____ (du).", answer: "dich", hint_en: "hören → Akkusativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+    { id: "CASE_TRIG-018", prompt_de: "Ich helfe ____ (du).", answer: "dir", hint_en: "helfen → Dativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+
+    { id: "CASE_TRIG-019", prompt_de: "Wir sehen ____ (sie – singular).", answer: "sie", hint_en: "sehen → Akkusativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+    { id: "CASE_TRIG-020", prompt_de: "Wir geben ____ (sie – singular) das Geld.", answer: "ihr", hint_en: "geben → indirect object = Dativ", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+
+    // Formal forms
+    { id: "CASE_TRIG-021", prompt_de: "Ich sehe ____ (Sie – formal).", answer: "Sie", hint_en: "Akkusativ formal", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+    { id: "CASE_TRIG-022", prompt_de: "Ich helfe ____ (Sie – formal).", answer: "Ihnen", hint_en: "Dativ formal", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+
+    // Plural forms
+    { id: "CASE_TRIG-023", prompt_de: "Ich sehe ____ (sie – plural).", answer: "sie", hint_en: "Akkusativ plural", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] },
+    { id: "CASE_TRIG-024", prompt_de: "Ich helfe ____ (sie – plural).", answer: "ihnen", hint_en: "Dativ plural", tags: ["Grammar","pronouns","case-detection","mixed","fill-in"] }
+
+  ];
+/* grammar_FILLIN_decks_conversation_articles_case.js
+   Deck: Conversation — Articles (Akk vs Dat)
+   Deck key: GRAMMAR_FILLIN_CONVERSATION_ARTICLES_CASE
+
+   Learner must:
+   - Read a short question
+   - Complete the response
+   - Insert the correct article form (der/die/das/den/dem/…)
+
+   IDs: CONV_ART-001, ...
+   Tags: ["Grammar","articles","Akk","Dat","conversation","fill-in"]
+*/
+
+(function () {
+  window.FILLIN_DECKS = window.FILLIN_DECKS || {};
+  window.FILLIN_DECKS_META = window.FILLIN_DECKS_META || {};
+
+  const DECK_KEY_CONV = "GRAMMAR_FILLIN_CONVERSATION_ARTICLES_CASE";
+
+  window.FILLIN_DECKS_META[DECK_KEY_CONV] = {
+    title: "Conversation — Articles (Akk vs Dat)",
+    category: "Grammar",
+    level: "medium",
+    mechanic: "fill-in",
+    description: "Complete the response using the correct article form based on Akkusativ or Dativ."
+  };
+
+  window.FILLIN_DECKS[DECK_KEY_CONV] = [
+
+    // Akkusativ triggers (direct object)
+
+    {
+      id: "CONV_ART-001",
+      prompt_de: "A: Hast du den Film gesehen?\nB: Ja, ich habe ____ Film gesehen.",
+      answer: "den",
+      hint_en: "sehen → Akkusativ",
+      tags: ["Grammar","articles","Akk","conversation","fill-in"]
+    },
+
+    {
+      id: "CONV_ART-002",
+      prompt_de: "A: Kennst du die Lehrerin?\nB: Ja, ich kenne ____ Lehrerin.",
+      answer: "die",
+      hint_en: "kennen → Akkusativ (fem stays die)",
+      tags: ["Grammar","articles","Akk","conversation","fill-in"]
+    },
+
+    {
+      id: "CONV_ART-003",
+      prompt_de: "A: Kaufst du das Auto?\nB: Ja, ich kaufe ____ Auto.",
+      answer: "das",
+      hint_en: "kaufen → Akkusativ (neuter stays das)",
+      tags: ["Grammar","articles","Akk","conversation","fill-in"]
+    },
+
+    {
+      id: "CONV_ART-004",
+      prompt_de: "A: Besuchst du der Arzt?\nB: Nein, ich besuche ____ Arzt morgen.",
+      answer: "den",
+      hint_en: "besuchen → Akkusativ (masc → den)",
+      tags: ["Grammar","articles","Akk","conversation","fill-in"]
+    },
+
+    // Dativ triggers (prepositions)
+
+    {
+      id: "CONV_ART-005",
+      prompt_de: "A: Mit wem sprichst du?\nB: Ich spreche mit ____ Lehrer.",
+      answer: "dem",
+      hint_en: "mit → Dativ (masc → dem)",
+      tags: ["Grammar","articles","Dat","conversation","fill-in"]
+    },
+
+    {
+      id: "CONV_ART-006",
+      prompt_de: "A: Hilfst du der Frau?\nB: Ja, ich helfe ____ Frau.",
+      answer: "der",
+      hint_en: "helfen → Dativ (fem → der)",
+      tags: ["Grammar","articles","Dat","conversation","fill-in"]
+    },
+
+    {
+      id: "CONV_ART-007",
+      prompt_de: "A: Arbeitest du bei der Firma?\nB: Ja, ich arbeite bei ____ Firma.",
+      answer: "der",
+      hint_en: "bei → Dativ",
+      tags: ["Grammar","articles","Dat","conversation","fill-in"]
+    },
+
+    {
+      id: "CONV_ART-008",
+      prompt_de: "A: Spielst du mit dem Kind?\nB: Ja, ich spiele mit ____ Kind.",
+      answer: "dem",
+      hint_en: "mit → Dativ (neuter → dem)",
+      tags: ["Grammar","articles","Dat","conversation","fill-in"]
+    },
+
+    // Mixed: double object
+
+    {
+      id: "CONV_ART-009",
+      prompt_de: "A: Gibst du dem Mann das Buch?\nB: Ja, ich gebe ____ Mann das Buch.",
+      answer: "dem",
+      hint_en: "indirect object → Dativ",
+      tags: ["Grammar","articles","Dat","conversation","fill-in"]
+    },
+
+    {
+      id: "CONV_ART-010",
+      prompt_de: "A: Zeigst du den Schülern den Film?\nB: Ja, ich zeige ____ Film.",
+      answer: "den",
+      hint_en: "direct object → Akkusativ",
+      tags: ["Grammar","articles","Akk","conversation","fill-in"]
+    },
+
+    // Preposition + Akk
+
+    {
+      id: "CONV_ART-011",
+      prompt_de: "A: Freust du dich auf das Wochenende?\nB: Ja, ich freue mich auf ____ Wochenende.",
+      answer: "das",
+      hint_en: "auf (no movement) → Akkusativ",
+      tags: ["Grammar","articles","Akk","conversation","fill-in"]
+    },
+
+    {
+      id: "CONV_ART-012",
+      prompt_de: "A: Denkst du an den Test?\nB: Ja, ich denke an ____ Test.",
+      answer: "den",
+      hint_en: "an → Akkusativ here",
+      tags: ["Grammar","articles","Akk","conversation","fill-in"]
+    },
+
+    // Dativ after certain verbs
+
+    {
+      id: "CONV_ART-013",
+      prompt_de: "A: Folgst du dem Lehrer?\nB: Ja, ich folge ____ Lehrer.",
+      answer: "dem",
+      hint_en: "folgen → Dativ",
+      tags: ["Grammar","articles","Dat","conversation","fill-in"]
+    },
+
+    {
+      id: "CONV_ART-014",
+      prompt_de: "A: Dankst du der Frau?\nB: Ja, ich danke ____ Frau.",
+      answer: "der",
+      hint_en: "danken → Dativ",
+      tags: ["Grammar","articles","Dat","conversation","fill-in"]
+    }
+
+  ];
+/* grammar_FILLIN_decks_dat_pronouns_core_40.js
+   Deck: Dative Pronouns — Core Drill (40 Questions)
+   Deck key: GRAMMAR_FILLIN_DAT_PRONOUNS_CORE_40
+
+   Focus:
+   - One blank
+   - No hints
+   - Verb determines Dativ
+   - Reinforces mir/dir/ihm/ihr/uns/euch/Ihnen/ihnen
+
+   Tags: ["Grammar","pronouns","Dat","core","fill-in"]
+*/
+
+(function () {
+  window.FILLIN_DECKS = window.FILLIN_DECKS || {};
+  window.FILLIN_DECKS_META = window.FILLIN_DECKS_META || {};
+
+  const DECK_KEY = "GRAMMAR_FILLIN_DAT_PRONOUNS_CORE_40";
+
+  window.FILLIN_DECKS_META[DECK_KEY] = {
+    title: "Dative Pronouns — Core Drill (40)",
+    category: "Grammar",
+    level: "medium",
+    mechanic: "fill-in",
+    description: "Choose the correct Dativ pronoun based on context."
+  };
+
+  window.FILLIN_DECKS[DECK_KEY] = [
+
+    // helfen
+    { id: "DAT40-001", prompt_de: "Er hilft ____.", answer: "mir", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-002", prompt_de: "Ich helfe ____.", answer: "dir", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-003", prompt_de: "Wir helfen ____.", answer: "ihm", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-004", prompt_de: "Sie hilft ____.", answer: "uns", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-005", prompt_de: "Ich helfe ____ gern.", answer: "euch", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+
+    // danken
+    { id: "DAT40-006", prompt_de: "Ich danke ____.", answer: "dir", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-007", prompt_de: "Wir danken ____.", answer: "ihnen", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-008", prompt_de: "Er dankt ____.", answer: "ihr", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-009", prompt_de: "Sie dankt ____ sehr.", answer: "mir", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+
+    // antworten
+    { id: "DAT40-010", prompt_de: "Er antwortet ____.", answer: "mir", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-011", prompt_de: "Ich antworte ____.", answer: "ihm", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-012", prompt_de: "Wir antworten ____ später.", answer: "euch", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-013", prompt_de: "Sie antwortet ____ nicht.", answer: "uns", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+
+    // folgen
+    { id: "DAT40-014", prompt_de: "Wir folgen ____.", answer: "ihr", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-015", prompt_de: "Er folgt ____.", answer: "mir", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-016", prompt_de: "Ich folge ____.", answer: "dir", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-017", prompt_de: "Sie folgt ____.", answer: "ihm", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+
+    // gehören
+    { id: "DAT40-018", prompt_de: "Das gehört ____.", answer: "mir", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-019", prompt_de: "Das gehört ____.", answer: "uns", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-020", prompt_de: "Das gehört ____.", answer: "ihnen", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+
+    // gratulieren
+    { id: "DAT40-021", prompt_de: "Ich gratuliere ____.", answer: "dir", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-022", prompt_de: "Wir gratulieren ____.", answer: "ihr", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-023", prompt_de: "Er gratuliert ____.", answer: "uns", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+
+    // passen
+    { id: "DAT40-024", prompt_de: "Das passt ____ gut.", answer: "mir", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-025", prompt_de: "Das passt ____ nicht.", answer: "dir", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-026", prompt_de: "Das passt ____ perfekt.", answer: "ihr", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+
+    // gefallen
+    { id: "DAT40-027", prompt_de: "Das gefällt ____.", answer: "mir", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-028", prompt_de: "Das gefällt ____ sehr.", answer: "ihm", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-029", prompt_de: "Das gefällt ____ nicht.", answer: "uns", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+
+    // schmecken
+    { id: "DAT40-030", prompt_de: "Das schmeckt ____ gut.", answer: "dir", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-031", prompt_de: "Das schmeckt ____ nicht.", answer: "euch", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+
+    // glauben
+    { id: "DAT40-032", prompt_de: "Er glaubt ____.", answer: "mir", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-033", prompt_de: "Ich glaube ____.", answer: "dir", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+
+    // fehlen
+    { id: "DAT40-034", prompt_de: "Du fehlst ____.", answer: "mir", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-035", prompt_de: "Wir fehlen ____.", answer: "ihnen", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+
+    // formell
+    { id: "DAT40-036", prompt_de: "Kann ich ____ helfen?", answer: "Ihnen", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-037", prompt_de: "Ich danke ____ herzlich.", answer: "Ihnen", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+
+    // mixed reinforcement
+    { id: "DAT40-038", prompt_de: "Wir helfen ____ morgen.", answer: "ihnen", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-039", prompt_de: "Sie antwortet ____ sofort.", answer: "dir", tags: ["Grammar","pronouns","Dat","core","fill-in"] },
+    { id: "DAT40-040", prompt_de: "Er folgt ____ nach Hause.", answer: "uns", tags: ["Grammar","pronouns","Dat","core","fill-in"] }
+
+  ];
+/* grammar_FILLIN_decks_mixed_articles_def_indef_40.js
+   Deck: Mixed Articles — Definite & Indefinite (Akk + Dat)
+   Deck key: GRAMMAR_FILLIN_MIXED_ARTICLES_DEF_INDEF_40
+
+   Focus:
+   - Mixed Akkusativ & Dativ
+   - Definite + Indefinite
+   - Hint provides gender + case only (e.g., "masc Akk")
+   - High emphasis on masculine transformations
+
+   Tags: ["Grammar","articles","Akk","Dat","mixed","fill-in"]
+*/
+
+(function () {
+  window.FILLIN_DECKS = window.FILLIN_DECKS || {};
+  window.FILLIN_DECKS_META = window.FILLIN_DECKS_META || {};
+
+  const DECK_KEY = "GRAMMAR_FILLIN_MIXED_ARTICLES_DEF_INDEF_40";
+
+  window.FILLIN_DECKS_META[DECK_KEY] = {
+    title: "Mixed Articles — Definite & Indefinite (40)",
+    category: "Grammar",
+    level: "medium",
+    mechanic: "fill-in",
+    description: "Choose the correct definite or indefinite article based on gender and case."
+  };
+
+  window.FILLIN_DECKS[DECK_KEY] = [
+
+    // Masculine — Akk vs Dat (highest impact)
+
+    { id: "ART40-001", prompt_de: "Ich sehe ____ Mann.", answer: "den", hint_en: "masc Akk (def)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-002", prompt_de: "Ich helfe ____ Mann.", answer: "dem", hint_en: "masc Dat (def)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-003", prompt_de: "Ich sehe ____ Hund.", answer: "einen", hint_en: "masc Akk (indef)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-004", prompt_de: "Ich helfe ____ Hund.", answer: "einem", hint_en: "masc Dat (indef)", tags: ["Grammar","articles","fill-in"] },
+
+    { id: "ART40-005", prompt_de: "Ich kenne ____ Lehrer.", answer: "den", hint_en: "masc Akk (def)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-006", prompt_de: "Ich danke ____ Lehrer.", answer: "dem", hint_en: "masc Dat (def)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-007", prompt_de: "Ich kaufe ____ Apfel.", answer: "einen", hint_en: "masc Akk (indef)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-008", prompt_de: "Ich gebe ____ Apfel.", answer: "einem", hint_en: "masc Dat (indef)", tags: ["Grammar","articles","fill-in"] },
+
+    // Feminine
+
+    { id: "ART40-009", prompt_de: "Ich sehe ____ Frau.", answer: "die", hint_en: "fem Akk (def)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-010", prompt_de: "Ich helfe ____ Frau.", answer: "der", hint_en: "fem Dat (def)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-011", prompt_de: "Ich kaufe ____ Tasche.", answer: "eine", hint_en: "fem Akk (indef)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-012", prompt_de: "Ich helfe ____ Tasche.", answer: "einer", hint_en: "fem Dat (indef)", tags: ["Grammar","articles","fill-in"] },
+
+    { id: "ART40-013", prompt_de: "Ich besuche ____ Freundin.", answer: "die", hint_en: "fem Akk (def)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-014", prompt_de: "Ich danke ____ Freundin.", answer: "der", hint_en: "fem Dat (def)", tags: ["Grammar","articles","fill-in"] },
+
+    // Neuter
+
+    { id: "ART40-015", prompt_de: "Ich sehe ____ Kind.", answer: "das", hint_en: "neut Akk (def)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-016", prompt_de: "Ich helfe ____ Kind.", answer: "dem", hint_en: "neut Dat (def)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-017", prompt_de: "Ich kaufe ____ Auto.", answer: "ein", hint_en: "neut Akk (indef)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-018", prompt_de: "Ich gebe ____ Auto.", answer: "einem", hint_en: "neut Dat (indef)", tags: ["Grammar","articles","fill-in"] },
+
+    // Plural definite
+
+    { id: "ART40-019", prompt_de: "Ich sehe ____ Kinder.", answer: "die", hint_en: "plural Akk (def)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-020", prompt_de: "Ich helfe ____ Kindern.", answer: "den", hint_en: "plural Dat (def)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-021", prompt_de: "Ich spreche mit ____ Studenten.", answer: "den", hint_en: "plural Dat (def)", tags: ["Grammar","articles","fill-in"] },
+
+    // Prepositions — mixed
+
+    { id: "ART40-022", prompt_de: "Ich freue mich auf ____ Urlaub.", answer: "den", hint_en: "masc Akk (def)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-023", prompt_de: "Ich arbeite bei ____ Firma.", answer: "der", hint_en: "fem Dat (def)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-024", prompt_de: "Ich denke an ____ Test.", answer: "den", hint_en: "masc Akk (def)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-025", prompt_de: "Ich spreche mit ____ Kollegen.", answer: "dem", hint_en: "masc Dat (def)", tags: ["Grammar","articles","fill-in"] },
+
+    // Double object structures
+
+    { id: "ART40-026", prompt_de: "Ich gebe ____ Mann das Buch.", answer: "dem", hint_en: "masc Dat (def)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-027", prompt_de: "Ich kaufe ____ Mann ein Geschenk.", answer: "einem", hint_en: "masc Dat (indef)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-028", prompt_de: "Ich sehe ____ Mann.", answer: "einen", hint_en: "masc Akk (indef)", tags: ["Grammar","articles","fill-in"] },
+
+    // More rotation for automaticity
+
+    { id: "ART40-029", prompt_de: "Ich kenne ____ Vater.", answer: "den", hint_en: "masc Akk (def)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-030", prompt_de: "Ich folge ____ Vater.", answer: "dem", hint_en: "masc Dat (def)", tags: ["Grammar","articles","fill-in"] },
+
+    { id: "ART40-031", prompt_de: "Ich sehe ____ Blume.", answer: "eine", hint_en: "fem Akk (indef)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-032", prompt_de: "Ich helfe ____ Blume.", answer: "einer", hint_en: "fem Dat (indef)", tags: ["Grammar","articles","fill-in"] },
+
+    { id: "ART40-033", prompt_de: "Ich kaufe ____ Buch.", answer: "ein", hint_en: "neut Akk (indef)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-034", prompt_de: "Ich gebe ____ Buch.", answer: "einem", hint_en: "neut Dat (indef)", tags: ["Grammar","articles","fill-in"] },
+
+    { id: "ART40-035", prompt_de: "Ich sehe ____ Studenten.", answer: "die", hint_en: "plural Akk (def)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-036", prompt_de: "Ich helfe ____ Studenten.", answer: "den", hint_en: "plural Dat (def)", tags: ["Grammar","articles","fill-in"] },
+
+    { id: "ART40-037", prompt_de: "Ich arbeite mit ____ Mann.", answer: "einem", hint_en: "masc Dat (indef)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-038", prompt_de: "Ich denke an ____ Freund.", answer: "einen", hint_en: "masc Akk (indef)", tags: ["Grammar","articles","fill-in"] },
+
+    { id: "ART40-039", prompt_de: "Ich danke ____ Kind.", answer: "dem", hint_en: "neut Dat (def)", tags: ["Grammar","articles","fill-in"] },
+    { id: "ART40-040", prompt_de: "Ich sehe ____ Kind.", answer: "ein", hint_en: "neut Akk (indef)", tags: ["Grammar","articles","fill-in"] }
+
+  ];
+
+   /* grammar_FILLIN_decks_conversation_perfekt_conjugate_80_split.js
+   Deck: Conversation — Perfekt (Split: Aux-only + Partizip-only)
+   Deck key: GRAMMAR_FILLIN_CONVERSATION_PERFEKT_SPLIT_80
+
+   Mechanic:
+   - Each original item becomes TWO cards:
+     a) Aux-only (one blank): user types only the conjugated auxiliary (habe/hast/hat/haben/seid/sind/etc.)
+     b) Partizip-only (one blank): user types only the Partizip II
+
+   Tags: ["Grammar","Perfekt","conversation","fill-in"]
+*/
+
+(function () {
+  window.FILLIN_DECKS = window.FILLIN_DECKS || {};
+  window.FILLIN_DECKS_META = window.FILLIN_DECKS_META || {};
+
+  const DECK_KEY = "GRAMMAR_FILLIN_CONVERSATION_PERFEKT_SPLIT_80";
+
+  window.FILLIN_DECKS_META[DECK_KEY] = {
+    title: "Conversation — Perfekt (Split: Aux-only + Partizip) (80)",
+    category: "Grammar",
+    level: "medium",
+    mechanic: "fill-in",
+    description: "Each prompt appears twice: once for the auxiliary, once for the Partizip II."
+  };
+
+  window.FILLIN_DECKS[DECK_KEY] = [
+
+    // 001
+    { id: "PERF_CONJ-001a", prompt_de: "A: Was hast du gestern gemacht?\nB: Ich ____ Wasser getrunken (trinken).", answer: "habe", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-001b", prompt_de: "A: Was hast du gestern gemacht?\nB: Ich habe Wasser ____ (trinken).", answer: "getrunken", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 002
+    { id: "PERF_CONJ-002a", prompt_de: "A: Und du?\nB: Du ____ Tee getrunken (trinken).", answer: "hast", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-002b", prompt_de: "A: Und du?\nB: Du hast Tee ____ (trinken).", answer: "getrunken", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 003
+    { id: "PERF_CONJ-003a", prompt_de: "A: Was hat Paul gemacht?\nB: Er ____ einen Film gesehen (sehen).", answer: "hat", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-003b", prompt_de: "A: Was hat Paul gemacht?\nB: Er hat einen Film ____ (sehen).", answer: "gesehen", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 004
+    { id: "PERF_CONJ-004a", prompt_de: "A: Hat Maria gekocht?\nB: Sie ____ Pasta gekocht (kochen).", answer: "hat", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-004b", prompt_de: "A: Hat Maria gekocht?\nB: Sie hat Pasta ____ (kochen).", answer: "gekocht", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 005
+    { id: "PERF_CONJ-005a", prompt_de: "A: Hat das Kind gegessen?\nB: Es ____ ein Brötchen gegessen (essen).", answer: "hat", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-005b", prompt_de: "A: Hat das Kind gegessen?\nB: Es hat ein Brötchen ____ (essen).", answer: "gegessen", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 006
+    { id: "PERF_CONJ-006a", prompt_de: "A: Was habt ihr gemacht?\nB: Wir ____ Musik gehört (hören).", answer: "haben", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-006b", prompt_de: "A: Was habt ihr gemacht?\nB: Wir haben Musik ____ (hören).", answer: "gehört", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 007
+    { id: "PERF_CONJ-007a", prompt_de: "A: Und ihr?\nB: Ihr ____ viel gelernt (lernen).", answer: "habt", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-007b", prompt_de: "A: Und ihr?\nB: Ihr habt viel ____ (lernen).", answer: "gelernt", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 008
+    { id: "PERF_CONJ-008a", prompt_de: "A: Was haben Sie gemacht?\nB: Sie ____ einen Brief geschrieben (schreiben).", answer: "haben", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-008b", prompt_de: "A: Was haben Sie gemacht?\nB: Sie haben einen Brief ____ (schreiben).", answer: "geschrieben", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 009
+    { id: "PERF_CONJ-009a", prompt_de: "A: Was haben die Freunde gemacht?\nB: Sie ____ ein Geschenk gekauft (kaufen).", answer: "haben", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-009b", prompt_de: "A: Was haben die Freunde gemacht?\nB: Sie haben ein Geschenk ____ (kaufen).", answer: "gekauft", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 010
+    { id: "PERF_CONJ-010a", prompt_de: "A: Hast du das verstanden?\nB: Ich ____ alles verstanden (verstehen).", answer: "habe", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-010b", prompt_de: "A: Hast du das verstanden?\nB: Ich habe alles ____ (verstehen).", answer: "verstanden", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 011
+    { id: "PERF_CONJ-011a", prompt_de: "A: Hast du die Aufgaben gemacht?\nB: Du ____ sie gemacht (machen).", answer: "hast", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-011b", prompt_de: "A: Hast du die Aufgaben gemacht?\nB: Du hast sie ____ (machen).", answer: "gemacht", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 012
+    { id: "PERF_CONJ-012a", prompt_de: "A: Hat er das Handy gefunden?\nB: Er ____ es gefunden (finden).", answer: "hat", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-012b", prompt_de: "A: Hat er das Handy gefunden?\nB: Er hat es ____ (finden).", answer: "gefunden", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 013
+    { id: "PERF_CONJ-013a", prompt_de: "A: Hat sie dich gefragt?\nB: Sie ____ mich gefragt (fragen).", answer: "hat", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-013b", prompt_de: "A: Hat sie dich gefragt?\nB: Sie hat mich ____ (fragen).", answer: "gefragt", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 014
+    { id: "PERF_CONJ-014a", prompt_de: "A: Warst du gestern draußen?\nB: Ich ____ nach Hause gegangen (gehen).", answer: "bin", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-014b", prompt_de: "A: Warst du gestern draußen?\nB: Ich bin nach Hause ____ (gehen).", answer: "gegangen", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 015
+    { id: "PERF_CONJ-015a", prompt_de: "A: Und du?\nB: Du ____ sehr spät gekommen (kommen).", answer: "bist", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-015b", prompt_de: "A: Und du?\nB: Du bist sehr spät ____ (kommen).", answer: "gekommen", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 016
+    { id: "PERF_CONJ-016a", prompt_de: "A: Was hat er gemacht?\nB: Er ____ nach Berlin gefahren (fahren).", answer: "ist", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-016b", prompt_de: "A: Was hat er gemacht?\nB: Er ist nach Berlin ____ (fahren).", answer: "gefahren", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 017
+    { id: "PERF_CONJ-017a", prompt_de: "A: War sie in der Stadt?\nB: Sie ____ ins Kino gegangen (gehen).", answer: "ist", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-017b", prompt_de: "A: War sie in der Stadt?\nB: Sie ist ins Kino ____ (gehen).", answer: "gegangen", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 018
+    { id: "PERF_CONJ-018a", prompt_de: "A: War das Kind müde?\nB: Es ____ sofort eingeschlafen (einschlafen).", answer: "ist", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-018b", prompt_de: "A: War das Kind müde?\nB: Es ist sofort ____ (einschlafen).", answer: "eingeschlafen", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 019
+    { id: "PERF_CONJ-019a", prompt_de: "A: Seid ihr früh aufgestanden?\nB: Wir ____ um 6 Uhr aufgestanden (aufstehen).", answer: "sind", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-019b", prompt_de: "A: Seid ihr früh aufgestanden?\nB: Wir sind um 6 Uhr ____ (aufstehen).", answer: "aufgestanden", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 020
+    { id: "PERF_CONJ-020a", prompt_de: "A: Und ihr?\nB: Ihr ____ schnell gelaufen (laufen).", answer: "seid", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-020b", prompt_de: "A: Und ihr?\nB: Ihr seid schnell ____ (laufen).", answer: "gelaufen", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 021
+    { id: "PERF_CONJ-021a", prompt_de: "A: Sind Sie angekommen?\nB: Sie ____ um 8 Uhr angekommen (ankommen).", answer: "sind", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-021b", prompt_de: "A: Sind Sie angekommen?\nB: Sie sind um 8 Uhr ____ (ankommen).", answer: "angekommen", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 022
+    { id: "PERF_CONJ-022a", prompt_de: "A: Sind die Freunde geflogen?\nB: Sie ____ nach München geflogen (fliegen).", answer: "sind", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-022b", prompt_de: "A: Sind die Freunde geflogen?\nB: Sie sind nach München ____ (fliegen).", answer: "geflogen", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 023
+    { id: "PERF_CONJ-023a", prompt_de: "A: Hast du ihn angerufen?\nB: Ich ____ ihn angerufen (anrufen).", answer: "habe", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-023b", prompt_de: "A: Hast du ihn angerufen?\nB: Ich habe ihn ____ (anrufen).", answer: "angerufen", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 024
+    { id: "PERF_CONJ-024a", prompt_de: "A: Hast du deine Eltern angerufen?\nB: Du ____ sie angerufen (anrufen).", answer: "hast", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-024b", prompt_de: "A: Hast du deine Eltern angerufen?\nB: Du hast sie ____ (anrufen).", answer: "angerufen", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 025
+    { id: "PERF_CONJ-025a", prompt_de: "A: Ist er zurückgekommen?\nB: Er ____ gestern zurückgekommen (zurückkommen).", answer: "ist", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-025b", prompt_de: "A: Ist er zurückgekommen?\nB: Er ist gestern ____ (zurückkommen).", answer: "zurückgekommen", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 026
+    { id: "PERF_CONJ-026a", prompt_de: "A: Seid ihr ausgegangen?\nB: Ihr ____ am Freitag ausgegangen (ausgehen).", answer: "seid", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-026b", prompt_de: "A: Seid ihr ausgegangen?\nB: Ihr seid am Freitag ____ (ausgehen).", answer: "ausgegangen", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 027
+    { id: "PERF_CONJ-027a", prompt_de: "A: Hast du aufgehört?\nB: Ich ____ um 17 Uhr aufgehört (aufhören).", answer: "habe", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-027b", prompt_de: "A: Hast du aufgehört?\nB: Ich habe um 17 Uhr ____ (aufhören).", answer: "aufgehört", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 028
+    { id: "PERF_CONJ-028a", prompt_de: "A: Hat sie angefangen?\nB: Sie ____ um 9 Uhr angefangen (anfangen).", answer: "hat", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-028b", prompt_de: "A: Hat sie angefangen?\nB: Sie hat um 9 Uhr ____ (anfangen).", answer: "angefangen", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 029
+    { id: "PERF_CONJ-029a", prompt_de: "A: Hast du viel getrunken?\nB: Ich ____ viel Kaffee getrunken (trinken).", answer: "habe", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-029b", prompt_de: "A: Hast du viel getrunken?\nB: Ich habe viel Kaffee ____ (trinken).", answer: "getrunken", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 030
+    { id: "PERF_CONJ-030a", prompt_de: "A: Hast du das Buch gelesen?\nB: Du ____ es gelesen (lesen).", answer: "hast", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-030b", prompt_de: "A: Hast du das Buch gelesen?\nB: Du hast es ____ (lesen).", answer: "gelesen", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 031
+    { id: "PERF_CONJ-031a", prompt_de: "A: Hat er gegessen?\nB: Er ____ schon gegessen (essen).", answer: "hat", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-031b", prompt_de: "A: Hat er gegessen?\nB: Er hat schon ____ (essen).", answer: "gegessen", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 032
+    { id: "PERF_CONJ-032a", prompt_de: "A: Haben wir das gesehen?\nB: Wir ____ das schon gesehen (sehen).", answer: "haben", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-032b", prompt_de: "A: Haben wir das gesehen?\nB: Wir haben das schon ____ (sehen).", answer: "gesehen", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 033
+    { id: "PERF_CONJ-033a", prompt_de: "A: Habt ihr geschrieben?\nB: Ihr ____ eine E-Mail geschrieben (schreiben).", answer: "habt", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-033b", prompt_de: "A: Habt ihr geschrieben?\nB: Ihr habt eine E-Mail ____ (schreiben).", answer: "geschrieben", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 034
+    { id: "PERF_CONJ-034a", prompt_de: "A: Bist du geblieben?\nB: Ich ____ zu Hause geblieben (bleiben).", answer: "bin", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-034b", prompt_de: "A: Bist du geblieben?\nB: Ich bin zu Hause ____ (bleiben).", answer: "geblieben", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 035
+    { id: "PERF_CONJ-035a", prompt_de: "A: Bist du gereist?\nB: Du ____ nach Hamburg gereist (reisen).", answer: "bist", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-035b", prompt_de: "A: Bist du gereist?\nB: Du bist nach Hamburg ____ (reisen).", answer: "gereist", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 036
+    { id: "PERF_CONJ-036a", prompt_de: "A: Ist sie gelaufen?\nB: Sie ____ nach Hause gelaufen (laufen).", answer: "ist", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-036b", prompt_de: "A: Ist sie gelaufen?\nB: Sie ist nach Hause ____ (laufen).", answer: "gelaufen", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 037
+    { id: "PERF_CONJ-037a", prompt_de: "A: Hast du gearbeitet?\nB: Ich ____ bis 18 Uhr gearbeitet (arbeiten).", answer: "habe", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-037b", prompt_de: "A: Hast du gearbeitet?\nB: Ich habe bis 18 Uhr ____ (arbeiten).", answer: "gearbeitet", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 038
+    { id: "PERF_CONJ-038a", prompt_de: "A: Habt ihr gespielt?\nB: Wir ____ Karten gespielt (spielen).", answer: "haben", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-038b", prompt_de: "A: Habt ihr gespielt?\nB: Wir haben Karten ____ (spielen).", answer: "gespielt", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 039
+    { id: "PERF_CONJ-039a", prompt_de: "A: Hat er gefragt?\nB: Er ____ nach dem Weg gefragt (fragen).", answer: "hat", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-039b", prompt_de: "A: Hat er gefragt?\nB: Er hat nach dem Weg ____ (fragen).", answer: "gefragt", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+
+    // 040 (formal Sie = haben)
+    { id: "PERF_CONJ-040a", prompt_de: "A: Haben Sie besucht?\nB: Sie ____ Freunde besucht (besuchen).", answer: "haben", tags: ["Grammar","Perfekt","conversation","fill-in"] },
+    { id: "PERF_CONJ-040b", prompt_de: "A: Haben Sie besucht?\nB: Sie haben Freunde ____ (besuchen).", answer: "besucht", tags: ["Grammar","Perfekt","conversation","fill-in"] }
+
+  ];
+
+
+
 
 
 
