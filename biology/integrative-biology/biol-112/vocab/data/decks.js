@@ -146,7 +146,7 @@ window.DECKS = {
   ],
 
 
-BIOL112_Genetics: [
+BIOL112_GENETICS: [
   // Big-Picture Concepts
   { id: "GEN_Terms_001", tag: "cell division", de: "Cell division", en: "One parent cell divides to produce daughter cells." },
   { id: "GEN_Terms_002", tag: "cell division", de: "Genome", en: "All of an organism’s genetic material (all its DNA)." },
