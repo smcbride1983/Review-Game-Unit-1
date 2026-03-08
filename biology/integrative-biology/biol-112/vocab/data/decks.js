@@ -141,7 +141,7 @@ window.DECKS = {
     { id: "EVO_Terms_103", de: "Selection vs gene flow", en: "Balance between local adaptation and allele movement.", tag: "Speciation" },
     { id: "EVO_Terms_104", de: "Polyploidy", en: "Possession of more than two chromosome sets.", tag: "Speciation" },
     { id: "EVO_Terms_105", de: "Host switching", en: "Shift to a new host species.", tag: "Speciation" },
-    { id: "EVO_Terms_106", de: "Ecological specialization", en: "Adaptation to a specific niche.", tag: "Speciation" }
+    { id: "EVO_Terms_106", de: "Ecological specialization", en: "Adaptation to a specific niche.", tag: "Speciation" },
 
   ],
 
