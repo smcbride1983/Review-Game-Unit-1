@@ -195,6 +195,63 @@ BIOL112_Genetics: [
   { id: "GEN_Terms_033", tag: "cell division", de: "Haploid cells", en: "The outcome of meiosis: cells with one set of chromosomes." },
   { id: "GEN_Terms_034", tag: "cell division", de: "Chromosome number", en: "The total number of chromosomes in a cell." },
   { id: "GEN_Terms_035", tag: "cell division", de: "Genetic variation", en: "Differences among gametes or individuals caused by meiosis." }
+
+   // Molecular Genetics / Central Dogma
+{ id: "GEN_Terms_048", tag: "molecular genetics", de: "Central Dogma", en: "The flow of genetic information from DNA to RNA to protein." },
+{ id: "GEN_Terms_049", tag: "molecular genetics", de: "RNA", en: "A nucleic acid that carries genetic information and helps produce proteins." },
+{ id: "GEN_Terms_050", tag: "molecular genetics", de: "Protein", en: "A molecule made of amino acids that performs most functions in cells." },
+{ id: "GEN_Terms_051", tag: "molecular genetics", de: "Nucleotide", en: "The basic building block of DNA and RNA consisting of a sugar, phosphate, and base." },
+{ id: "GEN_Terms_052", tag: "molecular genetics", de: "Deoxyribose", en: "The sugar molecule found in DNA nucleotides." },
+{ id: "GEN_Terms_053", tag: "molecular genetics", de: "Ribose", en: "The sugar molecule found in RNA nucleotides." },
+{ id: "GEN_Terms_054", tag: "molecular genetics", de: "Base pairing", en: "The specific pairing of nucleotide bases (A with T or U, and C with G)." },
+{ id: "GEN_Terms_055", tag: "molecular genetics", de: "Double helix", en: "The twisted ladder structure of DNA formed by two complementary strands." },
+{ id: "GEN_Terms_056", tag: "molecular genetics", de: "DNA polymerase", en: "An enzyme that synthesizes new DNA strands during replication." },
+{ id: "GEN_Terms_057", tag: "molecular genetics", de: "RNA polymerase", en: "An enzyme that synthesizes RNA from a DNA template." },
+{ id: "GEN_Terms_058", tag: "molecular genetics", de: "Transcription", en: "The process of copying DNA into RNA." },
+{ id: "GEN_Terms_059", tag: "molecular genetics", de: "Translation", en: "The process of building a protein from an mRNA sequence." },
+{ id: "GEN_Terms_060", tag: "molecular genetics", de: "mRNA", en: "Messenger RNA that carries genetic instructions from DNA to the ribosome." },
+{ id: "GEN_Terms_061", tag: "molecular genetics", de: "tRNA", en: "Transfer RNA that brings amino acids to the ribosome during protein synthesis." },
+{ id: "GEN_Terms_062", tag: "molecular genetics", de: "Ribosome", en: "The cellular structure that reads mRNA and assembles proteins." },
+{ id: "GEN_Terms_063", tag: "molecular genetics", de: "Amino acid", en: "The building block of proteins." },
+{ id: "GEN_Terms_064", tag: "molecular genetics", de: "Genetic code", en: "The set of rules that determines how codons specify amino acids." },
+{ id: "GEN_Terms_065", tag: "molecular genetics", de: "Codon", en: "A three-nucleotide sequence in mRNA that specifies an amino acid." },
+
+// Mutation types
+{ id: "GEN_Terms_066", tag: "mutation", de: "Substitution mutation", en: "A mutation where one nucleotide is replaced with another." },
+{ id: "GEN_Terms_067", tag: "mutation", de: "Insertion mutation", en: "A mutation where one or more nucleotides are added to DNA." },
+{ id: "GEN_Terms_068", tag: "mutation", de: "Deletion mutation", en: "A mutation where one or more nucleotides are removed from DNA." },
+
+// Population genetics
+{ id: "GEN_Terms_069", tag: "evolution genetics", de: "Allele", en: "A different version of the same gene." },
+{ id: "GEN_Terms_070", tag: "evolution genetics", de: "Natural selection", en: "The process where traits that improve survival or reproduction become more common." },
+{ id: "GEN_Terms_071", tag: "evolution genetics", de: "Gene flow", en: "Movement of alleles between populations through migration and reproduction." },
+{ id: "GEN_Terms_072", tag: "evolution genetics", de: "Genetic drift", en: "Random changes in allele frequencies in a population." },
+
+// Gene regulation
+{ id: "GEN_Terms_073", tag: "gene regulation", de: "Gene regulation", en: "Control of when, where, and how much a gene is expressed." },
+{ id: "GEN_Terms_074", tag: "gene regulation", de: "Transcriptional regulation", en: "Control of gene expression by regulating transcription." },
+{ id: "GEN_Terms_075", tag: "gene regulation", de: "Translational regulation", en: "Control of gene expression by regulating translation." },
+{ id: "GEN_Terms_076", tag: "gene regulation", de: "Post-translational regulation", en: "Control of protein activity after a protein has been produced." },
+{ id: "GEN_Terms_077", tag: "gene regulation", de: "DNA methylation", en: "Chemical modification of DNA that can reduce gene transcription." },
+
+// Molecular biology techniques
+{ id: "GEN_Terms_078", tag: "molecular techniques", de: "PCR (Polymerase Chain Reaction)", en: "A technique used to amplify a specific DNA sequence." },
+{ id: "GEN_Terms_079", tag: "molecular techniques", de: "qPCR", en: "A PCR method that measures the quantity of DNA during amplification." },
+{ id: "GEN_Terms_080", tag: "molecular techniques", de: "RT-PCR", en: "A method that converts RNA to DNA and amplifies it to study gene expression." },
+{ id: "GEN_Terms_081", tag: "molecular techniques", de: "Gel electrophoresis", en: "A method used to separate DNA fragments by size using an electric field." },
+{ id: "GEN_Terms_082", tag: "molecular techniques", de: "Sequencing", en: "Determining the exact order of nucleotides in DNA or RNA." },
+{ id: "GEN_Terms_083", tag: "molecular techniques", de: "Western blot", en: "A method used to detect specific proteins using antibodies." },
+{ id: "GEN_Terms_084", tag: "molecular techniques", de: "ELISA", en: "A technique that uses antibodies to detect and quantify proteins or antigens." },
+{ id: "GEN_Terms_085", tag: "molecular techniques", de: "Immunofluorescence", en: "A method that uses fluorescent antibodies to visualize proteins in cells." },
+{ id: "GEN_Terms_086", tag: "molecular techniques", de: "Spectrophotometry", en: "A method that measures how much light a sample absorbs to quantify molecules." },
+
+// Omics
+{ id: "GEN_Terms_087", tag: "omics", de: "Metagenomics", en: "The study of all genetic material from a community of organisms." },
+{ id: "GEN_Terms_088", tag: "omics", de: "Transcriptomics", en: "The study of all RNA transcripts produced by a genome." },
+{ id: "GEN_Terms_089", tag: "omics", de: "Proteomics", en: "The study of all proteins produced by a cell or organism." },
+
+// Gene editing
+{ id: "GEN_Terms_090", tag: "gene editing", de: "CRISPR-Cas", en: "A gene editing system that can precisely cut and modify DNA." }
 ]
 
 };
